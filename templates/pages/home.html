@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Импорт авто из США, Китая, Кореи — персональный расчёт{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="hero" id="hero">
+  <div class="hero-video-wrap">
+    <video class="hero-video" autoplay muted loop playsinline aria-hidden="true">
+      <source src="/media/hero.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">Ваш автомобиль —<br>напрямую из США, Китая или Кореи.</h1>
+    <p class="hero-subtitle">Экономия до 50%. Полный контроль сделки.</p>
+  </div>
+
+  <div class="hero-stats reveal">
+    <div class="hero-stat">
+      <span class="hero-stat-value" data-value="450" data-prefix="" data-suffix="+">0</span>
+      <span class="hero-stat-label">доставленных автомобилей</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-value" data-value="870" data-prefix="" data-suffix=" 000 ₽">0</span>
+      <span class="hero-stat-label">средняя экономия клиента</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-value" data-value="97" data-prefix="" data-suffix="%">0</span>
+      <span class="hero-stat-label">клиентов приходят по рекомендации</span>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-contact reveal">
+      <a href="tel:+79611634157" class="hero-contact-phone">+7 (961) 163-41-57</a>
+      <p class="hero-contact-address">г. Белгород, Харьковский пер.,<br>36А, БЦ «Панорама», каб. 402</p>
+      <a href="{% url 'contacts' %}" class="hero-contact-btn">Связаться с нами</a>
+    </div>
+    <div class="hero-service-icons service-icons-row">
+      <a href="{% url 'services' %}" class="hero-service-btn reveal">Наши услуги</a>
+      <a href="{% url 'order_quiz' %}" class="hero-service-btn reveal">Заказать авто</a>
+      <a href="{% url 'process' %}" class="hero-service-btn reveal">Процесс</a>
+    </div>
+    <div class="hero-bottom-spacer" aria-hidden="true"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
+</footer>
+{% endblock %}

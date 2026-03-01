@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Профиль — AUTOPARK{% endblock %}
+
+{% block content %}
+<main class="page">
+  <div class="container">
+    <h1>Профиль</h1>
+    <p>Вы вошли. Сессия: <code>{{ session_token }}</code></p>
+    <p><a href="{% url 'logout' %}" class="btn btn-outline">Выйти</a></p>
+  </div>
+</main>
+{% endblock %}

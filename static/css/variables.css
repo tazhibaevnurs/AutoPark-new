@@ -1,0 +1,21 @@
+:root {
+  /* ТЗ: чёрный/графит фон, белый текст, холодный синий или серебро акцент. Без красного, без оранжевого */
+  --bg: #0a0a0b;
+  --bg-soft: #141416;
+  --text: #f5f5f5;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  --accent: #E98733;
+  --accent-light: #f0a04d;
+  --border: rgba(255, 255, 255, 0.12);
+  --font: 'Manrope', -apple-system, sans-serif;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --radius: 4px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.35s var(--ease);
+}

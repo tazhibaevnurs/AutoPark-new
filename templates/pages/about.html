@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}О нас — импорт авто из Кореи и Китая{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="page about-page">
+  <div class="container">
+    <header class="about-intro">
+      <h1 class="reveal">О нас</h1>
+      <p class="about-intro-lead reveal">Осуществляем полный цикл доставки автомобилей — от подбора и покупки до оформления документов и передачи ключей владельцу. Учитываем стиль жизни, задачи и бюджет — находим идеальное авто под ключ.</p>
+    </header>
+
+    <section class="about-advantages">
+      <h2 class="about-section-title reveal">Наши преимущества</h2>
+      <ul class="about-advantages-list" aria-label="Список преимуществ">
+        <li class="about-advantage-item">
+          <span class="about-advantage-num" aria-hidden="true">01</span>
+          <div class="about-advantage-content">
+            <h3>Подбор авто под ваши цели и бюджет</h3>
+            <p>Подберём оптимальный автомобиль с учётом ваших пожеланий, бюджета и состояния — с полным сопровождением.</p>
+          </div>
+        </li>
+        <li class="about-advantage-item">
+          <span class="about-advantage-num" aria-hidden="true">02</span>
+          <div class="about-advantage-content">
+            <h3>Прозрачность и гарантия</h3>
+            <p>Предоставляем фото и видео отчёты, историю автомобиля и официальные документы. Всё прозрачно.</p>
+          </div>
+        </li>
+        <li class="about-advantage-item">
+          <span class="about-advantage-num" aria-hidden="true">03</span>
+          <div class="about-advantage-content">
+            <h3>Полный цикл услуг под ключ</h3>
+            <p>Сопровождаем сделку от поиска до доставки и оформления — вам остаётся только сесть за руль.</p>
+          </div>
+        </li>
+        <li class="about-advantage-item">
+          <span class="about-advantage-num" aria-hidden="true">04</span>
+          <div class="about-advantage-content">
+            <h3>Поддержка на каждом этапе</h3>
+            <p>Ваш личный менеджер всегда на связи — от первой консультации до передачи ключей от авто.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="about-stats">
+      <h2 class="about-section-title reveal">За цифрами — наш успех</h2>
+      <p class="about-stats-lead reveal">Наша репутация подтверждена конкретными результатами и доверием клиентов. Мы внимательно анализируем каждый этап работы, чтобы обеспечить максимальное качество и эффективность в импорте автомобилей из Кореи и Китая.</p>
+      <div class="about-stats-grid">
+        <div class="about-stat reveal">
+          <span class="about-stat-value" data-value="450" data-prefix="+" data-suffix="">0</span>
+          <span class="about-stat-label">Авто доставлено</span>
+        </div>
+        <div class="about-stat reveal">
+          <span class="about-stat-value" data-value="650" data-prefix="" data-suffix="">0</span>
+          <span class="about-stat-label">Проведено консультаций</span>
+        </div>
+        <div class="about-stat reveal">
+          <span class="about-stat-value" data-value="1" data-prefix="" data-suffix="+">0</span>
+          <span class="about-stat-label">Год на рынке</span>
+        </div>
+        <div class="about-stat reveal">
+          <span class="about-stat-value" data-value="1" data-prefix="+" data-suffix="">0</span>
+          <span class="about-stat-label">Партнёров в Азии</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-cta reveal">
+      <p class="about-cta-text">Поможем, подскажем, сопроводим — мы с вами даже после передачи авто. Напишите нам — расскажем, как это работает!</p>
+      <a href="{% url 'contacts' %}" class="btn btn-primary">Связаться с нами</a>
+      <a href="{% url 'order_quiz' %}" class="btn btn-outline" style="margin-left: 0.75rem;">Оставить заявку</a>
+    </section>
+  </div>
+</main>
+<footer class="footer">
+  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
+</footer>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% load static %}
+<header class="header" id="header">
+  <div class="header-left">
+    <a href="{% url 'home' %}" class="logo">AUTOPARK</a>
+  </div>
+  <div class="header-right">
+    <a href="tel:+79611634157" class="header-link">+7 (961) 163-41-57</a>
+    <a href="https://t.me/Auto_Park31" target="_blank" rel="noopener" class="header-link" aria-label="Telegram">Telegram</a>
+    <a href="https://wa.me/79611634157" target="_blank" rel="noopener" class="header-link" aria-label="WhatsApp">WhatsApp</a>
+    <button type="button" class="burger" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="burger-overlay" id="burger-overlay">
+  <nav class="burger-menu burger-menu--left">
+    <button type="button" class="burger-close" aria-label="Закрыть меню">×</button>
+    <ul class="burger-menu-list">
+      <li><a href="{% url 'home' %}">Главная</a></li>
+      <li><a href="{% url 'about' %}">О нас</a></li>
+      <li><a href="{% url 'cases' %}">Наши кейсы</a></li>
+      <li><a href="{% url 'team' %}">Команда</a></li>
+      <li><a href="{% url 'contacts' %}">Контакты</a></li>
+    </ul>
+    <div class="burger-menu-buttons">
+      <a href="{% url 'contacts' %}" class="btn btn-primary burger-btn">Свяжитесь с нами</a>
+      <a href="{% url 'order_quiz' %}" class="btn btn-outline burger-btn">Заказать авто</a>
+    </div>
+    <ul class="burger-menu-legal">
+      <li><a href="https://drive.google.com/uc?export=download&id=1JZ5hpnlEzeVdLSH-eAORKuCtPAnkhuHr" target="_blank" rel="noopener">Политика обработки данных</a></li>
+      <li><a href="https://drive.google.com/uc?export=download&id=13KE5cE9HXU4fGGIKitZcfQ7LuJvJJJxp" target="_blank" rel="noopener">Политика конфиденциальности</a></li>
+      <li><a href="https://drive.google.com/uc?export=download&id=1jOOtkO13dT-TPbsYDe64Kiv1PVCkKUPB" target="_blank" rel="noopener">Пользовательское соглашение</a></li>
+    </ul>
+  </nav>
+</div>

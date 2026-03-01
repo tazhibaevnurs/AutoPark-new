@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Наши услуги — полный цикл импорта авто{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="page services-page">
+  <div class="container">
+    <header class="services-intro">
+      <h1 class="reveal">Наши услуги</h1>
+      <p class="services-intro-lead reveal">Полный цикл импорта — от подбора до передачи ключей. Работаем с авто из США, Китая и Кореи.</p>
+    </header>
+
+    <section class="services-grid">
+      <article class="service-card reveal">
+        <h2>Подбор авто на аукционах</h2>
+        <p>Ищем автомобиль на крупных аукционах (Copart, IAAI, Manheim и др.) по вашим параметрам: марка, бюджет, год, комплектация.</p>
+      </article>
+      <article class="service-card reveal">
+        <h2>Выкуп</h2>
+        <p>Оформляем участие в торгах и выкуп выбранного лота. Прозрачные условия, фиксированная комиссия, контроль на каждом этапе.</p>
+      </article>
+      <article class="service-card reveal">
+        <h2>Проверка истории</h2>
+        <p>Проверяем VIN: пробег, ДТП, залоги, ремонты. Предоставляем отчёт перед принятием решения о выкупе.</p>
+      </article>
+      <article class="service-card reveal">
+        <h2>Логистика</h2>
+        <p>Организуем доставку от места выкупа до порта: страхование, документы, отслеживание груза до прибытия.</p>
+      </article>
+      <article class="service-card reveal">
+        <h2>Таможня</h2>
+        <p>Таможенное оформление и растаможка. Рассчитаем пошлины и сборы заранее — никаких сюрпризов при постановке на учёт.</p>
+      </article>
+      <article class="service-card reveal">
+        <h2>Доставка по РФ</h2>
+        <p>Доставляем автомобиль в ваш город. Работаем с проверенными перевозчиками, даём трек-номер и сроки.</p>
+      </article>
+      <article class="service-card reveal">
+        <h2>Оформление</h2>
+        <p>Помогаем с получением ЭПТС, постановкой на учёт в ГИБДД и подготовкой полного пакета документов.</p>
+      </article>
+      <article class="service-card reveal">
+        <h2>Финансирование и лизинг</h2>
+        <p>Подберём программу рассрочки, кредита или лизинга под ваш бюджет. Работаем с партнёрскими банками и лизинговыми компаниями.</p>
+      </article>
+    </section>
+
+    <section class="services-cta reveal">
+      <p class="services-cta-text">Хотите узнать стоимость под ключ или оформить заявку? Мы рассчитаем всё под ваш бюджет и ответим в течение 24 часов.</p>
+      <a href="{% url 'order_quiz' %}" class="btn btn-primary">Получить персональный расчёт</a>
+      <a href="{% url 'process' %}" class="btn btn-outline" style="margin-left: 0.75rem;">Как мы работаем</a>
+    </section>
+  </div>
+</main>
+<footer class="footer">
+  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
+</footer>
+{% endblock %}

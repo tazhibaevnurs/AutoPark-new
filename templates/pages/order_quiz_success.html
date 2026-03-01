@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Заявка отправлена{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <div class="container container--narrow" style="text-align: center;">
+    <h1 class="reveal">Заявка принята</h1>
+    <p class="reveal">Мы свяжемся с вами в течение 24 часов и подберём 3 варианта под ваш бюджет и задачи.</p>
+    <p class="reveal" style="margin-top: 1.5rem;">
+      <a href="{% url 'home' %}" class="btn btn-primary">На главную</a>
+    </p>
+  </div>
+</main>
+<footer class="footer">
+  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
+</footer>
+{% endblock %}

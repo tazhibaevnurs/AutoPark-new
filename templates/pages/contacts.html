@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Контакты — AUTOPARK{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="page contacts-page">
+  <div class="container">
+    <header class="contacts-intro">
+      <h1 class="reveal">Контакты</h1>
+      <p class="contacts-intro-lead reveal">Свяжитесь с нами для консультации, расчёта стоимости или начала подбора автомобиля. Мы всегда на связи и готовы ответить на все ваши вопросы удобным для вас способом.</p>
+    </header>
+
+    <section class="contacts-block">
+      <div class="contacts-grid">
+        <div class="contact-item reveal">
+          <span class="contact-item-label">Телефон</span>
+          <a href="tel:+79611634157" class="contact-item-value contact-item-link">+7 (961) 163-41-57</a>
+        </div>
+        <div class="contact-item reveal">
+          <span class="contact-item-label">Telegram</span>
+          <a href="https://t.me/Auto_Park31" target="_blank" rel="noopener" class="contact-item-value contact-item-link">@Auto_Park31</a>
+        </div>
+        <div class="contact-item reveal">
+          <span class="contact-item-label">Рабочее время</span>
+          <p class="contact-item-value">9:00 — 17:00, Пн — Сб</p>
+        </div>
+      </div>
+
+      <div class="contact-address reveal">
+        <span class="contact-item-label">Адрес офиса</span>
+        <p class="contact-item-value">г. Белгород, Харьковский пер., 36А, бизнес-центр «Панорама», каб. 402<br>(напротив отеля «Амакс»)</p>
+      </div>
+    </section>
+
+    <section class="contacts-cta reveal">
+      <p class="contacts-cta-text">Оставьте заявку — мы перезвоним и ответим на все вопросы.</p>
+      <a href="{% url 'order_quiz' %}" class="btn btn-primary">Оставить заявку</a>
+    </section>
+  </div>
+</main>
+<footer class="footer">
+  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
+</footer>
+{% endblock %}

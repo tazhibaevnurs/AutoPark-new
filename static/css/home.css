@@ -1,0 +1,359 @@
+/* ========== HERO ========== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 6rem var(--space-lg) 3rem;
+}
+
+.hero-video-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-video-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(10,10,11,0.4) 0%, rgba(10,10,11,0.7) 100%);
+  transition: opacity 0.6s var(--ease);
+}
+
+.hero.scrolled .hero-video-wrap::after {
+  opacity: 1;
+  background: rgba(10, 10, 11, 0.85);
+}
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-placeholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0a0a0b 0%, #1a1d22 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-md);
+  transition: transform 0.6s var(--ease), opacity 0.6s var(--ease);
+}
+
+.hero.scrolled .hero-title {
+  transform: translateY(-30px);
+  opacity: 0.6;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-xl);
+  font-weight: 400;
+  transition: transform 0.6s var(--ease), opacity 0.6s var(--ease);
+}
+
+.hero.scrolled .hero-subtitle {
+  transform: translateY(-20px);
+  opacity: 0.5;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  justify-content: center;
+  margin-bottom: var(--space-3xl);
+  transition: transform 0.6s var(--ease), opacity 0.6s var(--ease);
+}
+
+.hero.scrolled .hero-buttons {
+  transform: translateY(-15px);
+  opacity: 0.4;
+}
+
+/* Цифры под hero (ВАУ-деталь по ТЗ) */
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2xl);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-stat {
+  text-align: center;
+}
+
+.hero-stat-value {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.hero-stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Нижняя строка Hero: контакты слева, кнопки по центру */
+.hero-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-xl);
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 var(--space-lg);
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.hero-contact {
+  text-align: left;
+  min-width: 200px;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-service-icons {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.hero-bottom-spacer {
+  min-width: 200px;
+}
+
+.hero-contact-phone {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: var(--space-xs);
+  transition: color var(--transition);
+}
+
+.hero-contact-phone:hover {
+  color: var(--accent-light);
+}
+
+.hero-contact-address {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-md);
+  line-height: 1.4;
+  max-width: 100%;
+}
+
+.hero-contact-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--bg);
+  background: var(--text);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius);
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.hero-contact-btn:hover {
+  background: var(--accent-light);
+  color: var(--bg);
+  border-color: var(--accent-light);
+}
+
+/* ========== Кнопки в Hero (с hover) ========== */
+.service-icons-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.hero-service-btn {
+  display: inline-block;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: color var(--transition), border-color var(--transition), background var(--transition), transform 0.25s var(--ease);
+}
+
+.hero-service-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(233, 135, 51, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ========== НИЖНИЙ CTA БЛОК ========== */
+.cta-block {
+  padding: var(--space-3xl) var(--space-lg);
+  text-align: center;
+  background: var(--bg-soft);
+  border-top: 1px solid var(--border);
+}
+
+.cta-block p {
+  max-width: 600px;
+  margin: 0 auto var(--space-lg);
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.cta-block .btn-primary {
+  margin-top: var(--space-sm);
+}
+
+/* ========== FOOTER (минимальный) ========== */
+.footer {
+  display: none;
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  color: var(--text-muted);
+}
+
+.footer a:hover {
+  color: var(--accent-light);
+}
+
+/* ========== АДАПТИВ: главная для мобильных ========== */
+@media (max-width: 768px) {
+  .hero {
+    padding: 5rem var(--space-md) 2rem;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .hero-title {
+    font-size: clamp(1.5rem, 6vw, 2.25rem);
+    margin-bottom: var(--space-sm);
+  }
+  .hero-subtitle {
+    font-size: 1rem;
+    margin-bottom: var(--space-lg);
+  }
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-2xl);
+  }
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-stats {
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+  .hero-stat-value {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+  .hero-stat-label {
+    font-size: 0.8rem;
+  }
+  .hero-bottom {
+    position: relative;
+    bottom: auto;
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-lg) var(--space-md) var(--space-md);
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+  }
+  .hero-contact {
+    min-width: 0;
+    text-align: center;
+  }
+  .hero-bottom .hero-contact-address {
+    margin-top: var(--space-xs);
+  }
+  .hero-service-icons {
+    flex: none;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-bottom-spacer {
+    display: none;
+  }
+  .hero-service-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 4.5rem var(--space-sm) 1.5rem;
+  }
+  .hero-content {
+    max-width: 100%;
+  }
+  .hero-title {
+    font-size: 1.4rem;
+  }
+  .hero-stats {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .hero-stat {
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-stat:last-child {
+    border-bottom: none;
+  }
+  .hero-service-icons {
+    flex-direction: column;
+  }
+  .hero-service-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

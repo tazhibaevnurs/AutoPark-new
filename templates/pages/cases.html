@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Наши кейсы — авто из Кореи и Китая под ключ{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="page cases-page">
+  <div class="container">
+    <header class="cases-intro">
+      <h1 class="reveal">Наши кейсы</h1>
+      <p class="cases-intro-lead reveal">Мы уже реализовали десятки успешных заказов — от подбора автомобиля до его доставки клиенту. Ниже представлены реальные примеры авто, которые мы привезли из Кореи и Китая под ключ.</p>
+    </header>
+
+    <section class="cases-grid">
+      <article class="case-card reveal">
+        <div class="case-card-image" aria-hidden="true"></div>
+        <div class="case-card-body">
+          <span class="case-card-country">Корея</span>
+          <h2 class="case-card-title">Kia Sorento</h2>
+          <p class="case-card-meta">2021, дизель · под ключ</p>
+        </div>
+      </article>
+      <article class="case-card reveal">
+        <div class="case-card-image" aria-hidden="true"></div>
+        <div class="case-card-body">
+          <span class="case-card-country">Корея</span>
+          <h2 class="case-card-title">Hyundai Tucson</h2>
+          <p class="case-card-meta">2022, бензин · под ключ</p>
+        </div>
+      </article>
+      <article class="case-card reveal">
+        <div class="case-card-image" aria-hidden="true"></div>
+        <div class="case-card-body">
+          <span class="case-card-country">Корея</span>
+          <h2 class="case-card-title">Zeekr 009</h2>
+          <p class="case-card-meta">2025, электро · под ключ</p>
+        </div>
+      </article>
+      <article class="case-card reveal">
+        <div class="case-card-image" aria-hidden="true"></div>
+        <div class="case-card-body">
+          <span class="case-card-country">Китай</span>
+          <h2 class="case-card-title">Skoda Kodiaq</h2>
+          <p class="case-card-meta">2023, дизель · под ключ</p>
+        </div>
+      </article>
+      <article class="case-card reveal">
+        <div class="case-card-image" aria-hidden="true"></div>
+        <div class="case-card-body">
+          <span class="case-card-country">Китай</span>
+          <h2 class="case-card-title">Toyota RAV4</h2>
+          <p class="case-card-meta">2024, гибрид · под ключ</p>
+        </div>
+      </article>
+      <article class="case-card reveal">
+        <div class="case-card-image" aria-hidden="true"></div>
+        <div class="case-card-body">
+          <span class="case-card-country">Корея</span>
+          <h2 class="case-card-title">Tesla Model 3</h2>
+          <p class="case-card-meta">2025, электро · под ключ</p>
+        </div>
+      </article>
+      <article class="case-card reveal">
+        <div class="case-card-image" aria-hidden="true"></div>
+        <div class="case-card-body">
+          <span class="case-card-country">Корея</span>
+          <h2 class="case-card-title">Genesis GV80</h2>
+          <p class="case-card-meta">Подбор, доставка, оформление</p>
+        </div>
+      </article>
+      <article class="case-card reveal">
+        <div class="case-card-image" aria-hidden="true"></div>
+        <div class="case-card-body">
+          <span class="case-card-country">Китай</span>
+          <h2 class="case-card-title">Li L9</h2>
+          <p class="case-card-meta">Электрокроссовер · под ключ</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="cases-cta reveal">
+      <p class="cases-cta-text">Хотите такой же результат? Оставьте заявку — подберём и привезём авто под ваши цели и бюджет.</p>
+      <a href="{% url 'order_quiz' %}" class="btn btn-primary">Оставить заявку</a>
+      <a href="{% url 'contacts' %}" class="btn btn-outline" style="margin-left: 0.75rem;">Связаться с нами</a>
+    </section>
+  </div>
+</main>
+<footer class="footer">
+  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
+</footer>
+{% endblock %}
