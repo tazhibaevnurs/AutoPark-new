@@ -4,7 +4,8 @@ services:
     build: .
     container_name: autopark-web
     ports:
-      - "8000:8000"
+      - "80:8000"    # основной доступ без порта в URL (http://IP/)
+      - "8000:8000" # запасной доступ (http://IP:8000/)
     env_file:
       - .env
     environment:
