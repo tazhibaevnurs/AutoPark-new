@@ -1,6 +1,4 @@
 # Autopark — запуск для разработки и продакшена
-version: "3.9"
-
 services:
   web:
     build: .

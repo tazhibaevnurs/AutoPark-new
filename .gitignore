@@ -33,6 +33,10 @@ db.sqlite3-journal
 # Docker
 .docker/
 
+# Документация — в репозитории только README
+*.md
+!README.md
+
 # Тесты и отчёты
 .coverage
 htmlcov/

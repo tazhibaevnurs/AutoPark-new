@@ -224,6 +224,21 @@ docker compose down
 docker compose down -v
 ```
 
+### Деплой на VPS Beget
+
+- **Конфигурация:** минимум 2 ядра, 2 ГБ RAM, 30 ГБ NVMe.
+- **ОС:** выберите **Ubuntu 22.04** или готовое решение «Docker».
+- **Доступ:** укажите пароль root или добавьте SSH-ключ; после создания сервера придёт письмо с IP и паролем.
+
+Дальше выполняйте шаги из **Части 2** (SSH, установка Docker) и **Части 3** (клонирование, `.env`, `docker compose build` и `up -d`).
+
+### Деплой на любой другой VPS
+
+1. Клонировать репозиторий на сервер.
+2. Создать `.env` с `DJANGO_SECRET_KEY`, `DEBUG=False`, `ALLOWED_HOSTS=ip-или-домен`.
+3. Запустить: `docker compose build` и `docker compose up -d`.
+4. При необходимости настроить Nginx как reverse proxy на порт 8000 и SSL.
+
 ### Домен и HTTPS
 
 Чтобы открывать сайт по домену и по HTTPS:
