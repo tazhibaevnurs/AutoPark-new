@@ -89,6 +89,20 @@
     onScroll();
   }
 
+  // Hero-видео: при ошибке загрузки (нет файла / 404) скрываем видео — виден градиентный фон
+  (function () {
+    var heroVideo = document.querySelector('.hero .hero-video');
+    if (!heroVideo) return;
+    function hideVideoShowPlaceholder() {
+      heroVideo.style.display = 'none';
+    }
+    heroVideo.addEventListener('error', hideVideoShowPlaceholder);
+    if (heroVideo.readyState >= 2) return;
+    heroVideo.addEventListener('loadeddata', function onLoaded() {
+      heroVideo.removeEventListener('error', hideVideoShowPlaceholder);
+    }, { once: true });
+  })();
+
   // Список преимуществ на странице «О нас» — поочерёдное появление при скролле
   const aboutAdvantages = document.querySelector('.about-advantages');
   const aboutList = document.querySelector('.about-advantages-list');
