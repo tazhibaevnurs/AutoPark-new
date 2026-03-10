@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ post.title }} — Блог AUTOPARK{% endblock %}
+{% block body_class %}page-inner bdet-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.bdet-page { background: #FCFCFC; }
+  body.bdet-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .bdet-hero {
+    position: relative; min-height: 36vh;
+    display: flex; align-items: flex-end; background: #0a0a0a; overflow: hidden;
+  }
+  .bdet-hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); }
+  .bdet-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.7), transparent); }
+  .bdet-hero-inner {
+    position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 3rem 1.5rem 2.5rem 5rem;
+    padding-top: 4rem;
+  }
+  .bdet-breadcrumb {
+    display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem;
+    font-size: .9rem; color: rgba(255,255,255,.65);
+    line-height: 1.5;
+    padding-top: 0.25rem;
+  }
+  .bdet-breadcrumb a { color: rgba(255,255,255,.65); transition: color .2s; }
+  .bdet-breadcrumb a:hover { color: #E98733; }
+  .bdet-breadcrumb svg { width: 14px; height: 14px; opacity: .5; }
+  .bdet-hero h1 {
+    font-size: clamp(1.75rem,4vw,3rem); font-weight: 600; color: #fff;
+    letter-spacing: -.02em; margin: 0; line-height: 1.2;
+  }
+  .bdet-meta { font-size: .9rem; color: rgba(255,255,255,.5); margin-top: .5rem; }
+
+  .bdet-main {
+    max-width: 800px; margin: 2rem auto 0; padding: 2.5rem 1.5rem 3rem;
+    background: #fff;
+    border-radius: 24px;
+    border: 1px solid rgba(0,0,0,.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .bdet-media {
+    border-radius: 24px; overflow: hidden; margin-bottom: 2rem;
+    background: #f3f4f6;
+  }
+  .bdet-media img,
+  .bdet-media video {
+    width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block;
+  }
+  .bdet-media--placeholder {
+    aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(145deg, rgba(233,135,51,.08) 0%, #f3f4f6 100%);
+  }
+  .bdet-media--placeholder svg { width: 64px; height: 64px; color: #E98733; opacity: .2; }
+  .bdet-play-badge {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .bdet-play-badge span {
+    width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.55); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.2);
+    color: #fff;
+  }
+  .bdet-media video { position: relative; }
+
+  .bdet-content {
+    font-size: 1.05rem; line-height: 1.75;
+    color: #111;
+    white-space: pre-line;
+  }
+  .bdet-content p { margin: 0 0 1rem; color: #111; }
+  .bdet-content p:last-child { margin-bottom: 0; }
+
+  .bdet-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+  .bdet-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: all .2s;
+  }
+  .bdet-btn--primary { background: #111; color: #fff; }
+  .bdet-btn--primary:hover { background: #E98733; color: #fff; transform: translateY(-1px); }
+  .bdet-btn--outline { background: transparent; color: #111; border: 1px solid rgba(0,0,0,.15); }
+  .bdet-btn--outline:hover { border-color: #E98733; color: #E98733; }
+
+  .bdet-related { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+  .bdet-related h2 { font-size: 1.5rem; font-weight: 600; color: #111; margin: 0 0 1.5rem; }
+  .bdet-related-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .bdet-rel-card {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 20px;
+    overflow: hidden; transition: border-color .3s, box-shadow .3s, transform .3s;
+    text-decoration: none; color: inherit; display: block;
+  }
+  .bdet-rel-card:hover {
+    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+    transform: translateY(-3px); color: inherit;
+  }
+  .bdet-rel-image { aspect-ratio: 16/10; overflow: hidden; background: #f3f4f6; }
+  .bdet-rel-image img { width: 100%; height: 100%; object-fit: cover; }
+  .bdet-rel-body { padding: 1rem 1.25rem; }
+  .bdet-rel-title { font-size: 1rem; font-weight: 600; color: #111; margin: 0; }
+
+  .bdet-cta { background: #131313; padding: 4rem 1.5rem; text-align: center; }
+  .bdet-cta h2 { font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff; margin: 0 0 .75rem; }
+  .bdet-cta p { font-size: 1rem; color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6; }
+  .bdet-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .bdet-cta-btn {
+    display: inline-block; padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: background .2s, transform .2s;
+  }
+  .bdet-cta-btn--primary { background: #fff; color: #131313; }
+  .bdet-cta-btn--primary:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
+  .bdet-cta-btn--outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
+  .bdet-cta-btn--outline:hover { border-color: #E98733; color: #f0a04d; }
+
+  @media (max-width:768px) {
+    .bdet-hero-inner { padding: 5rem 1.5rem 2rem; }
+    .bdet-related-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width:480px) {
+    .bdet-hero-inner { padding: 4.5rem 1rem 1.5rem; }
+    .bdet-related-grid { grid-template-columns: 1fr; }
+    .bdet-cta-buttons { flex-direction: column; align-items: stretch; } .bdet-cta-btn { text-align: center; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <section class="bdet-hero">
+    <div class="bdet-hero-bg" aria-hidden="true"></div>
+    <div class="bdet-hero-overlay" aria-hidden="true"></div>
+    <div class="bdet-hero-inner">
+      <nav class="bdet-breadcrumb">
+        <a href="{% url 'home' %}">Главная</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a href="{% url 'blog' %}">Блог</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span style="color:rgba(255,255,255,.75);">{{ post.title }}</span>
+      </nav>
+      <h1>{{ post.title }}</h1>
+      <p class="bdet-meta">{{ post.created_at|date:"d.m.Y" }}</p>
+    </div>
+  </section>
+
+  <article class="bdet-main">
+    <div class="bdet-media{% if not post.image and not post.video %} bdet-media--placeholder{% endif %}" style="position:relative;">
+      {% if post.video %}
+        <video src="{% url 'serve_blog_video' post.pk %}" controls playsinline preload="metadata" poster="{% if post.image %}{{ post.image.url }}{% endif %}"></video>
+        <div class="bdet-play-badge" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><polygon points="5 3 19 12 5 21 5 3"/></svg></span></div>
+      {% elif post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+      {% else %}
+        <div class="bdet-media--placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="bdet-content" style="white-space: pre-line;">{{ post.content }}</div>
+
+    <div class="bdet-actions">
+      <a href="{% url 'order_quiz' %}" class="bdet-btn bdet-btn--primary">Оставить заявку</a>
+      <a href="{% url 'blog' %}" class="bdet-btn bdet-btn--outline">Все статьи</a>
+    </div>
+  </article>
+
+  {% if related %}
+  <section class="bdet-related">
+    <h2>Другие статьи</h2>
+    <div class="bdet-related-grid">
+      {% for r in related %}
+      <a href="{% url 'blog_detail' r.slug %}" class="bdet-rel-card">
+        <div class="bdet-rel-image">
+          {% if r.image %}<img src="{{ r.image.url }}" alt="{{ r.title }}">{% endif %}
+        </div>
+        <div class="bdet-rel-body">
+          <p class="bdet-rel-title">{{ r.title }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="bdet-cta">
+    <h2>Остались вопросы?</h2>
+    <p>Оставьте заявку — подберём авто и проведём через все этапы импорта.</p>
+    <div class="bdet-cta-buttons">
+      <a href="{% url 'order_quiz' %}" class="bdet-cta-btn bdet-cta-btn--primary">Оставить заявку</a>
+      <a href="{% url 'contacts' %}" class="bdet-cta-btn bdet-cta-btn--outline">Контакты</a>
+    </div>
+  </section>
+</main>
+{% endblock %}

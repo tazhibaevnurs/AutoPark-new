@@ -120,8 +120,8 @@
 
   // Счётчик цифр «как спидометр» в блоке «За цифрами — наш успех»
   (function () {
-    var statsSection = document.querySelector('.about-stats');
-    var statValues = document.querySelectorAll('.about-stat-value[data-value]');
+    var statsSection = document.querySelector('.about-stats') || document.querySelector('.abt-stats');
+    var statValues = document.querySelectorAll('.about-stat-value[data-value], .abt-stat-value[data-value]');
     if (!statsSection || !statValues.length) return;
 
     function easeOutExpo(t) {
@@ -208,7 +208,7 @@
             var end = parseInt(el.getAttribute('data-value'), 10);
             var prefix = el.getAttribute('data-prefix') || '';
             var suffix = el.getAttribute('data-suffix') || '';
-            animateValue(el, 0, end, 1800, prefix, suffix);
+            animateValue(el, 0, end, 5500, prefix, suffix);
           });
         });
       },
@@ -231,7 +231,8 @@
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     );
     reveals.forEach(function (el) {
-      el.style.transition = 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+      var duration = el.classList.contains('hero-stats') ? '5.5s' : '0.7s';
+      el.style.transition = 'opacity ' + duration + ' cubic-bezier(0.4, 0, 0.2, 1), transform ' + duration + ' cubic-bezier(0.4, 0, 0.2, 1)';
       observer.observe(el);
     });
   }
@@ -239,7 +240,7 @@
   // Анимация цифр при появлении (опционально — можно добавить счётчик)
   const statValues = document.querySelectorAll('.hero-stat-value');
   statValues.forEach(function (el) {
-    el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    el.style.transition = 'opacity 5.5s ease, transform 5.5s ease';
   });
 
   // Уведомление о cookies: принятие / отклонение, сохранение выбора в куки

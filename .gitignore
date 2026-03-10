@@ -20,6 +20,9 @@ db.sqlite3
 db.sqlite3-journal
 /media/
 /staticfiles/
+
+# Большие медиа — загружать на сервер вручную (см. static/video/README.txt)
+# static/video/*.mp4
 .env
 .env.local
 

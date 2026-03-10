@@ -1,0 +1,41 @@
+# CI: тесты и проверка настроек при каждом пуше и в PR
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: Tests & check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Django check (deploy)
+        env:
+          DJANGO_SECRET_KEY: ci-secret-key-for-testing-only
+          DEBUG: "False"
+          ALLOWED_HOSTS: localhost,127.0.0.1,testserver
+        run: python manage.py check_deploy
+
+      - name: Run tests
+        env:
+          DJANGO_SECRET_KEY: ci-secret-key-for-testing-only
+          DEBUG: "False"
+          ALLOWED_HOSTS: localhost,127.0.0.1,testserver
+        run: python manage.py test --no-input -v 2

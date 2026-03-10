@@ -37,6 +37,10 @@
   object-fit: cover;
 }
 
+.hero-video--image {
+  display: block;
+}
+
 .hero-placeholder {
   position: absolute;
   inset: 0;
@@ -266,12 +270,15 @@
   color: var(--accent-light);
 }
 
-/* ========== АДАПТИВ: главная для мобильных ========== */
+/* ========== АДАПТИВ: планшет ========== */
 @media (max-width: 768px) {
   .hero {
     padding: 5rem var(--space-md) 2rem;
     min-height: 100vh;
     min-height: 100dvh;
+  }
+  .hero-br {
+    display: none;
   }
   .hero-title {
     font-size: clamp(1.5rem, 6vw, 2.25rem);
@@ -305,13 +312,20 @@
     position: relative;
     bottom: auto;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     padding: var(--space-lg) var(--space-md) var(--space-md);
     gap: var(--space-lg);
     margin-top: var(--space-xl);
   }
   .hero-contact {
     min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+  }
+  .hero-contact-btn {
+    width: 100%;
     text-align: center;
   }
   .hero-bottom .hero-contact-address {
@@ -319,6 +333,7 @@
   }
   .hero-service-icons {
     flex: none;
+    width: 100%;
     justify-content: center;
     flex-wrap: wrap;
   }
@@ -331,19 +346,25 @@
   }
 }
 
+/* ========== АДАПТИВ: мобильный ========== */
 @media (max-width: 480px) {
   .hero {
     padding: 4.5rem var(--space-sm) 1.5rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
   }
   .hero-content {
     max-width: 100%;
   }
   .hero-title {
-    font-size: 1.4rem;
+    font-size: clamp(1.25rem, 7vw, 1.6rem);
+    line-height: 1.25;
+  }
+  .hero-subtitle {
+    font-size: 0.95rem;
   }
   .hero-stats {
     flex-direction: column;
-    gap: var(--space-md);
+    gap: 0;
   }
   .hero-stat {
     padding: var(--space-sm) 0;
@@ -352,11 +373,38 @@
   .hero-stat:last-child {
     border-bottom: none;
   }
+  .hero-stat-value {
+    font-size: 1.5rem;
+  }
+  .hero-stat-label {
+    font-size: 0.78rem;
+  }
+  .hero-bottom {
+    gap: var(--space-md);
+    padding: var(--space-md) 0;
+  }
+  .hero-contact-phone {
+    font-size: 1.05rem;
+  }
+  .hero-contact-address {
+    font-size: 0.85rem;
+  }
+  .hero-contact-btn {
+    padding: 0.85rem 1.5rem;
+    font-size: 0.9rem;
+  }
   .hero-service-icons {
     flex-direction: column;
+    gap: var(--space-sm);
   }
   .hero-service-btn {
     width: 100%;
     text-align: center;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.9rem;
+  }
+  .footer {
+    padding: var(--space-md) var(--space-sm);
+    padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
   }
 }

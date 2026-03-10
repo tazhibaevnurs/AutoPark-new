@@ -1,0 +1,8 @@
+{
+  "name": "autopark-new",
+  "private": true,
+  "scripts": {
+    "build": "cd react-services && npm run build:embed",
+    "dev:services": "cd react-services && npm run dev"
+  }
+}

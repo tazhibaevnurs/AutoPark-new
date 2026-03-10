@@ -1,0 +1,534 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ car.title }} — Каталог AUTOPARK{% endblock %}
+{% block body_class %}page-inner cdet-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.cdet-page { background: #FCFCFC; }
+  body.cdet-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .cdet-hero {
+    position: relative; min-height: 28vh;
+    display: flex; align-items: flex-end; background: #0a0a0a; overflow: hidden;
+  }
+  .cdet-hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); }
+  .cdet-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.7), transparent); }
+  .cdet-hero-inner {
+    position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 5rem 1.5rem 2.5rem 5rem;
+  }
+  .cdet-breadcrumb {
+    display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem;
+    font-size: .85rem; color: rgba(255,255,255,.5);
+  }
+  .cdet-breadcrumb a { color: rgba(255,255,255,.5); transition: color .2s; }
+  .cdet-breadcrumb a:hover { color: #E98733; }
+  .cdet-breadcrumb svg { width: 14px; height: 14px; opacity: .4; }
+  .cdet-hero h1 {
+    font-size: clamp(1.75rem,4vw,3rem); font-weight: 600; color: #fff;
+    letter-spacing: -.02em; margin: 0; line-height: 1.15;
+  }
+
+  .cdet-main {
+    max-width: 1280px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem;
+    display: grid; grid-template-columns: 1.15fr 1fr; gap: 2.5rem; align-items: start;
+  }
+
+  /* Gallery */
+  .cdet-gallery { display: flex; flex-direction: column; gap: .75rem; }
+  .cdet-main-media {
+    border-radius: 24px; overflow: hidden; position: relative; cursor: pointer;
+    background: #f3f4f6;
+  }
+  .cdet-main-media img,
+  .cdet-main-media video {
+    width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block;
+    transition: transform .4s ease;
+  }
+  .cdet-main-media:hover img { transform: scale(1.03); }
+  .cdet-main-media--placeholder {
+    aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(145deg, rgba(233,135,51,.08) 0%, #f3f4f6 100%);
+  }
+  .cdet-main-media--placeholder svg { width: 64px; height: 64px; color: #E98733; opacity: .2; }
+  .cdet-expand-hint {
+    position: absolute; top: 12px; right: 12px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(0,0,0,.5); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; opacity: 0; transition: opacity .3s;
+  }
+  .cdet-main-media:hover .cdet-expand-hint { opacity: 1; }
+  .cdet-expand-hint svg { width: 18px; height: 18px; }
+  .cdet-play-badge {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .cdet-play-badge span {
+    width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.55); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.2);
+    color: #fff; transition: background .2s;
+  }
+  .cdet-main-media:hover .cdet-play-badge span { background: rgba(233,135,51,.7); }
+  .cdet-play-badge svg { width: 24px; height: 24px; margin-left: 3px; }
+
+  .cdet-thumbs {
+    display: flex; gap: .5rem; overflow-x: auto; padding-bottom: 4px;
+    scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.15) transparent;
+  }
+  .cdet-thumb {
+    width: 80px; height: 56px; border-radius: 12px; overflow: hidden;
+    flex-shrink: 0; cursor: pointer; border: 2px solid transparent;
+    transition: border-color .2s, opacity .2s; opacity: .6;
+  }
+  .cdet-thumb.active { border-color: #E98733; opacity: 1; }
+  .cdet-thumb:hover { opacity: 1; }
+  .cdet-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .cdet-thumb--video { position: relative; }
+  .cdet-thumb--video::after {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(0,0,0,.3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='%23fff' opacity='.8'%3E%3Cpolygon points='5 3 19 12 5 21 5 3'/%3E%3C/svg%3E") center/20px no-repeat;
+    border-radius: 10px;
+  }
+
+  /* Info */
+  .cdet-info { display: flex; flex-direction: column; gap: 1.5rem; }
+  .cdet-status-badge {
+    display: inline-block; padding: .35rem .9rem; border-radius: 9999px;
+    font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    width: fit-content;
+  }
+  .cdet-status--available { background: #10b981; color: #fff; }
+  .cdet-status--in_transit { background: #3b82f6; color: #fff; }
+  .cdet-status--on_order { background: #E98733; color: #fff; }
+  .cdet-status--sold { background: #6b7280; color: #fff; }
+  .cdet-price { font-size: clamp(1.5rem,3vw,2.25rem); font-weight: 700; color: #111; margin: 0; }
+
+  .cdet-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .cdet-spec {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 16px;
+    padding: 1rem 1.25rem;
+  }
+  .cdet-spec-label {
+    font-size: .7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: .25rem;
+  }
+  .cdet-spec-value { font-size: 1rem; font-weight: 600; color: #111; }
+
+  .cdet-desc {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+  }
+  .cdet-desc h3 { font-size: .9rem; font-weight: 600; color: #111; margin: 0 0 .5rem; }
+  .cdet-desc p { font-size: .95rem; color: #374151; line-height: 1.7; margin: 0; white-space: pre-line; }
+
+  .cdet-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .cdet-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: all .2s;
+  }
+  .cdet-btn--primary { background: #111; color: #fff; }
+  .cdet-btn--primary:hover { background: #E98733; transform: translateY(-1px); color: #fff; }
+  .cdet-btn--outline { background: transparent; color: #111; border: 1px solid rgba(0,0,0,.15); }
+  .cdet-btn--outline:hover { border-color: #E98733; color: #E98733; }
+
+  /* Messenger share buttons */
+  .cdet-share { display: flex; gap: .75rem; flex-wrap: wrap; }
+  .cdet-share-label {
+    width: 100%; font-size: .75rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: -.25rem;
+  }
+  .cdet-share-btn {
+    display: inline-flex; align-items: center; gap: .55rem;
+    padding: .7rem 1.5rem; font-size: .925rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none;
+    transition: all .25s; border: none; cursor: pointer;
+  }
+  .cdet-share-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+  .cdet-share-btn--tg {
+    background: #2AABEE; color: #fff;
+  }
+  .cdet-share-btn--tg:hover { background: #229ED9; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(42,171,238,.35); color: #fff; }
+  .cdet-share-btn--wa {
+    background: #25D366; color: #fff;
+  }
+  .cdet-share-btn--wa:hover { background: #1DA851; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37,211,102,.35); color: #fff; }
+
+  /* Related */
+  .cdet-related { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+  .cdet-related h2 { font-size: 1.5rem; font-weight: 600; color: #111; margin: 0 0 1.5rem; }
+  .cdet-related-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .cdet-rel-card {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 20px;
+    overflow: hidden; transition: border-color .3s, box-shadow .3s, transform .3s;
+    text-decoration: none; color: inherit; display: block;
+  }
+  .cdet-rel-card:hover {
+    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+    transform: translateY(-3px); color: inherit;
+  }
+  .cdet-rel-image { aspect-ratio: 16/10; overflow: hidden; background: linear-gradient(145deg, rgba(233,135,51,.08) 0%, #f3f4f6 100%); }
+  .cdet-rel-image img { width: 100%; height: 100%; object-fit: cover; }
+  .cdet-rel-body { padding: 1rem 1.25rem 1.25rem; }
+  .cdet-rel-title { font-size: 1rem; font-weight: 600; color: #111; margin: 0 0 .2rem; }
+  .cdet-rel-meta { font-size: .85rem; color: #6b7280; margin: 0; }
+
+  /* Modal */
+  .cdet-modal {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.9); backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s;
+  }
+  .cdet-modal.active { opacity: 1; visibility: visible; }
+  .cdet-modal-close {
+    position: absolute; top: 1.25rem; right: 1.25rem; z-index: 3;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; padding: 0; color: #fff; transition: background .2s;
+  }
+  .cdet-modal-close:hover { background: rgba(233,135,51,.6); }
+  .cdet-modal-close svg { width: 22px; height: 22px; }
+  .cdet-modal-body { max-width: 92vw; max-height: 85vh; border-radius: 16px; overflow: hidden; }
+  .cdet-modal-body img { display: block; max-width: 92vw; max-height: 85vh; object-fit: contain; border-radius: 16px; }
+  .cdet-modal-body video { display: block; max-width: 92vw; max-height: 85vh; border-radius: 16px; }
+  .cdet-modal-nav {
+    position: absolute; top: 50%; z-index: 2;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; padding: 0; color: #fff; transition: background .2s;
+    transform: translateY(-50%);
+  }
+  .cdet-modal-nav:hover { background: rgba(233,135,51,.6); }
+  .cdet-modal-nav svg { width: 22px; height: 22px; }
+  .cdet-modal-prev { left: 1.25rem; }
+  .cdet-modal-next { right: 1.25rem; }
+  .cdet-modal-counter {
+    position: absolute; bottom: 1.25rem; left: 50%; transform: translateX(-50%);
+    font-size: .85rem; color: rgba(255,255,255,.6); background: rgba(0,0,0,.4);
+    padding: .35rem 1rem; border-radius: 9999px; backdrop-filter: blur(6px);
+  }
+
+  /* CTA & Footer */
+  .cdet-cta { background: #131313; padding: 4rem 1.5rem; text-align: center; }
+  .cdet-cta h2 { font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff; margin: 0 0 .75rem; }
+  .cdet-cta p { font-size: 1rem; color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6; }
+  .cdet-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .cdet-cta-btn {
+    display: inline-block; padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: background .2s, transform .2s;
+  }
+  .cdet-cta-btn--primary { background: #fff; color: #131313; }
+  .cdet-cta-btn--primary:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
+  .cdet-cta-btn--outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
+  .cdet-cta-btn--outline:hover { border-color: #E98733; color: #f0a04d; }
+  .cdet-footer {
+    background: #131313; border-top: 1px solid rgba(255,255,255,.08);
+    padding: 1.5rem; text-align: center; font-size: .85rem; color: rgba(255,255,255,.4);
+  }
+
+  @media (max-width:1024px) {
+    .cdet-hero-inner { padding-left: 2.5rem; }
+    .cdet-related-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width:768px) {
+    .cdet-hero-inner { padding: 5rem 1.5rem 2rem; }
+    .cdet-main { grid-template-columns: 1fr; padding: 1.5rem 1rem 2rem; gap: 1.5rem; }
+    .cdet-related { padding: 0 1rem 2rem; }
+    .cdet-related-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .cdet-cta { padding: 3rem 1rem; }
+  }
+  @media (max-width:480px) {
+    .cdet-hero h1 { font-size: 1.5rem; }
+    .cdet-hero-inner { padding: 4.5rem 1rem 1.5rem; }
+    .cdet-specs { grid-template-columns: 1fr; }
+    .cdet-related-grid { grid-template-columns: 1fr; }
+    .cdet-actions { flex-direction: column; }
+    .cdet-btn { text-align: center; justify-content: center; }
+    .cdet-cta-buttons { flex-direction: column; align-items: stretch; }
+    .cdet-cta-btn { text-align: center; }
+    .cdet-modal-body { max-width: 96vw; max-height: 80vh; }
+    .cdet-modal-body img, .cdet-modal-body video { max-width: 96vw; max-height: 80vh; border-radius: 12px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <section class="cdet-hero">
+    <div class="cdet-hero-bg" aria-hidden="true"></div>
+    <div class="cdet-hero-overlay" aria-hidden="true"></div>
+    <div class="cdet-hero-inner">
+      <nav class="cdet-breadcrumb">
+        <a href="{% url 'home' %}">Главная</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a href="{% url 'catalog' %}">Каталог</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span style="color:rgba(255,255,255,.75);">{{ car.title }}</span>
+      </nav>
+      <h1>{{ car.title }}</h1>
+    </div>
+  </section>
+
+  <div class="cdet-main">
+    <!-- Left: Gallery -->
+    <div class="cdet-gallery">
+      <div class="cdet-main-media" id="mainMedia">
+        {% if car.image %}
+          <img src="{{ car.image.url }}" alt="{{ car.title }}" id="mainImg">
+          <div class="cdet-expand-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </div>
+        {% elif car.video %}
+          <video src="{% url 'serve_catalog_video' car.pk %}" muted playsinline preload="metadata" id="mainVid"></video>
+          <div class="cdet-play-badge"><span><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span></div>
+        {% else %}
+          <div class="cdet-main-media--placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><path d="M15 18H9"/><circle cx="17" cy="18" r="2"/></svg>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if car.image or gallery.count > 0 or car.video %}
+      <div class="cdet-thumbs" id="thumbStrip">
+        {% if car.image %}
+        <div class="cdet-thumb active" data-type="image" data-src="{{ car.image.url }}">
+          <img src="{{ car.image.url }}" alt="Главное фото">
+        </div>
+        {% endif %}
+        {% for photo in gallery %}
+        <div class="cdet-thumb" data-type="image" data-src="{{ photo.image.url }}">
+          <img src="{{ photo.image.url }}" alt="{{ photo.caption|default:car.title }}">
+        </div>
+        {% endfor %}
+        {% if car.video %}
+        <div class="cdet-thumb cdet-thumb--video" data-type="video" data-src="{% url 'serve_catalog_video' car.pk %}">
+          {% if car.image %}<img src="{{ car.image.url }}" alt="Видео">{% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Right: Info -->
+    <div class="cdet-info">
+      <span class="cdet-status-badge cdet-status--{{ car.status }}">{{ car.get_status_display }}</span>
+
+      {% if car.price %}
+        <p class="cdet-price">{{ car.price }}</p>
+      {% endif %}
+
+      <div class="cdet-specs">
+        {% if car.year %}
+        <div class="cdet-spec">
+          <p class="cdet-spec-label">Год выпуска</p>
+          <p class="cdet-spec-value">{{ car.year }}</p>
+        </div>
+        {% endif %}
+        <div class="cdet-spec">
+          <p class="cdet-spec-label">Страна</p>
+          <p class="cdet-spec-value">{{ car.get_country_display }}</p>
+        </div>
+        {% if car.engine_type %}
+        <div class="cdet-spec">
+          <p class="cdet-spec-label">Двигатель</p>
+          <p class="cdet-spec-value">{{ car.engine_type }}</p>
+        </div>
+        {% endif %}
+        {% if car.mileage %}
+        <div class="cdet-spec">
+          <p class="cdet-spec-label">Пробег</p>
+          <p class="cdet-spec-value">{{ car.mileage }}</p>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if car.description %}
+      <div class="cdet-desc">
+        <h3>Описание</h3>
+        <p>{{ car.description }}</p>
+      </div>
+      {% endif %}
+
+      <div class="cdet-actions">
+        <a href="{% url 'order_quiz' %}" class="cdet-btn cdet-btn--primary">Оставить заявку</a>
+        <a href="{% url 'contacts' %}" class="cdet-btn cdet-btn--outline">Связаться с нами</a>
+      </div>
+
+      <div class="cdet-share">
+        <span class="cdet-share-label">Поделиться</span>
+        <a class="cdet-share-btn cdet-share-btn--tg" id="shareTg" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 1 0 24 12.056 12.01 12.01 0 0 0 11.944 0Zm5.655 8.418c-.197 2.063-.946 7.07-1.337 9.38-.165.977-.49 1.304-.806 1.336-.685.064-1.206-.453-1.87-.888l-2.607-1.766c-1.2-.815-.423-1.264.262-1.996.18-.187 3.296-3.022 3.356-3.28.008-.032.015-.152-.057-.215s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.478.33-.912.49-1.302.482-.429-.008-1.252-.242-1.865-.442-.752-.245-1.349-.374-1.297-.79.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.1-.002.322.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472Z"/></svg>
+          Telegram
+        </a>
+        <a class="cdet-share-btn cdet-share-btn--wa" id="shareWa" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.019-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Zm-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884Zm8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {% if related %}
+  <section class="cdet-related">
+    <h2>Другие автомобили</h2>
+    <div class="cdet-related-grid">
+      {% for r in related %}
+      <a href="{% url 'catalog_detail' r.pk %}" class="cdet-rel-card">
+        <div class="cdet-rel-image">
+          {% if r.image %}<img src="{{ r.image.url }}" alt="{{ r.title }}">{% endif %}
+        </div>
+        <div class="cdet-rel-body">
+          <p class="cdet-rel-title">{{ r.title }}</p>
+          <p class="cdet-rel-meta">{% if r.price %}{{ r.price }}{% endif %}{% if r.price and r.specs_line %} · {% endif %}{{ r.specs_line }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="cdet-cta">
+    <h2>Хотите именно этот автомобиль?</h2>
+    <p>Оставьте заявку — мы свяжемся с вами для обсуждения деталей и условий.</p>
+    <div class="cdet-cta-buttons">
+      <a href="{% url 'order_quiz' %}" class="cdet-cta-btn cdet-cta-btn--primary">Оставить заявку</a>
+      <a href="{% url 'catalog' %}" class="cdet-cta-btn cdet-cta-btn--outline">Назад в каталог</a>
+    </div>
+  </section>
+</main>
+
+<!-- Lightbox modal -->
+<div class="cdet-modal" id="cdetModal">
+  <button type="button" class="cdet-modal-close" aria-label="Закрыть">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <button type="button" class="cdet-modal-nav cdet-modal-prev" aria-label="Назад">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button type="button" class="cdet-modal-nav cdet-modal-next" aria-label="Вперёд">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg>
+  </button>
+  <div class="cdet-modal-body" id="cdetModalBody"></div>
+  <div class="cdet-modal-counter" id="cdetModalCounter"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  /* Share buttons */
+  var carUrl = window.location.href;
+  var carTitle = '{{ car.title|escapejs }}';
+  var carPrice = '{{ car.price|default:""|escapejs }}';
+  var tgText = 'Смотри: ' + carTitle + (carPrice ? ' — ' + carPrice : '');
+  var waText = tgText + '\n' + carUrl;
+
+  var tgBtn = document.getElementById('shareTg');
+  var waBtn = document.getElementById('shareWa');
+  if (tgBtn) tgBtn.href = 'https://t.me/share/url?url=' + encodeURIComponent(carUrl) + '&text=' + encodeURIComponent(tgText);
+  if (waBtn) waBtn.href = 'https://wa.me/?text=' + encodeURIComponent(waText);
+
+  var thumbs = document.querySelectorAll('.cdet-thumb');
+  var mainMedia = document.getElementById('mainMedia');
+
+  /* Build slides array from thumbs */
+  var slides = [];
+  thumbs.forEach(function(t){ slides.push({ type: t.dataset.type, src: t.dataset.src }); });
+  if (slides.length === 0 && mainMedia) {
+    var img = mainMedia.querySelector('img');
+    var vid = mainMedia.querySelector('video');
+    if (img) slides.push({ type: 'image', src: img.src });
+    else if (vid) slides.push({ type: 'video', src: vid.src });
+  }
+
+  /* Thumb click → swap main media */
+  thumbs.forEach(function(t, i){
+    t.addEventListener('click', function(){
+      thumbs.forEach(function(x){ x.classList.remove('active'); });
+      t.classList.add('active');
+      showMainMedia(t.dataset.type, t.dataset.src);
+    });
+  });
+
+  function showMainMedia(type, src) {
+    if (!mainMedia) return;
+    if (type === 'video') {
+      mainMedia.innerHTML =
+        '<video src="'+src+'" controls autoplay playsinline style="width:100%;aspect-ratio:16/10;object-fit:cover;display:block;border-radius:0;"></video>';
+    } else {
+      mainMedia.innerHTML =
+        '<img src="'+src+'" alt="" style="width:100%;aspect-ratio:16/10;object-fit:cover;display:block;transition:transform .4s ease;">'+
+        '<div class="cdet-expand-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div>';
+    }
+  }
+
+  /* Modal lightbox */
+  var modal = document.getElementById('cdetModal');
+  var body = document.getElementById('cdetModalBody');
+  var counter = document.getElementById('cdetModalCounter');
+  var currentIdx = 0;
+
+  function openModal(idx) {
+    if (slides.length === 0) return;
+    currentIdx = idx;
+    renderSlide();
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    var v = body.querySelector('video');
+    if (v) { v.pause(); v.src = ''; }
+    body.innerHTML = '';
+  }
+  function renderSlide() {
+    var s = slides[currentIdx];
+    var v = body.querySelector('video');
+    if (v) { v.pause(); v.src = ''; }
+    if (s.type === 'video') {
+      body.innerHTML = '<video src="'+s.src+'" controls autoplay playsinline></video>';
+    } else {
+      body.innerHTML = '<img src="'+s.src+'" alt="">';
+    }
+    counter.textContent = (currentIdx+1) + ' / ' + slides.length;
+    document.querySelector('.cdet-modal-prev').style.display = slides.length > 1 ? '' : 'none';
+    document.querySelector('.cdet-modal-next').style.display = slides.length > 1 ? '' : 'none';
+  }
+  function go(dir) {
+    currentIdx = (currentIdx + dir + slides.length) % slides.length;
+    renderSlide();
+  }
+
+  if (mainMedia) {
+    mainMedia.addEventListener('click', function(e){
+      var idx = 0;
+      var activeThumb = document.querySelector('.cdet-thumb.active');
+      if (activeThumb) {
+        thumbs.forEach(function(t,i){ if (t === activeThumb) idx = i; });
+      }
+      openModal(idx);
+    });
+  }
+
+  modal.querySelector('.cdet-modal-close').addEventListener('click', closeModal);
+  modal.querySelector('.cdet-modal-prev').addEventListener('click', function(){ go(-1); });
+  modal.querySelector('.cdet-modal-next').addEventListener('click', function(){ go(1); });
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e){
+    if (!modal.classList.contains('active')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowLeft') go(-1);
+    if (e.key === 'ArrowRight') go(1);
+  });
+})();
+</script>
+{% endblock %}

@@ -2,72 +2,443 @@
 {% load static %}
 
 {% block title %}Заказать авто — подбор под ваш бюджет{% endblock %}
+{% block body_class %}page-inner order-quiz-page{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.order-quiz-page { background: #FCFCFC; }
+  body.order-quiz-page .page { padding-top: 0; padding-bottom: 0; }
+
+  .oq-hero {
+    position: relative;
+    min-height: 32vh;
+    display: flex;
+    align-items: center;
+    background: #0a0a0a;
+    overflow: hidden;
+  }
+  .oq-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1920&q=80') center/cover no-repeat;
+    opacity: 0.4;
+  }
+  .oq-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.8));
+  }
+  .oq-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 4rem 5rem;
+  }
+  .oq-hero-accent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .oq-hero-line {
+    width: 4px;
+    height: 5rem;
+    border-radius: 9999px;
+    background: #E98733;
+    flex-shrink: 0;
+  }
+  .oq-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin: 0;
+    line-height: 1.15;
+  }
+
+  .oq-section-heading {
+    text-align: center;
+    padding: 3rem 1.5rem 2rem;
+  }
+  .oq-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(233,135,51,0.3);
+    background: rgba(233,135,51,0.06);
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+  .oq-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #E98733;
+  }
+  .oq-section-heading h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: #000;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+  }
+  .oq-section-heading p {
+    font-size: 1.05rem;
+    color: #374151;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .oq-columns {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .oq-info-card {
+    background: #0a0a0a;
+    border-radius: 24px;
+    padding: 2rem;
+    color: #fff;
+  }
+  .oq-info-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1.5rem;
+  }
+  .oq-benefit {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .oq-benefit:last-child { margin-bottom: 0; }
+  .oq-benefit-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(233,135,51,0.15);
+    border: 1px solid rgba(233,135,51,0.4);
+  }
+  .oq-benefit-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: #E98733;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .oq-benefit-text h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: #fff;
+  }
+  .oq-benefit-text p {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.6);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .oq-info-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin: 2rem 0 1.5rem;
+  }
+  .oq-info-cta-label {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.5);
+    margin: 0 0 0.25rem;
+  }
+  .oq-info-phone {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+  }
+  .oq-info-phone:hover { text-decoration: underline; color: #f0a04d; }
+
+  .oq-form-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 2rem;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .oq-form-card .form-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .oq-form-card .form-section-title:not(:first-child) {
+    margin-top: 1.5rem;
+  }
+  .oq-field {
+    margin-bottom: 1rem;
+  }
+  .oq-field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.375rem;
+  }
+  .oq-field input,
+  .oq-field select,
+  .oq-field textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: #1f2937;
+    font-family: inherit;
+    outline: none;
+    transition: box-shadow 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+  .oq-field input:focus,
+  .oq-field select:focus,
+  .oq-field textarea:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+  }
+  .oq-field textarea { resize: vertical; min-height: 80px; }
+  .oq-field select { cursor: pointer; }
+  .oq-field .form-hint {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    margin-top: 0.25rem;
+  }
+  .oq-field .errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+    color: #dc2626;
+  }
+  .oq-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .oq-submit-btn {
+    display: block;
+    width: 100%;
+    padding: 0.875rem;
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    background: #E98733;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+  .oq-submit-btn:hover { background: #d4782e; }
+  .oq-submit-note {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-top: 0.75rem;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .oq-footer {
+    background: #131313;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  @media (max-width: 1024px) {
+    .oq-hero-inner { padding-left: 2.5rem; }
+  }
+  @media (max-width: 768px) {
+    .oq-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .oq-hero-line { height: 3.5rem; }
+    .oq-columns {
+      grid-template-columns: 1fr;
+      padding-bottom: 2rem;
+    }
+    .oq-info-card { order: 2; }
+    .oq-form-card { order: 1; }
+    .oq-section-heading { padding: 2rem 1rem 1.5rem; }
+  }
+  @media (max-width: 480px) {
+    .oq-hero h1 { font-size: 1.5rem; }
+    .oq-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .oq-info-card, .oq-form-card { padding: 1.5rem; border-radius: 20px; }
+    .oq-row { grid-template-columns: 1fr; }
+    .oq-columns { padding: 0 1rem 2rem; gap: 1.25rem; }
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<main class="page order-page">
-  <div class="container container--narrow">
-    <header class="order-intro">
-      <h1 class="reveal">Заказать авто</h1>
-      <p class="order-intro-lead reveal">Подберём авто под ваш бюджет и задачи. Получите 3 варианта в течение 24 часов.</p>
-    </header>
+<main class="page">
+  <section class="oq-hero">
+    <div class="oq-hero-bg" aria-hidden="true"></div>
+    <div class="oq-hero-overlay" aria-hidden="true"></div>
+    <div class="oq-hero-inner">
+      <div class="oq-hero-accent">
+        <div class="oq-hero-line"></div>
+        <h1>Заказать авто</h1>
+      </div>
+    </div>
+  </section>
 
-    <form class="quiz-form reveal" action="{% url 'order_quiz' %}" method="post">
-      {% csrf_token %}
-      {% if form.non_field_errors %}
-        <ul class="form-errors">{{ form.non_field_errors }}</ul>
-      {% endif %}
-      <div class="form-group">
-        <label for="id_country">Страна</label>
-        {{ form.country }}
-        {{ form.country.errors }}
-      </div>
-      <div class="form-group">
-        <label for="id_budget">Бюджет (₽)</label>
-        {{ form.budget }}
-        {{ form.budget.errors }}
-      </div>
-      <div class="form-group">
-        <label for="id_body_type">Тип кузова</label>
-        {{ form.body_type }}
-        {{ form.body_type.errors }}
-      </div>
-      <div class="form-group">
-        <label for="id_urgency">Срочность</label>
-        {{ form.urgency }}
-        {{ form.urgency.errors }}
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="id_name">Имя</label>
-          {{ form.name }}
-          {{ form.name.errors }}
+  <div class="oq-section-heading">
+    <div class="oq-pill">
+      <span class="oq-pill-dot"></span>
+      Персональный подбор
+    </div>
+    <h2>Оставьте заявку</h2>
+    <p>Укажите параметры — мы подберём до 3 вариантов под ваш бюджет и свяжемся в течение 24 часов</p>
+  </div>
+
+  <div class="oq-columns">
+    <div class="oq-info-card">
+      <h3>Почему выбирают нас</h3>
+
+      <div class="oq-benefit">
+        <div class="oq-benefit-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </div>
-        <div class="form-group">
-          <label for="id_phone">Телефон</label>
-          {{ form.phone }}
-          {{ form.phone.errors }}
+        <div class="oq-benefit-text">
+          <h4>Подбор на аукционах</h4>
+          <p>Находим авто на аукционах и у проверенных поставщиков</p>
         </div>
       </div>
-      <div class="form-group">
-        <label for="id_contact">Telegram или WhatsApp</label>
-        {{ form.contact }}
-        {{ form.contact.errors }}
+
+      <div class="oq-benefit">
+        <div class="oq-benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="oq-benefit-text">
+          <h4>Проверка истории</h4>
+          <p>Полная проверка юридической чистоты и отчёт по каждому варианту</p>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="id_comment">Комментарий</label>
-        {{ form.comment }}
-        {{ form.comment.errors }}
+
+      <div class="oq-benefit">
+        <div class="oq-benefit-icon">
+          <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5a1 1 0 01-1 1h-1"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div class="oq-benefit-text">
+          <h4>Расчёт «под ключ»</h4>
+          <p>Доставка, таможня, оформление — всё включено в итоговую стоимость</p>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Отправить заявку</button>
-    </form>
+
+      <div class="oq-benefit">
+        <div class="oq-benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="oq-benefit-text">
+          <h4>Прозрачные условия</h4>
+          <p>Без скрытых комиссий и обязательств. Полный контроль сделки</p>
+        </div>
+      </div>
+
+      <hr class="oq-info-divider">
+      <p class="oq-info-cta-label">Или позвоните нам</p>
+      <a href="tel:+79611634157" class="oq-info-phone">+7 (961) 163-41-57</a>
+    </div>
+
+    <div class="oq-form-card">
+      <form action="{% url 'order_quiz' %}" method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <ul class="errorlist" style="margin-bottom: 1rem; color: #dc2626; font-size: 0.85rem; list-style: none; padding: 0;">
+            {{ form.non_field_errors }}
+          </ul>
+        {% endif %}
+
+        <div class="form-section-title">Параметры подбора</div>
+
+        <div class="oq-row">
+          <div class="oq-field">
+            <label for="id_country">Страна поставки</label>
+            {{ form.country }}
+            {{ form.country.errors }}
+          </div>
+          <div class="oq-field">
+            <label for="id_budget">Бюджет (₽)</label>
+            {{ form.budget }}
+            <span class="form-hint">Ориентир суммы «под ключ»</span>
+            {{ form.budget.errors }}
+          </div>
+        </div>
+
+        <div class="oq-row">
+          <div class="oq-field">
+            <label for="id_body_type">Тип кузова</label>
+            {{ form.body_type }}
+            {{ form.body_type.errors }}
+          </div>
+          <div class="oq-field">
+            <label for="id_urgency">Срочность</label>
+            {{ form.urgency }}
+            {{ form.urgency.errors }}
+          </div>
+        </div>
+
+        <div class="form-section-title">Как с вами связаться</div>
+
+        <div class="oq-row">
+          <div class="oq-field">
+            <label for="id_name">Имя</label>
+            {{ form.name }}
+            {{ form.name.errors }}
+          </div>
+          <div class="oq-field">
+            <label for="id_phone">Телефон</label>
+            {{ form.phone }}
+            {{ form.phone.errors }}
+          </div>
+        </div>
+
+        <div class="oq-field">
+          <label for="id_contact">Telegram или WhatsApp</label>
+          {{ form.contact }}
+          <span class="form-hint">@username или номер — ответим при необходимости</span>
+          {{ form.contact.errors }}
+        </div>
+
+        <div class="oq-field">
+          <label for="id_comment">Комментарий</label>
+          {{ form.comment }}
+          <span class="form-hint">Марка, модель, год — если уже есть пожелания</span>
+          {{ form.comment.errors }}
+        </div>
+
+        <button type="submit" class="oq-submit-btn">Отправить заявку</button>
+        <p class="oq-submit-note">Менеджер свяжется в течение 24 часов и предложит до 3 вариантов с расчётом стоимости</p>
+      </form>
+    </div>
   </div>
 </main>
-<footer class="footer">
-  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
-</footer>
 {% endblock %}

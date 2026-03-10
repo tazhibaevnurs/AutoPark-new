@@ -2,85 +2,291 @@
 {% load static %}
 
 {% block title %}О нас — импорт авто из Кореи и Китая{% endblock %}
+{% block body_class %}page-inner about-new-page{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.about-new-page { background: #FCFCFC; }
+  body.about-new-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  /* Hero */
+  .abt-hero {
+    position: relative; min-height: 32vh;
+    display: flex; align-items: center; background: #0a0a0a; overflow: hidden;
+  }
+  .abt-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80') center/cover no-repeat;
+    opacity: 0.35;
+  }
+  .abt-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.8)); }
+  .abt-hero-inner {
+    position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 5rem 1.5rem 4rem 5rem;
+  }
+  .abt-hero-accent { display: flex; align-items: center; gap: 1rem; }
+  .abt-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
+  .abt-hero h1 {
+    font-size: clamp(2rem,5vw,3.5rem); font-weight: 600; color: #fff;
+    letter-spacing: -.02em; margin: 0; line-height: 1.15;
+  }
+
+  /* Section heading */
+  .abt-heading { text-align: center; padding: 3rem 1.5rem 1.5rem; }
+  .abt-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    border: 1px solid rgba(233,135,51,.3); background: rgba(233,135,51,.06);
+    color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
+  }
+  .abt-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #E98733; }
+  .abt-heading h2 {
+    font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 600; color: #000;
+    letter-spacing: -.02em; margin: 0 0 .75rem;
+  }
+  .abt-heading p {
+    font-size: 1.05rem; color: #374151; max-width: 700px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* Advantages grid */
+  .abt-advantages {
+    max-width: 1280px; margin: 0 auto; padding: 1rem 1.5rem 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  }
+  .abt-adv {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
+    padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    transition: border-color .3s, box-shadow .3s, transform .3s;
+  }
+  .abt-adv:hover {
+    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+    transform: translateY(-2px);
+  }
+  .abt-adv-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .abt-adv-num {
+    flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%;
+    border: 2px solid #E98733; display: flex; align-items: center; justify-content: center;
+    font-size: .9rem; font-weight: 700; color: #E98733;
+  }
+  .abt-adv-icon {
+    flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(233,135,51,.1); display: flex; align-items: center; justify-content: center;
+  }
+  .abt-adv-icon svg {
+    width: 22px; height: 22px; stroke: #E98733; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .abt-adv h3 { font-size: 1.15rem; font-weight: 600; color: #000; margin: 0; }
+  .abt-adv p { font-size: .95rem; color: #6b7280; line-height: 1.6; margin: 0; }
+
+  /* Stats — dark section */
+  .abt-stats { background: #0a0a0a; padding: 4rem 1.5rem; }
+  .abt-stats-inner { max-width: 1280px; margin: 0 auto; }
+  .abt-stats-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05);
+    color: rgba(255,255,255,.8); font-size: .875rem; font-weight: 500;
+  }
+  .abt-stats-head { text-align: center; margin-bottom: 3rem; }
+  .abt-stats-head h2 {
+    font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff;
+    margin: 1rem 0 .75rem;
+  }
+  .abt-stats-head p {
+    font-size: 1rem; color: rgba(255,255,255,.55); max-width: 600px; margin: 0 auto; line-height: 1.6;
+  }
+  .abt-stats-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem;
+  }
+  .abt-stat-card {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+    border-radius: 20px; padding: 2rem 1.5rem; text-align: center;
+    transition: border-color .3s, background .3s;
+  }
+  .abt-stat-card:hover {
+    border-color: rgba(233,135,51,.3); background: rgba(233,135,51,.06);
+  }
+  .abt-stat-icon {
+    width: 48px; height: 48px; border-radius: 14px; background: rgba(233,135,51,.12);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;
+  }
+  .abt-stat-icon svg {
+    width: 24px; height: 24px; stroke: #E98733; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .abt-stat-value {
+    display: block; font-size: 2rem; font-weight: 700; color: #E98733;
+    letter-spacing: -.02em; margin-bottom: .25rem;
+  }
+  .abt-stat-label { font-size: .9rem; color: rgba(255,255,255,.5); }
+
+  /* CTA */
+  .abt-cta { background: #131313; padding: 4rem 1.5rem; text-align: center; }
+  .abt-cta h2 {
+    font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff; margin: 0 0 .75rem;
+  }
+  .abt-cta p {
+    font-size: 1rem; color: rgba(255,255,255,.55); max-width: 520px; margin: 0 auto 2rem; line-height: 1.6;
+  }
+  .abt-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .abt-cta-btn {
+    display: inline-block; padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: background .2s, transform .2s;
+  }
+  .abt-cta-btn--primary { background: #fff; color: #131313; }
+  .abt-cta-btn--primary:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
+  .abt-cta-btn--outline {
+    background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25);
+  }
+  .abt-cta-btn--outline:hover { border-color: #E98733; color: #f0a04d; }
+
+  /* Footer */
+  .abt-footer {
+    background: #131313; border-top: 1px solid rgba(255,255,255,.08);
+    padding: 1.5rem; text-align: center; font-size: .85rem; color: rgba(255,255,255,.4);
+  }
+
+  /* Responsive */
+  @media (max-width:1024px) { .abt-hero-inner { padding-left: 2.5rem; } }
+  @media (max-width:768px) {
+    .abt-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .abt-hero-line { height: 3.5rem; }
+    .abt-advantages { grid-template-columns: 1fr; padding: 1rem 1rem 2rem; }
+    .abt-stats-grid { grid-template-columns: 1fr 1fr; }
+    .abt-heading { padding: 2rem 1rem 1rem; }
+    .abt-stats, .abt-cta { padding: 3rem 1rem; }
+  }
+  @media (max-width:480px) {
+    .abt-hero h1 { font-size: 1.5rem; }
+    .abt-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .abt-adv, .abt-stat-card { padding: 1.5rem; border-radius: 20px; }
+    .abt-stats-grid { grid-template-columns: 1fr; }
+    .abt-stat-value { font-size: 1.75rem; }
+    .abt-cta-buttons { flex-direction: column; align-items: stretch; }
+    .abt-cta-btn { text-align: center; }
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<main class="page about-page">
-  <div class="container">
-    <header class="about-intro">
-      <h1 class="reveal">О нас</h1>
-      <p class="about-intro-lead reveal">Осуществляем полный цикл доставки автомобилей — от подбора и покупки до оформления документов и передачи ключей владельцу. Учитываем стиль жизни, задачи и бюджет — находим идеальное авто под ключ.</p>
-    </header>
+<main class="page">
+  <!-- Hero -->
+  <section class="abt-hero">
+    <div class="abt-hero-bg" aria-hidden="true"></div>
+    <div class="abt-hero-overlay" aria-hidden="true"></div>
+    <div class="abt-hero-inner">
+      <div class="abt-hero-accent">
+        <div class="abt-hero-line"></div>
+        <h1>О нас</h1>
+      </div>
+    </div>
+  </section>
 
-    <section class="about-advantages">
-      <h2 class="about-section-title reveal">Наши преимущества</h2>
-      <ul class="about-advantages-list" aria-label="Список преимуществ">
-        <li class="about-advantage-item">
-          <span class="about-advantage-num" aria-hidden="true">01</span>
-          <div class="about-advantage-content">
-            <h3>Подбор авто под ваши цели и бюджет</h3>
-            <p>Подберём оптимальный автомобиль с учётом ваших пожеланий, бюджета и состояния — с полным сопровождением.</p>
-          </div>
-        </li>
-        <li class="about-advantage-item">
-          <span class="about-advantage-num" aria-hidden="true">02</span>
-          <div class="about-advantage-content">
-            <h3>Прозрачность и гарантия</h3>
-            <p>Предоставляем фото и видео отчёты, историю автомобиля и официальные документы. Всё прозрачно.</p>
-          </div>
-        </li>
-        <li class="about-advantage-item">
-          <span class="about-advantage-num" aria-hidden="true">03</span>
-          <div class="about-advantage-content">
-            <h3>Полный цикл услуг под ключ</h3>
-            <p>Сопровождаем сделку от поиска до доставки и оформления — вам остаётся только сесть за руль.</p>
-          </div>
-        </li>
-        <li class="about-advantage-item">
-          <span class="about-advantage-num" aria-hidden="true">04</span>
-          <div class="about-advantage-content">
-            <h3>Поддержка на каждом этапе</h3>
-            <p>Ваш личный менеджер всегда на связи — от первой консультации до передачи ключей от авто.</p>
-          </div>
-        </li>
-      </ul>
-    </section>
+  <!-- Intro -->
+  <div class="abt-heading">
+    <div class="abt-pill"><span class="abt-pill-dot"></span> О компании</div>
+    <h2>Полный цикл импорта автомобилей</h2>
+    <p>От подбора и покупки до оформления документов и передачи ключей. Работаем с США, Китаем и Кореей — аукционы и проверенные поставщики. Один менеджер ведёт сделку, вы контролируете каждый этап.</p>
+  </div>
 
-    <section class="about-stats">
-      <h2 class="about-section-title reveal">За цифрами — наш успех</h2>
-      <p class="about-stats-lead reveal">Наша репутация подтверждена конкретными результатами и доверием клиентов. Мы внимательно анализируем каждый этап работы, чтобы обеспечить максимальное качество и эффективность в импорте автомобилей из Кореи и Китая.</p>
-      <div class="about-stats-grid">
-        <div class="about-stat reveal">
-          <span class="about-stat-value" data-value="450" data-prefix="+" data-suffix="">0</span>
-          <span class="about-stat-label">Авто доставлено</span>
+  <!-- Advantages -->
+  <div class="abt-advantages">
+    <article class="abt-adv">
+      <div class="abt-adv-header">
+        <div class="abt-adv-num">01</div>
+        <div class="abt-adv-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
         </div>
-        <div class="about-stat reveal">
-          <span class="about-stat-value" data-value="650" data-prefix="" data-suffix="">0</span>
-          <span class="about-stat-label">Проведено консультаций</span>
+        <h3>Подбор под ваши цели</h3>
+      </div>
+      <p>Подберём оптимальный автомобиль с учётом пожеланий, бюджета и состояния — с полным сопровождением на каждом этапе.</p>
+    </article>
+
+    <article class="abt-adv">
+      <div class="abt-adv-header">
+        <div class="abt-adv-num">02</div>
+        <div class="abt-adv-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <div class="about-stat reveal">
-          <span class="about-stat-value" data-value="1" data-prefix="" data-suffix="+">0</span>
-          <span class="about-stat-label">Год на рынке</span>
+        <h3>Прозрачность и гарантия</h3>
+      </div>
+      <p>Фото, видео, история автомобиля и официальные документы. Всё прозрачно — без скрытых условий и комиссий.</p>
+    </article>
+
+    <article class="abt-adv">
+      <div class="abt-adv-header">
+        <div class="abt-adv-num">03</div>
+        <div class="abt-adv-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
         </div>
-        <div class="about-stat reveal">
-          <span class="about-stat-value" data-value="1" data-prefix="+" data-suffix="">0</span>
-          <span class="about-stat-label">Партнёров в Азии</span>
+        <h3>Полный цикл под ключ</h3>
+      </div>
+      <p>Сопровождаем сделку от поиска до доставки и оформления — вам остаётся только сесть за руль.</p>
+    </article>
+
+    <article class="abt-adv">
+      <div class="abt-adv-header">
+        <div class="abt-adv-num">04</div>
+        <div class="abt-adv-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Поддержка на каждом этапе</h3>
+      </div>
+      <p>Личный менеджер всегда на связи — от первой консультации до передачи ключей от автомобиля.</p>
+    </article>
+  </div>
+
+  <!-- Stats -->
+  <section class="abt-stats">
+    <div class="abt-stats-inner">
+      <div class="abt-stats-head">
+        <div class="abt-stats-pill">Наши результаты</div>
+        <h2>За цифрами — наш успех</h2>
+        <p>Репутация подтверждена конкретными результатами и доверием клиентов</p>
+      </div>
+      <div class="abt-stats-grid">
+        <div class="abt-stat-card">
+          <div class="abt-stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><path d="M15 18H9"/><circle cx="17" cy="18" r="2"/></svg>
+          </div>
+          <span class="abt-stat-value" data-value="450" data-prefix="" data-suffix="+">0</span>
+          <span class="abt-stat-label">Авто доставлено</span>
+        </div>
+        <div class="abt-stat-card">
+          <div class="abt-stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <span class="abt-stat-value" data-value="650" data-prefix="" data-suffix="">0</span>
+          <span class="abt-stat-label">Консультаций проведено</span>
+        </div>
+        <div class="abt-stat-card">
+          <div class="abt-stat-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+          </div>
+          <span class="abt-stat-value" data-value="3" data-prefix="" data-suffix="+">0</span>
+          <span class="abt-stat-label">Год на рынке</span>
+        </div>
+        <div class="abt-stat-card">
+          <div class="abt-stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <span class="abt-stat-value" data-value="5" data-prefix="" data-suffix="+">0</span>
+          <span class="abt-stat-label">Партнёров в Азии</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="about-cta reveal">
-      <p class="about-cta-text">Поможем, подскажем, сопроводим — мы с вами даже после передачи авто. Напишите нам — расскажем, как это работает!</p>
-      <a href="{% url 'contacts' %}" class="btn btn-primary">Связаться с нами</a>
-      <a href="{% url 'order_quiz' %}" class="btn btn-outline" style="margin-left: 0.75rem;">Оставить заявку</a>
-    </section>
-  </div>
+  <!-- CTA -->
+  <section class="abt-cta">
+    <h2>Готовы к импорту?</h2>
+    <p>Поможем, подскажем, сопроводим — мы с вами даже после передачи авто. Напишите нам!</p>
+    <div class="abt-cta-buttons">
+      <a href="{% url 'contacts' %}" class="abt-cta-btn abt-cta-btn--primary">Связаться с нами</a>
+      <a href="{% url 'order_quiz' %}" class="abt-cta-btn abt-cta-btn--outline">Оставить заявку</a>
+    </div>
+  </section>
 </main>
-<footer class="footer">
-  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
-</footer>
 {% endblock %}

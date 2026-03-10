@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Доставка авто — заявка | AUTOPARK{% endblock %}
+{% block body_class %}page-inner delivery-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<link rel="stylesheet" href="{% static 'delivery/app.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="delivery-root" class="delivery-root"></div>
+<script>
+  window.__DELIVERY_DATA__ = {
+    formAction: "{{ form_action }}",
+    csrfToken: "{{ csrf_token }}",
+    successUrl: "{{ success_url }}",
+    errors: {{ form_errors_json|safe }}
+  };
+</script>
+<script type="module" src="{% static 'delivery/app.js' %}"></script>
+{% endblock %}

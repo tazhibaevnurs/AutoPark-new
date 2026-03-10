@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token }}">
     <title>{% block title %}Импорт авто из США, Китая, Кореи{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,10 +13,11 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     {% include 'includes/header_burger.html' %}
     {% include 'includes/fab_contact.html' %}
     {% block content %}{% endblock %}
+    {% block footer %}{% include 'includes/footer.html' %}{% endblock %}
     {% include 'includes/cookie_consent.html' %}
     <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}

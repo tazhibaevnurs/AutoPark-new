@@ -1,14 +1,13 @@
 {% load static %}
 <header class="header" id="header">
   <div class="header-left">
-    <a href="{% url 'home' %}" class="logo">AUTOPARK</a>
+    <a href="{% url 'home' %}" class="logo"><img src="{% static 'img/logo.svg' %}" alt="Autopark" class="logo-img"></a>
   </div>
   <div class="header-right">
     <a href="tel:+79611634157" class="header-link">+7 (961) 163-41-57</a>
-    <a href="https://t.me/Auto_Park31" target="_blank" rel="noopener" class="header-link" aria-label="Telegram">Telegram</a>
-    <a href="https://wa.me/79611634157" target="_blank" rel="noopener" class="header-link" aria-label="WhatsApp">WhatsApp</a>
     <button type="button" class="burger" aria-label="Меню">
-      <span></span><span></span><span></span>
+      <svg class="burger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg class="burger-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
 </header>
@@ -18,6 +17,7 @@
     <button type="button" class="burger-close" aria-label="Закрыть меню">×</button>
     <ul class="burger-menu-list">
       <li><a href="{% url 'home' %}">Главная</a></li>
+      <li><a href="{% url 'blog' %}">Блог</a></li>
       <li><a href="{% url 'about' %}">О нас</a></li>
       <li><a href="{% url 'cases' %}">Наши кейсы</a></li>
       <li><a href="{% url 'team' %}">Команда</a></li>

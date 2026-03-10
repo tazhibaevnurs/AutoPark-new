@@ -2,91 +2,171 @@
 {% load static %}
 
 {% block title %}Команда — AUTOPARK{% endblock %}
+{% block body_class %}page-inner tm-new-page{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.tm-new-page { background: #FCFCFC; }
+  body.tm-new-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .tm-hero {
+    position: relative; min-height: 32vh;
+    display: flex; align-items: center; background: #0a0a0a; overflow: hidden;
+  }
+  .tm-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=80') center/cover no-repeat;
+    opacity: 0.3;
+  }
+  .tm-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.8)); }
+  .tm-hero-inner {
+    position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 5rem 1.5rem 4rem 5rem;
+  }
+  .tm-hero-accent { display: flex; align-items: center; gap: 1rem; }
+  .tm-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
+  .tm-hero h1 {
+    font-size: clamp(2rem,5vw,3.5rem); font-weight: 600; color: #fff;
+    letter-spacing: -.02em; margin: 0; line-height: 1.15;
+  }
+
+  .tm-heading { text-align: center; padding: 3rem 1.5rem 1.5rem; }
+  .tm-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    border: 1px solid rgba(233,135,51,.3); background: rgba(233,135,51,.06);
+    color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
+  }
+  .tm-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #E98733; }
+  .tm-heading h2 {
+    font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 600; color: #000;
+    letter-spacing: -.02em; margin: 0 0 .75rem;
+  }
+  .tm-heading p {
+    font-size: 1.05rem; color: #374151; max-width: 700px; margin: 0 auto; line-height: 1.6;
+  }
+
+  .tm-grid {
+    max-width: 1280px; margin: 0 auto; padding: 1rem 1.5rem 3rem;
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+  }
+  .tm-card {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
+    overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    transition: border-color .3s, box-shadow .3s, transform .3s;
+    text-align: center; padding: 2.5rem 1.5rem 2rem;
+  }
+  .tm-card:hover {
+    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+    transform: translateY(-3px);
+  }
+  .tm-card-avatar {
+    width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #E98733, #f0a04d);
+    font-size: 1.75rem; font-weight: 700; color: #fff;
+    box-shadow: 0 4px 16px rgba(233,135,51,.25);
+    overflow: hidden;
+  }
+  .tm-card-avatar img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .tm-card-name {
+    font-size: 1.15rem; font-weight: 600; color: #000; margin: 0 0 .35rem;
+  }
+  .tm-card-role {
+    font-size: .9rem; color: #6b7280; margin: 0; line-height: 1.5;
+  }
+
+  .tm-cta { background: #131313; padding: 4rem 1.5rem; text-align: center; }
+  .tm-cta h2 {
+    font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff; margin: 0 0 .75rem;
+  }
+  .tm-cta p {
+    font-size: 1rem; color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6;
+  }
+  .tm-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .tm-cta-btn {
+    display: inline-block; padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: background .2s, transform .2s;
+  }
+  .tm-cta-btn--primary { background: #fff; color: #131313; }
+  .tm-cta-btn--primary:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
+  .tm-cta-btn--outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
+  .tm-cta-btn--outline:hover { border-color: #E98733; color: #f0a04d; }
+
+  .tm-footer {
+    background: #131313; border-top: 1px solid rgba(255,255,255,.08);
+    padding: 1.5rem; text-align: center; font-size: .85rem; color: rgba(255,255,255,.4);
+  }
+
+  @media (max-width:1024px) {
+    .tm-hero-inner { padding-left: 2.5rem; }
+    .tm-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width:768px) {
+    .tm-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .tm-hero-line { height: 3.5rem; }
+    .tm-grid { grid-template-columns: 1fr 1fr; padding: 1rem 1rem 2rem; gap: 1rem; }
+    .tm-heading { padding: 2rem 1rem 1rem; }
+    .tm-cta { padding: 3rem 1rem; }
+  }
+  @media (max-width:480px) {
+    .tm-hero h1 { font-size: 1.5rem; }
+    .tm-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .tm-grid { grid-template-columns: 1fr; }
+    .tm-card { border-radius: 20px; }
+    .tm-cta-buttons { flex-direction: column; align-items: stretch; }
+    .tm-cta-btn { text-align: center; }
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<main class="page team-page">
-  <div class="container">
-    <header class="team-intro">
-      <h1 class="reveal">Команда</h1>
-      <p class="team-intro-lead reveal">Квалифицированная команда профессионалов, обеспечивающая надёжный и эффективный импорт автомобилей из Кореи и Китая. Наши специалисты имеют опыт в международной логистике и автопоставках, сопровождая клиентов на всех этапах сделки.</p>
-    </header>
+<main class="page">
+  <section class="tm-hero">
+    <div class="tm-hero-bg" aria-hidden="true"></div>
+    <div class="tm-hero-overlay" aria-hidden="true"></div>
+    <div class="tm-hero-inner">
+      <div class="tm-hero-accent">
+        <div class="tm-hero-line"></div>
+        <h1>Наша команда</h1>
+      </div>
+    </div>
+  </section>
 
-    <section class="team-grid">
-      <article class="team-card reveal">
-        <div class="team-card-photo">
-          {% comment %}Подставьте фото: {% static 'img/team/andrey-pak.jpg' %}{% endcomment %}
-          <span class="team-card-initial" aria-hidden="true">А</span>
-        </div>
-        <div class="team-card-body">
-          <h2 class="team-card-name">Андрей Пак</h2>
-          <p class="team-card-role">Генеральный директор «AutoPark», ведущий эксперт в импорте автомобилей из Кореи и Китая.</p>
-        </div>
-      </article>
-
-      <article class="team-card reveal">
-        <div class="team-card-photo">
-          <span class="team-card-initial" aria-hidden="true">С</span>
-        </div>
-        <div class="team-card-body">
-          <h2 class="team-card-name">Сергей Рудась</h2>
-          <p class="team-card-role">Финансовый директор, отвечающий за финансовую стабильность и рост компании.</p>
-        </div>
-      </article>
-
-      <article class="team-card reveal">
-        <div class="team-card-photo">
-          <span class="team-card-initial" aria-hidden="true">А</span>
-        </div>
-        <div class="team-card-body">
-          <h2 class="team-card-name">Александр Якубов</h2>
-          <p class="team-card-role">Ведущий эксперт по подбору автомобилей, специализирующийся на поиске и оценке авто из Кореи и Китая.</p>
-        </div>
-      </article>
-
-      <article class="team-card reveal">
-        <div class="team-card-photo">
-          <span class="team-card-initial" aria-hidden="true">Н</span>
-        </div>
-        <div class="team-card-body">
-          <h2 class="team-card-name">Никита Настенко</h2>
-          <p class="team-card-role">Ведущий эксперт по подбору автомобилей, специализирующийся на поиске и оценке авто из Кореи и Китая.</p>
-        </div>
-      </article>
-
-      <article class="team-card reveal">
-        <div class="team-card-photo">
-          <span class="team-card-initial" aria-hidden="true">Е</span>
-        </div>
-        <div class="team-card-body">
-          <h2 class="team-card-name">Евгений Певтиев</h2>
-          <p class="team-card-role">Ведущий эксперт по подбору автомобилей, специализирующийся на поиске и оценке авто из Кореи и Китая.</p>
-        </div>
-      </article>
-
-      <article class="team-card reveal">
-        <div class="team-card-photo">
-          <span class="team-card-initial" aria-hidden="true">Р</span>
-        </div>
-        <div class="team-card-body">
-          <h2 class="team-card-name">Роман Юковичь</h2>
-          <p class="team-card-role">Ведущий эксперт по подбору автомобилей, специализирующийся на поиске и оценке авто из Кореи и Китая.</p>
-        </div>
-      </article>
-    </section>
-
-    <section class="team-cta reveal">
-      <p class="team-cta-text">Хотите обсудить подбор или доставку авто? Свяжитесь с нами — мы на связи.</p>
-      <a href="{% url 'contacts' %}" class="btn btn-primary">Контакты</a>
-      <a href="{% url 'order_quiz' %}" class="btn btn-outline" style="margin-left: 0.75rem;">Оставить заявку</a>
-    </section>
+  <div class="tm-heading">
+    <div class="tm-pill"><span class="tm-pill-dot"></span> Профессионалы</div>
+    <h2>Люди, которые стоят за AutoPark</h2>
+    <p>Квалифицированная команда с опытом в международной логистике и автопоставках. Сопровождаем клиентов на всех этапах сделки.</p>
   </div>
+
+  <div class="tm-grid">
+    {% for member in members %}
+    <article class="tm-card">
+      <div class="tm-card-avatar">
+        {% if member.photo %}
+          <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+        {% else %}
+          {{ member.initial }}
+        {% endif %}
+      </div>
+      <h2 class="tm-card-name">{{ member.name }}</h2>
+      <p class="tm-card-role">{{ member.role }}</p>
+    </article>
+    {% empty %}
+    <p style="grid-column:1/-1;text-align:center;color:#6b7280;padding:2rem 0;">Сотрудники пока не добавлены. Добавьте их через <a href="/admin/core/teammember/" style="color:#E98733;">админ-панель</a>.</p>
+    {% endfor %}
+  </div>
+
+  <section class="tm-cta">
+    <h2>Хотите обсудить подбор авто?</h2>
+    <p>Свяжитесь с нами — мы на связи и готовы ответить на все ваши вопросы.</p>
+    <div class="tm-cta-buttons">
+      <a href="{% url 'order_quiz' %}" class="tm-cta-btn tm-cta-btn--primary">Оставить заявку</a>
+      <a href="{% url 'contacts' %}" class="tm-cta-btn tm-cta-btn--outline">Контакты</a>
+    </div>
+  </section>
 </main>
-<footer class="footer">
-  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
-</footer>
 {% endblock %}

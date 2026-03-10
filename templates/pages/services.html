@@ -2,63 +2,192 @@
 {% load static %}
 
 {% block title %}Наши услуги — полный цикл импорта авто{% endblock %}
+{% block body_class %}page-inner svc-page{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.svc-page { background: #FCFCFC; }
+  body.svc-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .svc-hero {
+    position: relative; min-height: 32vh;
+    display: flex; align-items: center; background: #0a0a0a; overflow: hidden;
+  }
+  .svc-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80') center/cover no-repeat;
+    opacity: 0.35;
+  }
+  .svc-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.8)); }
+  .svc-hero-inner {
+    position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 5rem 1.5rem 4rem 5rem;
+  }
+  .svc-hero-accent { display: flex; align-items: center; gap: 1rem; }
+  .svc-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
+  .svc-hero h1 {
+    font-size: clamp(2rem,5vw,3.5rem); font-weight: 600; color: #fff;
+    letter-spacing: -.02em; margin: 0; line-height: 1.15;
+  }
+
+  .svc-heading { text-align: center; padding: 3rem 1.5rem 1.5rem; }
+  .svc-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    border: 1px solid rgba(233,135,51,.3); background: rgba(233,135,51,.06);
+    color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
+  }
+  .svc-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #E98733; }
+  .svc-heading h2 {
+    font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 600; color: #000;
+    letter-spacing: -.02em; margin: 0 0 .75rem;
+  }
+  .svc-heading p {
+    font-size: 1.05rem; color: #374151; max-width: 700px; margin: 0 auto; line-height: 1.6;
+  }
+
+  .svc-grid {
+    max-width: 1280px; margin: 0 auto; padding: 1rem 1.5rem 3rem;
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+  }
+  .svc-card {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
+    overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    transition: border-color .3s, box-shadow .3s, transform .3s;
+    text-decoration: none; color: inherit; display: flex; flex-direction: column;
+  }
+  .svc-card:hover {
+    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+    transform: translateY(-3px); color: inherit;
+  }
+  .svc-card-image {
+    aspect-ratio: 16/10; position: relative; overflow: hidden;
+    background: linear-gradient(145deg, rgba(233,135,51,.08) 0%, #f3f4f6 100%);
+  }
+  .svc-card-image img,
+  .svc-card-image video {
+    width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease;
+    display: block;
+  }
+  .svc-card:hover .svc-card-image img,
+  .svc-card:hover .svc-card-image video { transform: scale(1.04); }
+  .svc-card-image--placeholder::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23E98733' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round' opacity='0.2'%3E%3Cpath d='M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11'/%3E%3Cpath d='M14 9h4l4 4v4c0 .6-.4 1-1 1h-2'/%3E%3Ccircle cx='7' cy='18' r='2'/%3E%3Cpath d='M15 18H9'/%3E%3Ccircle cx='17' cy='18' r='2'/%3E%3C/svg%3E") center/48px no-repeat;
+  }
+  .svc-card-image--video::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,.25) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='%23fff' opacity='0.9'%3E%3Cpolygon points='5 3 19 12 5 21 5 3'/%3E%3C/svg%3E") center/48px no-repeat;
+  }
+  .svc-card-body { padding: 1.5rem 1.5rem 1.75rem; flex: 1; display: flex; flex-direction: column; }
+  .svc-card-title { font-size: 1.2rem; font-weight: 600; color: #000; margin: 0 0 .5rem; }
+  .svc-card-desc { font-size: .95rem; color: #6b7280; line-height: 1.55; margin: 0 0 1rem; flex: 1; }
+  .svc-card-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: .6rem 1.25rem; font-size: .9rem; font-weight: 500;
+    border-radius: 10px; background: #111; color: #fff;
+    transition: background .2s, transform .2s; margin-top: auto;
+  }
+  .svc-card:hover .svc-card-btn { background: #E98733; color: #fff; }
+
+  .svc-empty {
+    grid-column: 1/-1; text-align: center; color: #6b7280; padding: 3rem 0;
+    font-size: 1.05rem;
+  }
+
+  .svc-cta { background: #131313; padding: 4rem 1.5rem; text-align: center; }
+  .svc-cta h2 {
+    font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff; margin: 0 0 .75rem;
+  }
+  .svc-cta p {
+    font-size: 1rem; color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6;
+  }
+  .svc-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .svc-cta-btn {
+    display: inline-block; padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: background .2s, transform .2s;
+  }
+  .svc-cta-btn--primary { background: #fff; color: #131313; }
+  .svc-cta-btn--primary:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
+  .svc-cta-btn--outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
+  .svc-cta-btn--outline:hover { border-color: #E98733; color: #f0a04d; }
+
+  @media (max-width:1024px) {
+    .svc-hero-inner { padding-left: 2.5rem; }
+    .svc-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width:768px) {
+    .svc-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .svc-hero-line { height: 3.5rem; }
+    .svc-grid { grid-template-columns: 1fr 1fr; padding: 1rem 1rem 2rem; gap: 1rem; }
+    .svc-heading { padding: 2rem 1rem 1rem; }
+    .svc-cta { padding: 3rem 1rem; }
+  }
+  @media (max-width:480px) {
+    .svc-hero h1 { font-size: 1.5rem; }
+    .svc-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .svc-grid { grid-template-columns: 1fr; }
+    .svc-card { border-radius: 20px; }
+    .svc-cta-buttons { flex-direction: column; align-items: stretch; }
+    .svc-cta-btn { text-align: center; }
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<main class="page services-page">
-  <div class="container">
-    <header class="services-intro">
-      <h1 class="reveal">Наши услуги</h1>
-      <p class="services-intro-lead reveal">Полный цикл импорта — от подбора до передачи ключей. Работаем с авто из США, Китая и Кореи.</p>
-    </header>
+<main class="page">
+  <section class="svc-hero">
+    <div class="svc-hero-bg" aria-hidden="true"></div>
+    <div class="svc-hero-overlay" aria-hidden="true"></div>
+    <div class="svc-hero-inner">
+      <div class="svc-hero-accent">
+        <div class="svc-hero-line"></div>
+        <h1>Наши услуги</h1>
+      </div>
+    </div>
+  </section>
 
-    <section class="services-grid">
-      <article class="service-card reveal">
-        <h2>Подбор авто на аукционах</h2>
-        <p>Ищем автомобиль на крупных аукционах (Copart, IAAI, Manheim и др.) по вашим параметрам: марка, бюджет, год, комплектация.</p>
-      </article>
-      <article class="service-card reveal">
-        <h2>Выкуп</h2>
-        <p>Оформляем участие в торгах и выкуп выбранного лота. Прозрачные условия, фиксированная комиссия, контроль на каждом этапе.</p>
-      </article>
-      <article class="service-card reveal">
-        <h2>Проверка истории</h2>
-        <p>Проверяем VIN: пробег, ДТП, залоги, ремонты. Предоставляем отчёт перед принятием решения о выкупе.</p>
-      </article>
-      <article class="service-card reveal">
-        <h2>Логистика</h2>
-        <p>Организуем доставку от места выкупа до порта: страхование, документы, отслеживание груза до прибытия.</p>
-      </article>
-      <article class="service-card reveal">
-        <h2>Таможня</h2>
-        <p>Таможенное оформление и растаможка. Рассчитаем пошлины и сборы заранее — никаких сюрпризов при постановке на учёт.</p>
-      </article>
-      <article class="service-card reveal">
-        <h2>Доставка по РФ</h2>
-        <p>Доставляем автомобиль в ваш город. Работаем с проверенными перевозчиками, даём трек-номер и сроки.</p>
-      </article>
-      <article class="service-card reveal">
-        <h2>Оформление</h2>
-        <p>Помогаем с получением ЭПТС, постановкой на учёт в ГИБДД и подготовкой полного пакета документов.</p>
-      </article>
-      <article class="service-card reveal">
-        <h2>Финансирование и лизинг</h2>
-        <p>Подберём программу рассрочки, кредита или лизинга под ваш бюджет. Работаем с партнёрскими банками и лизинговыми компаниями.</p>
-      </article>
-    </section>
-
-    <section class="services-cta reveal">
-      <p class="services-cta-text">Хотите узнать стоимость под ключ или оформить заявку? Мы рассчитаем всё под ваш бюджет и ответим в течение 24 часов.</p>
-      <a href="{% url 'order_quiz' %}" class="btn btn-primary">Получить персональный расчёт</a>
-      <a href="{% url 'process' %}" class="btn btn-outline" style="margin-left: 0.75rem;">Как мы работаем</a>
-    </section>
+  <div class="svc-heading">
+    <div class="svc-pill"><span class="svc-pill-dot"></span> Полный цикл</div>
+    <h2>От подбора до постановки на учёт</h2>
+    <p>Подберём авто под ваш бюджет, организуем выкуп и доставку, оформим документы. Работаем с США, Китаем и Кореей.</p>
   </div>
+
+  <div class="svc-grid">
+    {% for item in services_with_urls %}
+    <a href="{{ item.detail_url }}" class="svc-card">
+      <div class="svc-card-image{% if not item.service.image and not item.service.video %} svc-card-image--placeholder{% endif %}">
+        {% if item.service.media_type == 'video' and item.service.video %}
+          <video src="{% url 'serve_service_video' item.service.pk %}" muted loop playsinline autoplay preload="auto" poster="{% if item.service.image %}{{ item.service.image.url }}{% endif %}"></video>
+        {% elif item.service.media_type == 'image' and item.service.image %}
+          <img src="{{ item.service.image.url }}" alt="{{ item.service.title }}">
+        {% elif item.service.image %}
+          <img src="{{ item.service.image.url }}" alt="{{ item.service.title }}">
+        {% endif %}
+      </div>
+      <div class="svc-card-body">
+        <h2 class="svc-card-title">{{ item.service.title }}</h2>
+        {% if item.service.description %}
+          <p class="svc-card-desc">{{ item.service.description }}</p>
+        {% endif %}
+        <span class="svc-card-btn">Подробнее</span>
+      </div>
+    </a>
+    {% empty %}
+    <p class="svc-empty">Услуги пока не добавлены. Добавьте их через <a href="/admin/core/service/" style="color:#E98733;">админ-панель</a>.</p>
+    {% endfor %}
+  </div>
+
+  <section class="svc-cta">
+    <h2>Не знаете, с чего начать?</h2>
+    <p>Оставьте заявку — мы подберём оптимальный вариант и проведём через все этапы.</p>
+    <div class="svc-cta-buttons">
+      <a href="{% url 'order_quiz' %}" class="svc-cta-btn svc-cta-btn--primary">Оставить заявку</a>
+      <a href="{% url 'contacts' %}" class="svc-cta-btn svc-cta-btn--outline">Контакты</a>
+    </div>
+  </section>
 </main>
-<footer class="footer">
-  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
-</footer>
 {% endblock %}

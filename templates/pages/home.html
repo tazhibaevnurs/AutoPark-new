@@ -3,6 +3,8 @@
 
 {% block title %}Импорт авто из США, Китая, Кореи — персональный расчёт{% endblock %}
 
+{% block footer %}{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
@@ -11,13 +13,17 @@
 <section class="hero" id="hero">
   <div class="hero-video-wrap">
     <div class="hero-placeholder" aria-hidden="true"></div>
-    <video class="hero-video" autoplay muted loop playsinline aria-hidden="true">
-      <source src="{% static 'video/hero.mp4' %}" type="video/mp4">
-    </video>
+    {% if hero_media and hero_media.media_type == 'image' and hero_media.image %}
+      <img class="hero-video hero-video--image" src="{{ hero_media.image.url }}" alt="" aria-hidden="true">
+    {% else %}
+      <video class="hero-video" autoplay muted loop playsinline aria-hidden="true">
+        <source src="{% url 'hero_video' %}" type="video/mp4">
+      </video>
+    {% endif %}
   </div>
 
   <div class="hero-content">
-    <h1 class="hero-title">Ваш автомобиль —<br>напрямую из США, Китая или Кореи.</h1>
+    <h1 class="hero-title">Ваш автомобиль — напрямую<br class="hero-br"> из США, Китая или Кореи.</h1>
     <p class="hero-subtitle">Экономия до 50%. Полный контроль сделки.</p>
   </div>
 
@@ -44,14 +50,11 @@
     </div>
     <div class="hero-service-icons service-icons-row">
       <a href="{% url 'services' %}" class="hero-service-btn reveal">Наши услуги</a>
+      <a href="{% url 'catalog' %}" class="hero-service-btn reveal">Каталог авто</a>
       <a href="{% url 'order_quiz' %}" class="hero-service-btn reveal">Заказать авто</a>
       <a href="{% url 'process' %}" class="hero-service-btn reveal">Процесс</a>
     </div>
     <div class="hero-bottom-spacer" aria-hidden="true"></div>
   </div>
 </section>
-
-<footer class="footer">
-  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
-</footer>
 {% endblock %}

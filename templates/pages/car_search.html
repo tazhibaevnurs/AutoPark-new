@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Поиск автомобилей — персональный подбор | AUTOPARK{% endblock %}
+{% block body_class %}page-inner car-search-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="page car-search-page">
+  <div class="container car-search-container">
+    <header class="car-search-intro reveal">
+      <h1>Поиск автомобилей</h1>
+      <p class="car-search-subtitle">Персональный подбор</p>
+      <p class="car-search-lead">Опишите желаемый автомобиль — мы найдём лучшие варианты под ваши требования.</p>
+    </header>
+
+    <section class="car-search-form-section reveal">
+      <h2 class="car-search-form-title">Оставьте заявку на поиск</h2>
+
+      <div class="car-search-what-we-do">
+        <h3 class="car-search-section-title">Что мы делаем</h3>
+        <ul class="car-search-features" aria-label="Что входит в поиск">
+          <li><strong>Глубокий поиск</strong> — анализируем все доступные площадки и предложения</li>
+          <li><strong>Проверка истории</strong> — полная проверка юридической чистоты и истории авто</li>
+          <li><strong>Техосмотр</strong> — выездная диагностика и оценка состояния</li>
+          <li><strong>Доставка</strong> — безопасная доставка в любой регион</li>
+        </ul>
+      </div>
+
+      <form class="car-search-form order-quiz-form" action="{% url 'car_search' %}" method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <ul class="form-errors">{{ form.non_field_errors }}</ul>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="id_name">{{ form.name.label }}</label>
+          {{ form.name }}
+          {{ form.name.errors }}
+        </div>
+        <div class="form-group">
+          <label for="id_phone">{{ form.phone.label }}</label>
+          {{ form.phone }}
+          {{ form.phone.errors }}
+        </div>
+        <div class="form-group">
+          <label for="id_email">{{ form.email.label }}</label>
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+        <div class="form-group">
+          <label for="id_message">{{ form.message.label }}</label>
+          {{ form.message }}
+          {{ form.message.errors }}
+        </div>
+
+        <p class="car-search-phone-note">Или позвоните нам: <a href="tel:+79611634157" class="car-search-phone-link">+7 (961) 163-41-57</a></p>
+
+        <div class="form-group form-group--checkbox">
+          {{ form.consent }}
+          <label for="id_consent">{{ form.consent.label }}</label>
+          {{ form.consent.errors }}
+        </div>
+
+        <div class="car-search-submit-wrap">
+          <button type="submit" class="btn btn-primary">Отправить заявку</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="car-search-info reveal">
+      <h2 class="car-search-section-title">Полезная информация</h2>
+      <ol class="car-search-info-list">
+        <li>
+          <span class="car-search-info-num">01</span>
+          <div>
+            <h3>Поиск и подбор автомобиля под ваши требования</h3>
+            <p>Услуга нужна, когда важно подобрать авто под конкретные параметры. Вы описываете требования — мы формируем подборку вариантов и согласуем дальнейшие действия.</p>
+          </div>
+        </li>
+        <li>
+          <span class="car-search-info-num">02</span>
+          <div>
+            <h3>Глубокий поиск предложений</h3>
+            <p>Проводим поиск по доступным предложениям (аукционы США, Китай, Корея), чтобы найти именно ваш вариант. Экономия времени и минимум риска пропустить подходящий автомобиль.</p>
+          </div>
+        </li>
+        <li>
+          <span class="car-search-info-num">03</span>
+          <div>
+            <h3>Проверка истории и юридической чистоты</h3>
+            <p>Перед принятием решения — проверка истории и юридической чистоты, чтобы снизить риски при покупке.</p>
+          </div>
+        </li>
+        <li>
+          <span class="car-search-info-num">04</span>
+          <div>
+            <h3>Техосмотр и доставка</h3>
+            <p>При необходимости — выездная диагностика и оценка состояния. Организуем доставку в ваш регион.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="car-search-faq reveal">
+      <h2 class="car-search-section-title">Частые вопросы</h2>
+      <dl class="car-search-faq-list">
+        <div class="car-search-faq-item">
+          <dt>Что входит в поиск автомобиля?</dt>
+          <dd>Подбор вариантов под ваши параметры, глубокий поиск предложений, проверка истории и юридической чистоты, при необходимости — техосмотр и доставка.</dd>
+        </div>
+        <div class="car-search-faq-item">
+          <dt>Проверяете юридическую чистоту?</dt>
+          <dd>Да. Проверяем историю и юридическую часть, чтобы снизить риски перед покупкой.</dd>
+        </div>
+        <div class="car-search-faq-item">
+          <dt>Можно ли начать без точной модели?</dt>
+          <dd>Да. Можно указать параметры: бюджет, тип кузова, год, пробег, комплектация. Чем точнее вводные, тем быстрее подбор.</dd>
+        </div>
+        <div class="car-search-faq-item">
+          <dt>Как оставить заявку?</dt>
+          <dd>Заполните форму на этой странице — после этого уточним детали и начнём подбор.</dd>
+        </div>
+      </dl>
+    </section>
+  </div>
+</main>{% endblock %}

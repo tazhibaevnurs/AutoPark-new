@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Заявка принята | AUTOPARK{% endblock %}
+{% block body_class %}page-inner{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="page order-page">
+  <div class="container order-page-container">
+    <header class="order-intro reveal">
+      <h1>Заявка принята</h1>
+      <p class="order-intro-lead">Мы получили вашу заявку на выкуп автомобиля. Менеджер свяжется с вами в течение часа для уточнения деталей и оценки.</p>
+      <div class="order-form-submit">
+        <a href="{% url 'home' %}" class="btn btn-primary">На главную</a>
+        <a href="{% url 'contacts' %}" class="btn btn-outline">Контакты</a>
+      </div>
+    </header>
+  </div>
+</main>{% endblock %}

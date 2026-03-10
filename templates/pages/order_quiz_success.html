@@ -1,24 +1,153 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Заявка отправлена{% endblock %}
+{% block title %}Заявка отправлена — AUTOPARK{% endblock %}
+{% block body_class %}page-inner{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.page-inner .oq-success { padding-top: 0; padding-bottom: 0; }
+  .oq-success-hero {
+    position: relative;
+    min-height: 32vh;
+    display: flex;
+    align-items: center;
+    background: #0a0a0a;
+    overflow: hidden;
+  }
+  .oq-success-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1920&q=80') center/cover no-repeat;
+    opacity: 0.3;
+  }
+  .oq-success-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.8));
+  }
+  .oq-success-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 4rem 5rem;
+  }
+  .oq-success-hero-accent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .oq-success-hero-line {
+    width: 4px;
+    height: 5rem;
+    border-radius: 9999px;
+    background: #E98733;
+    flex-shrink: 0;
+  }
+  .oq-success-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .oq-success-body {
+    background: #FCFCFC;
+    padding: 4rem 1.5rem;
+    text-align: center;
+    min-height: 40vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .oq-success-check {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(233,135,51,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .oq-success-check svg {
+    width: 32px;
+    height: 32px;
+    stroke: #E98733;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .oq-success-body h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 0.75rem;
+  }
+  .oq-success-body p {
+    font-size: 1.05rem;
+    color: #374151;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .oq-success-btn {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    background: #E98733;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .oq-success-btn:hover { background: #d4782e; color: #fff; }
+  .oq-success-footer {
+    background: #131313;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+  }
+  @media (max-width: 768px) {
+    .oq-success-hero-inner { padding: 5rem 1.5rem 3rem; }
+  }
+  @media (max-width: 480px) {
+    .oq-success-hero h1 { font-size: 1.5rem; }
+    .oq-success-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .oq-success-hero-line { height: 3.5rem; }
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<main class="page">
-  <div class="container container--narrow" style="text-align: center;">
-    <h1 class="reveal">Заявка принята</h1>
-    <p class="reveal">Мы свяжемся с вами в течение 24 часов и подберём 3 варианта под ваш бюджет и задачи.</p>
-    <p class="reveal" style="margin-top: 1.5rem;">
-      <a href="{% url 'home' %}" class="btn btn-primary">На главную</a>
-    </p>
+<main class="page oq-success">
+  <section class="oq-success-hero">
+    <div class="oq-success-hero-bg" aria-hidden="true"></div>
+    <div class="oq-success-hero-overlay" aria-hidden="true"></div>
+    <div class="oq-success-hero-inner">
+      <div class="oq-success-hero-accent">
+        <div class="oq-success-hero-line"></div>
+        <h1>Заявка принята</h1>
+      </div>
+    </div>
+  </section>
+
+  <div class="oq-success-body">
+    <div class="oq-success-check">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Спасибо за заявку!</h2>
+    <p>Мы свяжемся с вами в течение 24 часов и подберём до 3 вариантов под ваш бюджет и задачи.</p>
+    <a href="{% url 'home' %}" class="oq-success-btn">На главную</a>
   </div>
 </main>
-<footer class="footer">
-  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
-</footer>
 {% endblock %}

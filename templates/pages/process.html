@@ -2,86 +2,249 @@
 {% load static %}
 
 {% block title %}Процесс — как мы работаем{% endblock %}
+{% block body_class %}page-inner process-new-page{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.process-new-page { background: #FCFCFC; }
+  body.process-new-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .prc-hero {
+    position: relative;
+    min-height: 32vh;
+    display: flex;
+    align-items: center;
+    background: #0a0a0a;
+    overflow: hidden;
+  }
+  .prc-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=80') center/cover no-repeat;
+    opacity: 0.35;
+  }
+  .prc-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.8)); }
+  .prc-hero-inner {
+    position: relative; z-index: 1;
+    max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 5rem 1.5rem 4rem 5rem;
+  }
+  .prc-hero-accent { display: flex; align-items: center; gap: 1rem; }
+  .prc-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
+  .prc-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600;
+    color: #fff; letter-spacing: -0.02em; margin: 0; line-height: 1.15;
+  }
+
+  .prc-heading {
+    text-align: center;
+    padding: 3rem 1.5rem 1rem;
+  }
+  .prc-pill {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 1rem; border-radius: 9999px;
+    border: 1px solid rgba(233,135,51,0.3); background: rgba(233,135,51,0.06);
+    color: #374151; font-size: 0.875rem; font-weight: 500; margin-bottom: 1.5rem;
+  }
+  .prc-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #E98733; }
+  .prc-heading h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 600;
+    color: #000; letter-spacing: -0.02em; margin: 0 0 0.75rem;
+  }
+  .prc-heading p {
+    font-size: 1.05rem; color: #374151; max-width: 640px; margin: 0 auto; line-height: 1.6;
+  }
+
+  .prc-steps {
+    max-width: 1280px; margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .prc-step {
+    background: #fff; border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 24px; padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    position: relative;
+  }
+  .prc-step:hover {
+    border-color: rgba(233,135,51,0.3);
+    box-shadow: 0 8px 24px rgba(233,135,51,0.08);
+    transform: translateY(-2px);
+  }
+  .prc-step-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .prc-step-num {
+    flex-shrink: 0; width: 44px; height: 44px;
+    border-radius: 50%; border: 2px solid #E98733;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; font-weight: 700; color: #E98733;
+  }
+  .prc-step-icon {
+    flex-shrink: 0; width: 44px; height: 44px;
+    border-radius: 12px; background: rgba(233,135,51,0.1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .prc-step-icon svg {
+    width: 22px; height: 22px; stroke: #E98733; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .prc-step h3 {
+    font-size: 1.15rem; font-weight: 600; color: #000; margin: 0;
+  }
+  .prc-step p {
+    font-size: 0.95rem; color: #6b7280; line-height: 1.6; margin: 0;
+  }
+
+  .prc-cta {
+    background: #131313;
+    padding: 4rem 1.5rem;
+    text-align: center;
+  }
+  .prc-cta-pill {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 1rem; border-radius: 9999px;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.8); font-size: 0.875rem; font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+  .prc-cta h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600;
+    color: #fff; margin: 0 0 0.75rem;
+  }
+  .prc-cta p {
+    font-size: 1rem; color: rgba(255,255,255,0.6);
+    max-width: 520px; margin: 0 auto 2rem; line-height: 1.6;
+  }
+  .prc-cta-btn {
+    display: inline-block; padding: 0.875rem 2.5rem;
+    font-size: 1rem; font-weight: 500; color: #131313;
+    background: #fff; border-radius: 12px; text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .prc-cta-btn:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
+
+  .prc-footer {
+    background: #131313;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 1.5rem; text-align: center;
+    font-size: 0.85rem; color: rgba(255,255,255,0.4);
+  }
+
+  @media (max-width: 1024px) {
+    .prc-hero-inner { padding-left: 2.5rem; }
+  }
+  @media (max-width: 768px) {
+    .prc-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .prc-hero-line { height: 3.5rem; }
+    .prc-steps { grid-template-columns: 1fr; padding: 1.5rem 1rem 2rem; }
+    .prc-heading { padding: 2rem 1rem 1rem; }
+    .prc-cta { padding: 3rem 1rem; }
+  }
+  @media (max-width: 480px) {
+    .prc-hero h1 { font-size: 1.5rem; }
+    .prc-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .prc-step { padding: 1.5rem; border-radius: 20px; }
+    .prc-steps { gap: 1rem; }
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<main class="page process-page">
-  <div class="process-bg-3d" aria-hidden="true">
-    <div class="process-bg-shape process-bg-shape--1"></div>
-    <div class="process-bg-shape process-bg-shape--2"></div>
-    <div class="process-bg-shape process-bg-shape--3"></div>
-    <div class="process-bg-shape process-bg-shape--4"></div>
-    <div class="process-bg-shape process-bg-shape--5"></div>
-    <div class="process-bg-shape process-bg-shape--6"></div>
-  </div>
-  <div class="container process-page-content">
-    <header class="process-intro" id="process-intro">
-      <h1>Прозрачный процесс</h1>
-      <p class="process-intro-lead">Никаких скрытых условий. От заявки до ключей — понятные шаги и полный контроль на каждом этапе.</p>
-    </header>
+<main class="page">
+  <section class="prc-hero">
+    <div class="prc-hero-bg" aria-hidden="true"></div>
+    <div class="prc-hero-overlay" aria-hidden="true"></div>
+    <div class="prc-hero-inner">
+      <div class="prc-hero-accent">
+        <div class="prc-hero-line"></div>
+        <h1>Как мы работаем</h1>
+      </div>
+    </div>
+  </section>
 
-    <section class="process-blocks" id="process-blocks">
-      <article class="process-block" data-from="left">
-        <span class="process-block-num">01</span>
-        <div class="process-block-content">
-          <h2>Консультация</h2>
-          <p>Обсуждаем задачи, бюджет и предпочтения. Определяем страну поставки (США, Китай, Корея), тип кузова и сроки. Вы получаете понятный план действий.</p>
-        </div>
-      </article>
-      <article class="process-block" data-from="right">
-        <span class="process-block-num">02</span>
-        <div class="process-block-content">
-          <h2>Подбор</h2>
-          <p>Ищем варианты на аукционах и у проверенных поставщиков под ваши критерии. Предоставляем отчёт по каждому варианту: фото, история, цена.</p>
-        </div>
-      </article>
-      <article class="process-block" data-from="left">
-        <span class="process-block-num">03</span>
-        <div class="process-block-content">
-          <h2>Проверка</h2>
-          <p>Проверяем историю автомобиля, пробег, документы и техническое состояние. Вы принимаете решение только на основе полной информации.</p>
-        </div>
-      </article>
-      <article class="process-block" data-from="right">
-        <span class="process-block-num">04</span>
-        <div class="process-block-content">
-          <h2>Выкуп</h2>
-          <p>Оформляем сделку и выкупаем авто. Все платежи прозрачны: вы видите каждый этап и подтверждаете операции.</p>
-        </div>
-      </article>
-      <article class="process-block" data-from="left">
-        <span class="process-block-num">05</span>
-        <div class="process-block-content">
-          <h2>Доставка</h2>
-          <p>Организуем логистику, таможенное оформление и доставку по РФ до вашего города. Следите за статусом в режиме реального времени.</p>
-        </div>
-      </article>
-      <article class="process-block" data-from="right">
-        <span class="process-block-num">06</span>
-        <div class="process-block-content">
-          <h2>Передача авто</h2>
-          <p>Помогаем с оформлением в ГИБДД и передаём ключи. Вы получаете готовый к эксплуатации автомобиль с полным пакетом документов.</p>
-        </div>
-      </article>
-    </section>
-
-    <section class="process-cta" id="process-cta">
-      <p class="process-cta-text">Готовы начать? Оставьте заявку — подберём варианты под ваш бюджет и ответим в течение 24 часов.</p>
-      <a href="{% url 'order_quiz' %}" class="btn btn-primary">Получить персональный расчёт</a>
-    </section>
+  <div class="prc-heading">
+    <div class="prc-pill">
+      <span class="prc-pill-dot"></span>
+      6 этапов
+    </div>
+    <h2>Прозрачный процесс от заявки до ключей</h2>
+    <p>Один менеджер ведёт сделку. Вы контролируете каждый этап: отчёты, фото, статус доставки и документы.</p>
   </div>
+
+  <div class="prc-steps">
+    <article class="prc-step">
+      <div class="prc-step-header">
+        <div class="prc-step-num">01</div>
+        <div class="prc-step-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Консультация</h3>
+      </div>
+      <p>Обсуждаем задачи, бюджет и предпочтения. Определяем страну поставки, тип кузова и сроки. Вы получаете понятный план действий.</p>
+    </article>
+
+    <article class="prc-step">
+      <div class="prc-step-header">
+        <div class="prc-step-num">02</div>
+        <div class="prc-step-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <h3>Подбор</h3>
+      </div>
+      <p>Ищем варианты на аукционах и у проверенных поставщиков. Предоставляем отчёт по каждому: фото, история, цена.</p>
+    </article>
+
+    <article class="prc-step">
+      <div class="prc-step-header">
+        <div class="prc-step-num">03</div>
+        <div class="prc-step-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+        </div>
+        <h3>Проверка</h3>
+      </div>
+      <p>Проверяем историю автомобиля, пробег, документы и техническое состояние. Решение — только на основе полной информации.</p>
+    </article>
+
+    <article class="prc-step">
+      <div class="prc-step-header">
+        <div class="prc-step-num">04</div>
+        <div class="prc-step-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Выкуп</h3>
+      </div>
+      <p>Оформляем сделку и выкупаем авто. Все платежи прозрачны — вы видите каждый этап и подтверждаете операции.</p>
+    </article>
+
+    <article class="prc-step">
+      <div class="prc-step-header">
+        <div class="prc-step-num">05</div>
+        <div class="prc-step-icon">
+          <svg viewBox="0 0 24 24"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><path d="M15 18H9"/><circle cx="17" cy="18" r="2"/></svg>
+        </div>
+        <h3>Доставка</h3>
+      </div>
+      <p>Организуем логистику, таможенное оформление и доставку по РФ до вашего города. Отслеживание в реальном времени.</p>
+    </article>
+
+    <article class="prc-step">
+      <div class="prc-step-header">
+        <div class="prc-step-num">06</div>
+        <div class="prc-step-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h3>Передача авто</h3>
+      </div>
+      <p>Помогаем с оформлением в ГИБДД и передаём ключи. Готовый к эксплуатации автомобиль с полным пакетом документов.</p>
+    </article>
+  </div>
+
+  <section class="prc-cta">
+    <div class="prc-cta-pill">Готовы начать?</div>
+    <h2>Получите персональный расчёт</h2>
+    <p>Оставьте заявку — подберём варианты под ваш бюджет и ответим в течение 24 часов. Без обязательств.</p>
+    <a href="{% url 'order_quiz' %}" class="prc-cta-btn">Оставить заявку</a>
+  </section>
 </main>
-<footer class="footer">
-  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
-</footer>
-{% endblock %}
-
-{% block extra_js %}
-<script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="{% static 'js/process-animations.js' %}"></script>
 {% endblock %}

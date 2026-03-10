@@ -2,49 +2,217 @@
 {% load static %}
 
 {% block title %}Контакты — AUTOPARK{% endblock %}
+{% block body_class %}page-inner ct-new-page{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.ct-new-page { background: #FCFCFC; }
+  body.ct-new-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .ct-hero {
+    position: relative; min-height: 32vh;
+    display: flex; align-items: center; background: #0a0a0a; overflow: hidden;
+  }
+  .ct-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80') center/cover no-repeat;
+    opacity: 0.3;
+  }
+  .ct-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.8)); }
+  .ct-hero-inner {
+    position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 5rem 1.5rem 4rem 5rem;
+  }
+  .ct-hero-accent { display: flex; align-items: center; gap: 1rem; }
+  .ct-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
+  .ct-hero h1 {
+    font-size: clamp(2rem,5vw,3.5rem); font-weight: 600; color: #fff;
+    letter-spacing: -.02em; margin: 0; line-height: 1.15;
+  }
+
+  .ct-heading { text-align: center; padding: 3rem 1.5rem 1.5rem; }
+  .ct-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    border: 1px solid rgba(233,135,51,.3); background: rgba(233,135,51,.06);
+    color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
+  }
+  .ct-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #E98733; }
+  .ct-heading h2 {
+    font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 600; color: #000;
+    letter-spacing: -.02em; margin: 0 0 .75rem;
+  }
+  .ct-heading p {
+    font-size: 1.05rem; color: #374151; max-width: 700px; margin: 0 auto; line-height: 1.6;
+  }
+
+  .ct-grid {
+    max-width: 1280px; margin: 0 auto; padding: 1rem 1.5rem 2rem;
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+  }
+  .ct-card {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
+    padding: 2rem 1.5rem; text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    transition: border-color .3s, box-shadow .3s, transform .3s;
+  }
+  .ct-card:hover {
+    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+    transform: translateY(-3px);
+  }
+  .ct-card-icon {
+    width: 56px; height: 56px; border-radius: 16px; margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(233,135,51,.1), rgba(233,135,51,.05));
+  }
+  .ct-card-icon svg { width: 26px; height: 26px; color: #E98733; }
+  .ct-card-label {
+    font-size: .75rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: .5rem;
+  }
+  .ct-card-value {
+    font-size: 1.05rem; color: #111; margin: 0; line-height: 1.5;
+  }
+  .ct-card-link {
+    color: #E98733; text-decoration: none; font-weight: 500;
+    transition: color .2s;
+  }
+  .ct-card-link:hover { color: #d47620; }
+
+  .ct-address {
+    max-width: 1280px; margin: 0 auto; padding: 0 1.5rem 3rem;
+  }
+  .ct-address-card {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
+    padding: 2rem 2.5rem; display: flex; align-items: flex-start; gap: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .ct-address-card:hover {
+    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+  }
+  .ct-address-icon {
+    width: 56px; height: 56px; border-radius: 16px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(233,135,51,.1), rgba(233,135,51,.05));
+  }
+  .ct-address-icon svg { width: 26px; height: 26px; color: #E98733; }
+  .ct-address-label {
+    font-size: .75rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: .35rem;
+  }
+  .ct-address-value {
+    font-size: 1.05rem; color: #111; margin: 0; line-height: 1.6;
+  }
+
+  .ct-cta { background: #131313; padding: 4rem 1.5rem; text-align: center; }
+  .ct-cta h2 {
+    font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff; margin: 0 0 .75rem;
+  }
+  .ct-cta p {
+    font-size: 1rem; color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6;
+  }
+  .ct-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .ct-cta-btn {
+    display: inline-block; padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: background .2s, transform .2s;
+  }
+  .ct-cta-btn--primary { background: #fff; color: #131313; }
+  .ct-cta-btn--primary:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
+  .ct-cta-btn--outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
+  .ct-cta-btn--outline:hover { border-color: #E98733; color: #f0a04d; }
+
+  .ct-footer {
+    background: #131313; border-top: 1px solid rgba(255,255,255,.08);
+    padding: 1.5rem; text-align: center; font-size: .85rem; color: rgba(255,255,255,.4);
+  }
+
+  @media (max-width:1024px) {
+    .ct-hero-inner { padding-left: 2.5rem; }
+  }
+  @media (max-width:768px) {
+    .ct-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .ct-hero-line { height: 3.5rem; }
+    .ct-grid { grid-template-columns: 1fr; padding: 1rem 1rem 1.5rem; gap: 1rem; }
+    .ct-heading { padding: 2rem 1rem 1rem; }
+    .ct-address { padding: 0 1rem 2rem; }
+    .ct-address-card { padding: 1.5rem; flex-direction: column; align-items: center; text-align: center; }
+    .ct-cta { padding: 3rem 1rem; }
+  }
+  @media (max-width:480px) {
+    .ct-hero h1 { font-size: 1.5rem; }
+    .ct-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .ct-card { border-radius: 20px; }
+    .ct-address-card { border-radius: 20px; }
+    .ct-cta-buttons { flex-direction: column; align-items: stretch; }
+    .ct-cta-btn { text-align: center; }
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<main class="page contacts-page">
-  <div class="container">
-    <header class="contacts-intro">
-      <h1 class="reveal">Контакты</h1>
-      <p class="contacts-intro-lead reveal">Свяжитесь с нами для консультации, расчёта стоимости или начала подбора автомобиля. Мы всегда на связи и готовы ответить на все ваши вопросы удобным для вас способом.</p>
-    </header>
-
-    <section class="contacts-block">
-      <div class="contacts-grid">
-        <div class="contact-item reveal">
-          <span class="contact-item-label">Телефон</span>
-          <a href="tel:+79611634157" class="contact-item-value contact-item-link">+7 (961) 163-41-57</a>
-        </div>
-        <div class="contact-item reveal">
-          <span class="contact-item-label">Telegram</span>
-          <a href="https://t.me/Auto_Park31" target="_blank" rel="noopener" class="contact-item-value contact-item-link">@Auto_Park31</a>
-        </div>
-        <div class="contact-item reveal">
-          <span class="contact-item-label">Рабочее время</span>
-          <p class="contact-item-value">9:00 — 17:00, Пн — Сб</p>
-        </div>
+<main class="page">
+  <section class="ct-hero">
+    <div class="ct-hero-bg" aria-hidden="true"></div>
+    <div class="ct-hero-overlay" aria-hidden="true"></div>
+    <div class="ct-hero-inner">
+      <div class="ct-hero-accent">
+        <div class="ct-hero-line"></div>
+        <h1>Контакты</h1>
       </div>
+    </div>
+  </section>
 
-      <div class="contact-address reveal">
-        <span class="contact-item-label">Адрес офиса</span>
-        <p class="contact-item-value">г. Белгород, Харьковский пер., 36А, бизнес-центр «Панорама», каб. 402<br>(напротив отеля «Амакс»)</p>
-      </div>
-    </section>
-
-    <section class="contacts-cta reveal">
-      <p class="contacts-cta-text">Оставьте заявку — мы перезвоним и ответим на все вопросы.</p>
-      <a href="{% url 'order_quiz' %}" class="btn btn-primary">Оставить заявку</a>
-    </section>
+  <div class="ct-heading">
+    <div class="ct-pill"><span class="ct-pill-dot"></span> Свяжитесь с нами</div>
+    <h2>Мы всегда на связи</h2>
+    <p>Консультация и расчёт стоимости — бесплатно, без обязательств. Звоните, пишите или приезжайте в офис.</p>
   </div>
+
+  <div class="ct-grid">
+    <div class="ct-card">
+      <div class="ct-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <p class="ct-card-label">Телефон</p>
+      <p class="ct-card-value"><a href="tel:+79611634157" class="ct-card-link">+7 (961) 163-41-57</a></p>
+    </div>
+    <div class="ct-card">
+      <div class="ct-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <p class="ct-card-label">Telegram</p>
+      <p class="ct-card-value"><a href="https://t.me/Auto_Park31" target="_blank" rel="noopener" class="ct-card-link">@Auto_Park31</a></p>
+    </div>
+    <div class="ct-card">
+      <div class="ct-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <p class="ct-card-label">Рабочее время</p>
+      <p class="ct-card-value">9:00 — 17:00, Пн — Сб</p>
+    </div>
+  </div>
+
+  <div class="ct-address">
+    <div class="ct-address-card">
+      <div class="ct-address-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div>
+        <p class="ct-address-label">Адрес офиса</p>
+        <p class="ct-address-value">г. Белгород, Харьковский пер., 36А, бизнес-центр «Панорама», каб. 402<br>(напротив отеля «Амакс»)</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="ct-cta">
+    <h2>Остались вопросы?</h2>
+    <p>Оставьте заявку — мы перезвоним и ответим на все вопросы. Без обязательств.</p>
+    <div class="ct-cta-buttons">
+      <a href="{% url 'order_quiz' %}" class="ct-cta-btn ct-cta-btn--primary">Оставить заявку</a>
+      <a href="https://t.me/Auto_Park31" target="_blank" rel="noopener" class="ct-cta-btn ct-cta-btn--outline">Написать в Telegram</a>
+    </div>
+  </section>
 </main>
-<footer class="footer">
-  <p>© AUTOPARK. Импорт авто из США, Китая, Кореи.</p>
-</footer>
 {% endblock %}

@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Каталог авто — AUTOPARK{% endblock %}
+{% block body_class %}page-inner ctlg-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.ctlg-page { background: #FCFCFC; }
+  body.ctlg-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .ctlg-hero {
+    position: relative; min-height: 32vh;
+    display: flex; align-items: center; background: #0a0a0a; overflow: hidden;
+  }
+  .ctlg-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80') center/cover no-repeat;
+    opacity: 0.35;
+  }
+  .ctlg-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.8)); }
+  .ctlg-hero-inner {
+    position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+    padding: 5rem 1.5rem 4rem 5rem;
+  }
+  .ctlg-hero-accent { display: flex; align-items: center; gap: 1rem; }
+  .ctlg-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
+  .ctlg-hero h1 {
+    font-size: clamp(2rem,5vw,3.5rem); font-weight: 600; color: #fff;
+    letter-spacing: -.02em; margin: 0; line-height: 1.15;
+  }
+
+  .ctlg-heading { text-align: center; padding: 3rem 1.5rem 1rem; }
+  .ctlg-pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    border: 1px solid rgba(233,135,51,.3); background: rgba(233,135,51,.06);
+    color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
+  }
+  .ctlg-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #E98733; }
+  .ctlg-heading h2 {
+    font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 600; color: #000;
+    letter-spacing: -.02em; margin: 0 0 .75rem;
+  }
+  .ctlg-heading p {
+    font-size: 1.05rem; color: #374151; max-width: 700px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* Filters */
+  .ctlg-filters {
+    max-width: 1280px; margin: 0 auto; padding: .5rem 1.5rem 1.5rem;
+    display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center;
+  }
+  .ctlg-filter-btn {
+    padding: .5rem 1.25rem; border-radius: 9999px; font-size: .875rem; font-weight: 500;
+    border: 1px solid rgba(0,0,0,.1); background: #fff; color: #374151;
+    cursor: pointer; transition: all .2s;
+  }
+  .ctlg-filter-btn:hover { border-color: #E98733; color: #E98733; }
+  .ctlg-filter-btn.active { background: #E98733; color: #fff; border-color: #E98733; }
+
+  /* Grid */
+  .ctlg-grid {
+    max-width: 1280px; margin: 0 auto; padding: 1rem 1.5rem 3rem;
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+  }
+  .ctlg-card {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
+    overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    transition: border-color .3s, box-shadow .3s, transform .3s;
+  }
+  .ctlg-card:hover {
+    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+    transform: translateY(-3px);
+  }
+  .ctlg-card[data-visible="false"] { display: none; }
+  .ctlg-card-image {
+    aspect-ratio: 16/10; position: relative; overflow: hidden;
+    background: linear-gradient(145deg, rgba(233,135,51,.08) 0%, #f3f4f6 100%);
+    cursor: pointer;
+  }
+  .ctlg-card-image img {
+    width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease;
+  }
+  .ctlg-card:hover .ctlg-card-image img { transform: scale(1.04); }
+  .ctlg-card-image--placeholder::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23E98733' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round' opacity='0.2'%3E%3Cpath d='M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11'/%3E%3Cpath d='M14 9h4l4 4v4c0 .6-.4 1-1 1h-2'/%3E%3Ccircle cx='7' cy='18' r='2'/%3E%3Cpath d='M15 18H9'/%3E%3Ccircle cx='17' cy='18' r='2'/%3E%3C/svg%3E") center/48px no-repeat;
+  }
+  .ctlg-card-status {
+    position: absolute; top: 10px; left: 10px; z-index: 1;
+    padding: .3rem .75rem; border-radius: 9999px; font-size: .7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .ctlg-card-status--available { background: #10b981; color: #fff; }
+  .ctlg-card-status--in_transit { background: #3b82f6; color: #fff; }
+  .ctlg-card-status--on_order { background: #E98733; color: #fff; }
+  .ctlg-card-status--sold { background: #6b7280; color: #fff; }
+  .ctlg-card-expand {
+    position: absolute; top: 10px; right: 10px; z-index: 2;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,0,0,.55); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; padding: 0; color: #fff;
+    opacity: 0; transition: opacity .3s, background .2s;
+  }
+  .ctlg-card:hover .ctlg-card-expand { opacity: 1; }
+  .ctlg-card-expand:hover { background: rgba(233,135,51,.7); }
+  .ctlg-card-expand svg { width: 18px; height: 18px; }
+
+  .ctlg-card-body { padding: 1.25rem 1.5rem 1.5rem; }
+  .ctlg-card-country {
+    display: inline-block; font-size: .7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em; color: #E98733; margin-bottom: .3rem;
+  }
+  .ctlg-card-title { font-size: 1.15rem; font-weight: 600; color: #000; margin: 0 0 .25rem; }
+  .ctlg-card-specs { font-size: .85rem; color: #6b7280; margin: 0 0 .75rem; }
+  .ctlg-card-price { font-size: 1.1rem; font-weight: 700; color: #111; margin: 0 0 .75rem; }
+  .ctlg-card-btn {
+    display: inline-block; padding: .6rem 1.5rem; font-size: .875rem; font-weight: 500;
+    border-radius: 10px; background: #111; color: #fff; text-decoration: none;
+    transition: background .2s, transform .2s;
+  }
+  .ctlg-card-btn:hover { background: #E98733; transform: translateY(-1px); color: #fff; }
+
+  .ctlg-empty {
+    grid-column: 1/-1; text-align: center; color: #6b7280; padding: 3rem 0;
+    font-size: 1.05rem;
+  }
+
+  /* Modal */
+  .ctlg-modal {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.88); backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s;
+  }
+  .ctlg-modal.active { opacity: 1; visibility: visible; }
+  .ctlg-modal-close {
+    position: absolute; top: 1.25rem; right: 1.25rem; z-index: 2;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; padding: 0; color: #fff; transition: background .2s;
+  }
+  .ctlg-modal-close:hover { background: rgba(233,135,51,.6); }
+  .ctlg-modal-close svg { width: 22px; height: 22px; }
+  .ctlg-modal-content { max-width: 90vw; max-height: 80vh; border-radius: 16px; overflow: hidden; }
+  .ctlg-modal-content img {
+    display: block; max-width: 90vw; max-height: 80vh;
+    object-fit: contain; border-radius: 16px;
+  }
+  .ctlg-modal-info { margin-top: 1rem; text-align: center; color: #fff; }
+  .ctlg-modal-title { font-size: 1.25rem; font-weight: 600; margin: 0 0 .25rem; }
+  .ctlg-modal-meta { font-size: .9rem; color: rgba(255,255,255,.55); margin: 0; }
+
+  /* CTA */
+  .ctlg-cta { background: #131313; padding: 4rem 1.5rem; text-align: center; }
+  .ctlg-cta h2 { font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff; margin: 0 0 .75rem; }
+  .ctlg-cta p { font-size: 1rem; color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6; }
+  .ctlg-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .ctlg-cta-btn {
+    display: inline-block; padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
+    border-radius: 12px; text-decoration: none; transition: background .2s, transform .2s;
+  }
+  .ctlg-cta-btn--primary { background: #fff; color: #131313; }
+  .ctlg-cta-btn--primary:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
+  .ctlg-cta-btn--outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
+  .ctlg-cta-btn--outline:hover { border-color: #E98733; color: #f0a04d; }
+
+  .ctlg-footer {
+    background: #131313; border-top: 1px solid rgba(255,255,255,.08);
+    padding: 1.5rem; text-align: center; font-size: .85rem; color: rgba(255,255,255,.4);
+  }
+
+  @media (max-width:1024px) {
+    .ctlg-hero-inner { padding-left: 2.5rem; }
+    .ctlg-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width:768px) {
+    .ctlg-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .ctlg-hero-line { height: 3.5rem; }
+    .ctlg-grid { grid-template-columns: 1fr 1fr; padding: 1rem 1rem 2rem; gap: 1rem; }
+    .ctlg-heading { padding: 2rem 1rem .5rem; }
+    .ctlg-filters { padding: .5rem 1rem 1rem; }
+    .ctlg-cta { padding: 3rem 1rem; }
+  }
+  @media (max-width:480px) {
+    .ctlg-hero h1 { font-size: 1.5rem; }
+    .ctlg-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .ctlg-grid { grid-template-columns: 1fr; }
+    .ctlg-card { border-radius: 20px; }
+    .ctlg-cta-buttons { flex-direction: column; align-items: stretch; }
+    .ctlg-cta-btn { text-align: center; }
+    .ctlg-modal-content { max-width: 96vw; max-height: 70vh; border-radius: 12px; }
+    .ctlg-modal-content img { max-width: 96vw; max-height: 70vh; border-radius: 12px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <section class="ctlg-hero">
+    <div class="ctlg-hero-bg" aria-hidden="true"></div>
+    <div class="ctlg-hero-overlay" aria-hidden="true"></div>
+    <div class="ctlg-hero-inner">
+      <div class="ctlg-hero-accent">
+        <div class="ctlg-hero-line"></div>
+        <h1>Каталог авто</h1>
+      </div>
+    </div>
+  </section>
+
+  <div class="ctlg-heading">
+    <div class="ctlg-pill"><span class="ctlg-pill-dot"></span> Автомобили</div>
+    <h2>Доступные для заказа</h2>
+    <p>Актуальные предложения из Кореи, Китая и США. В наличии, в пути или под заказ — с полным сопровождением.</p>
+  </div>
+
+  <div class="ctlg-filters" id="ctlgFilters">
+    {% for code, label in countries %}
+    <button type="button" class="ctlg-filter-btn{% if code == 'all' %} active{% endif %}" data-filter="country" data-value="{{ code }}">{{ label }}</button>
+    {% endfor %}
+    <span style="width:1px;background:rgba(0,0,0,.1);margin:0 .25rem;"></span>
+    {% for code, label in statuses %}
+    <button type="button" class="ctlg-filter-btn{% if code == 'all' %} active{% endif %}" data-filter="status" data-value="{{ code }}">{{ label }}</button>
+    {% endfor %}
+  </div>
+
+  <div class="ctlg-grid" id="ctlgGrid">
+    {% for car in cars %}
+    <article class="ctlg-card" data-country="{{ car.country }}" data-status="{{ car.status }}">
+      <div class="ctlg-card-image{% if not car.image %} ctlg-card-image--placeholder{% endif %}">
+        <span class="ctlg-card-status ctlg-card-status--{{ car.status }}">{{ car.get_status_display }}</span>
+        {% if car.image %}
+          <img src="{{ car.image.url }}" alt="{{ car.title }}">
+          <button type="button" class="ctlg-card-expand" data-src="{{ car.image.url }}" data-title="{{ car.title }}" data-meta="{{ car.specs_line }}" aria-label="Развернуть">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+        {% endif %}
+      </div>
+      <div class="ctlg-card-body">
+        <span class="ctlg-card-country">{{ car.get_country_display }}</span>
+        <h2 class="ctlg-card-title">{{ car.title }}</h2>
+        {% if car.specs_line %}<p class="ctlg-card-specs">{{ car.specs_line }}</p>{% endif %}
+        {% if car.price %}<p class="ctlg-card-price">{{ car.price }}</p>{% endif %}
+        <a href="{% url 'catalog_detail' car.pk %}" class="ctlg-card-btn">Подробнее</a>
+      </div>
+    </article>
+    {% empty %}
+    <p class="ctlg-empty">Автомобили пока не добавлены. Добавьте их через <a href="/admin/core/catalogcar/" style="color:#E98733;">админ-панель</a>.</p>
+    {% endfor %}
+  </div>
+
+  <section class="ctlg-cta">
+    <h2>Не нашли нужный автомобиль?</h2>
+    <p>Оставьте заявку — подберём авто под ваши цели и бюджет из любой страны.</p>
+    <div class="ctlg-cta-buttons">
+      <a href="{% url 'order_quiz' %}" class="ctlg-cta-btn ctlg-cta-btn--primary">Оставить заявку</a>
+      <a href="{% url 'contacts' %}" class="ctlg-cta-btn ctlg-cta-btn--outline">Связаться с нами</a>
+    </div>
+  </section>
+</main>
+
+<div class="ctlg-modal" id="ctlgModal">
+  <button type="button" class="ctlg-modal-close" aria-label="Закрыть">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div class="ctlg-modal-content" id="ctlgModalContent"></div>
+  <div class="ctlg-modal-info">
+    <p class="ctlg-modal-title" id="ctlgModalTitle"></p>
+    <p class="ctlg-modal-meta" id="ctlgModalMeta"></p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  /* ---- Filters ---- */
+  var activeCountry = 'all';
+  var activeStatus = 'all';
+  var cards = document.querySelectorAll('.ctlg-card');
+
+  function applyFilters() {
+    var anyVisible = false;
+    cards.forEach(function(card){
+      var matchC = activeCountry === 'all' || card.dataset.country === activeCountry;
+      var matchS = activeStatus === 'all' || card.dataset.status === activeStatus;
+      var show = matchC && matchS;
+      card.dataset.visible = show;
+      if (show) anyVisible = true;
+    });
+  }
+
+  document.getElementById('ctlgFilters').addEventListener('click', function(e){
+    var btn = e.target.closest('.ctlg-filter-btn');
+    if (!btn) return;
+    var filter = btn.dataset.filter;
+    var value = btn.dataset.value;
+    if (filter === 'country') activeCountry = value;
+    if (filter === 'status') activeStatus = value;
+    document.querySelectorAll('.ctlg-filter-btn[data-filter="' + filter + '"]').forEach(function(b){
+      b.classList.toggle('active', b.dataset.value === value);
+    });
+    applyFilters();
+  });
+
+  /* ---- Modal ---- */
+  var modal = document.getElementById('ctlgModal');
+  var content = document.getElementById('ctlgModalContent');
+  var titleEl = document.getElementById('ctlgModalTitle');
+  var metaEl = document.getElementById('ctlgModalMeta');
+
+  function openModal(src, title, meta) {
+    content.innerHTML = '';
+    var img = document.createElement('img');
+    img.src = src; img.alt = title || '';
+    content.appendChild(img);
+    titleEl.textContent = title || '';
+    metaEl.textContent = meta || '';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    content.innerHTML = '';
+  }
+
+  document.querySelectorAll('.ctlg-card-expand').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      openModal(btn.dataset.src, btn.dataset.title, btn.dataset.meta);
+    });
+  });
+  document.querySelectorAll('.ctlg-card-image').forEach(function(wrap){
+    var expBtn = wrap.querySelector('.ctlg-card-expand');
+    if (!expBtn) return;
+    wrap.addEventListener('click', function(e){
+      if (e.target.closest('.ctlg-card-expand')) return;
+      openModal(expBtn.dataset.src, expBtn.dataset.title, expBtn.dataset.meta);
+    });
+  });
+
+  modal.querySelector('.ctlg-modal-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+  });
+})();
+</script>
+{% endblock %}
