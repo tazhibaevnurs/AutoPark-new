@@ -51,5 +51,5 @@ urlpatterns = [
     path('api/cookie-consent/', core_views.CookieConsentView.as_view(), name='api_cookie_consent'),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Раздача медиа (загруженные фото/видео) — и в разработке, и на сервере
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
