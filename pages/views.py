@@ -258,3 +258,30 @@ def logout_view(request):
     response = redirect('home')
     delete_session_cookie(response)
     return response
+
+
+def serve_media(request, path):
+    """
+    Раздача медиа-файлов (фото, видео из media/) при любом DEBUG.
+    В production встроенный static(DEBUG) может не отдавать файлы — этот view всегда отдаёт.
+    """
+    from pathlib import Path
+
+    media_root = Path(settings.MEDIA_ROOT).resolve()
+    file_path = (media_root / path).resolve()
+    if not file_path.is_file():
+        raise Http404
+    if not str(file_path).startswith(str(media_root)):
+        raise Http404
+    content_type = None
+    if path.lower().endswith(('.jpg', '.jpeg')):
+        content_type = 'image/jpeg'
+    elif path.lower().endswith('.png'):
+        content_type = 'image/png'
+    elif path.lower().endswith('.gif'):
+        content_type = 'image/gif'
+    elif path.lower().endswith('.webp'):
+        content_type = 'image/webp'
+    elif path.lower().endswith('.mp4'):
+        content_type = 'video/mp4'
+    return FileResponse(open(file_path, 'rb'), content_type=content_type or 'application/octet-stream')

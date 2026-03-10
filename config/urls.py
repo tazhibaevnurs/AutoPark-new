@@ -1,6 +1,5 @@
 from django.urls import path, include
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 import config.admin  # noqa: F401 — кастомизация заголовка и названия админки
 from pages import views as pages_views
@@ -49,7 +48,6 @@ urlpatterns = [
     path('media/blog/<int:pk>/video/', pages_views.serve_blog_video, name='serve_blog_video'),
     path('admin/', admin.site.urls),
     path('api/cookie-consent/', core_views.CookieConsentView.as_view(), name='api_cookie_consent'),
+    # Раздача медиа (фото и т.д.) — явный view, работает при DEBUG=False
+    path('media/<path:path>', pages_views.serve_media, name='serve_media'),
 ]
-
-# Раздача медиа (загруженные фото/видео) — и в разработке, и на сервере
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
