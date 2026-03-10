@@ -99,13 +99,15 @@ LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/admin/'
 
 # Безопасность. При DEBUG=True — для разработки (редирект и secure-куки выкл.).
-# При DEBUG=False — полные значения для продакшена (HTTPS, HSTS, secure-куки).
-SECURE_HSTS_SECONDS = 1 if DEBUG else 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD = not DEBUG
-SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+# При DEBUG=False — полные значения для продакшена, если включён HTTPS (USE_HTTPS=true).
+# Если на сервере только HTTP (например, доступ по IP без сертификата) — задайте USE_HTTPS=false.
+USE_HTTPS = os.environ.get('USE_HTTPS', 'false').lower() == 'true'
+SECURE_HSTS_SECONDS = 1 if (DEBUG or not USE_HTTPS) else 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = USE_HTTPS and not DEBUG
+SECURE_HSTS_PRELOAD = USE_HTTPS and not DEBUG
+SECURE_SSL_REDIRECT = USE_HTTPS and not DEBUG
+SESSION_COOKIE_SECURE = USE_HTTPS and not DEBUG
+CSRF_COOKIE_SECURE = USE_HTTPS and not DEBUG
 
 # При разработке (DEBUG=True) check --deploy всё равно ругается на эти пункты —
 # подавляем предупреждения, т.к. в проде будет DEBUG=False и настройки выше будут включены.
