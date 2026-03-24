@@ -1,7 +1,9 @@
 {% load static %}
 <header class="header" id="header">
   <div class="header-left">
-    <a href="{% url 'home' %}" class="logo"><img src="{% static 'img/logo.svg' %}" alt="Autopark" class="logo-img"></a>
+    <a href="{% url 'home' %}" class="logo" aria-label="AUTOPARK">
+      <span class="logo-text">AUTOPARK</span>
+    </a>
   </div>
   <div class="header-right">
     <a href="tel:+79611634157" class="header-link">+7 (961) 163-41-57</a>

@@ -139,6 +139,13 @@ video {
   color: inherit;
 }
 
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
 .logo-img {
   height: 40px;
   width: auto;
@@ -449,6 +456,10 @@ video {
   .logo-img {
     height: 34px;
   }
+  .logo-text {
+    font-size: 1.05rem;
+    letter-spacing: 0.1em;
+  }
   .burger-menu {
     width: min(300px, 90vw);
     padding: 4.5rem var(--space-lg) var(--space-lg);
@@ -488,6 +499,10 @@ video {
   }
   .logo-img {
     height: 28px;
+  }
+  .logo-text {
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
   }
   .burger-icon,
   .burger-icon-close {
@@ -636,6 +651,15 @@ video {
 }
 .sf-brand { display: flex; flex-direction: column; gap: .75rem; }
 .sf-logo { display: inline-block; width: fit-content; }
+.sf-logo-text {
+  display: inline-block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,.95);
+  transition: opacity .2s;
+}
+.sf-logo:hover .sf-logo-text { opacity: 1; }
 .sf-logo-img { height: 32px; width: auto; opacity: .95; transition: opacity .2s; }
 .sf-logo:hover .sf-logo-img { opacity: 1; }
 .sf-tagline { margin: 0; font-size: .85rem; color: rgba(255,255,255,.45); line-height: 1.5; }
