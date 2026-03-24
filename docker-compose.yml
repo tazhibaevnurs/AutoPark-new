@@ -3,6 +3,7 @@ services:
   web:
     build: .
     container_name: autopark-web
+    init: true
     ports:
       - "80:8000"    # основной доступ без порта в URL (http://IP/)
       - "8000:8000" # запасной доступ (http://IP:8000/)
@@ -16,6 +17,12 @@ services:
     volumes:
       - media_volume:/app/media
       - data_volume:/data
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=5)\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     restart: unless-stopped
 
 volumes:
