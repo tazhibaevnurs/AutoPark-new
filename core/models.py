@@ -1,4 +1,7 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+import uuid
+from .validators import validate_uploaded_image, validate_uploaded_video
 
 
 class TimeStampedModel(models.Model):
@@ -51,6 +54,7 @@ class Service(models.Model):
         IMAGE = 'image', 'Фото'
         VIDEO = 'video', 'Видео'
 
+    public_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
     title = models.CharField('Название', max_length=200)
     description = models.TextField(
         'Описание',
@@ -87,6 +91,16 @@ class Service(models.Model):
     def __str__(self):
         return self.title
 
+    def clean(self):
+        if self.image:
+            validate_uploaded_image(self.image)
+        if self.video:
+            validate_uploaded_video(self.video)
+        if self.media_type == self.MediaType.IMAGE and self.video:
+            raise ValidationError({'video': 'Для типа "Фото" загрузка видео не допускается.'})
+        if self.media_type == self.MediaType.VIDEO and self.image:
+            raise ValidationError({'image': 'Для типа "Видео" загрузка изображения не допускается.'})
+
 
 class TeamMember(models.Model):
     """Сотрудник компании для страницы «Команда»."""
@@ -114,9 +128,14 @@ class TeamMember(models.Model):
     def initial(self):
         return self.name[0].upper() if self.name else '?'
 
+    def clean(self):
+        if self.photo:
+            validate_uploaded_image(self.photo)
+
 
 class Case(models.Model):
     """Кейс (реализованный проект) для страницы «Наши кейсы»."""
+    public_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
     class Country(models.TextChoices):
         KOREA = 'korea', 'Корея'
         CHINA = 'china', 'Китай'
@@ -183,9 +202,20 @@ class Case(models.Model):
             line = f'{line} · {self.description}' if line else self.description
         return line
 
+    def clean(self):
+        if self.image:
+            validate_uploaded_image(self.image)
+        if self.video:
+            validate_uploaded_video(self.video)
+        if self.media_type == self.MediaType.IMAGE and self.video:
+            raise ValidationError({'video': 'Для типа "Фото" загрузка видео не допускается.'})
+        if self.media_type == self.MediaType.VIDEO and self.image:
+            raise ValidationError({'image': 'Для типа "Видео" загрузка изображения не допускается.'})
+
 
 class CatalogCar(models.Model):
     """Автомобиль в каталоге — доступные для заказа авто."""
+    public_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
     class Country(models.TextChoices):
         KOREA = 'korea', 'Корея'
         CHINA = 'china', 'Китай'
@@ -259,6 +289,12 @@ class CatalogCar(models.Model):
             parts.append(self.mileage)
         return ', '.join(parts)
 
+    def clean(self):
+        if self.image:
+            validate_uploaded_image(self.image)
+        if self.video:
+            validate_uploaded_video(self.video)
+
 
 class CatalogCarImage(models.Model):
     """Фото галереи для автомобиля в каталоге."""
@@ -277,6 +313,10 @@ class CatalogCarImage(models.Model):
 
     def __str__(self):
         return f'{self.car.title} — фото #{self.order}'
+
+    def clean(self):
+        if self.image:
+            validate_uploaded_image(self.image)
 
 
 class HeroMedia(models.Model):
@@ -316,9 +356,20 @@ class HeroMedia(models.Model):
     def __str__(self):
         return f'Hero — {self.get_media_type_display()}'
 
+    def clean(self):
+        if self.image:
+            validate_uploaded_image(self.image)
+        if self.video:
+            validate_uploaded_video(self.video)
+        if self.media_type == self.MediaType.IMAGE and self.video:
+            raise ValidationError({'video': 'Для типа "Фото" загрузка видео не допускается.'})
+        if self.media_type == self.MediaType.VIDEO and self.image:
+            raise ValidationError({'image': 'Для типа "Видео" загрузка изображения не допускается.'})
+
 
 class BlogPost(models.Model):
     """Статья блога: заголовок, контент, главное фото, опциональное видео, публикация."""
+    public_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
     title = models.CharField('Заголовок', max_length=300)
     slug = models.SlugField('URL', max_length=200, unique=True, allow_unicode=True)
     excerpt = models.CharField(
@@ -357,3 +408,9 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+    def clean(self):
+        if self.image:
+            validate_uploaded_image(self.image)
+        if self.video:
+            validate_uploaded_video(self.video)

@@ -2,10 +2,29 @@ import os
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import FileResponse, Http404, HttpResponse
-from config.cookies import (
-    set_session_cookie,
-    get_session_cookie,
-    delete_session_cookie,
+from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.core.cache import cache
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.views.decorators.http import require_POST
+from django.utils.encoding import force_bytes
+from django.utils.http import (
+    url_has_allowed_host_and_scheme,
+    urlsafe_base64_decode,
+    urlsafe_base64_encode,
+)
+from .forms import RegistrationForm
+from config.security import (
+    check_rate_limit,
+    clear_rate_limit,
+    ensure_math_captcha,
+    get_client_ip,
+    log_security_event,
 )
 
 # Путь к hero-видео по умолчанию (статическая папка)
@@ -99,10 +118,10 @@ def _serve_video_with_range(request, file_path):
     return response
 
 
-def serve_service_video(request, pk):
+def serve_service_video(request, public_id):
     """Раздаёт видео услуги с поддержкой Range (для воспроизведения в карточке)."""
     from core.models import Service
-    service = Service.objects.filter(pk=pk).first()
+    service = Service.objects.filter(public_id=public_id).first()
     if not service or service.media_type != 'video' or not service.video:
         raise Http404('Video not found')
     return _serve_video_with_range(request, service.video.path)
@@ -195,13 +214,13 @@ def catalog(request):
     })
 
 
-def catalog_detail(request, pk):
+def catalog_detail(request, public_id):
     from core.models import CatalogCar
     from django.shortcuts import get_object_or_404
-    car = get_object_or_404(CatalogCar, pk=pk, is_active=True)
+    car = get_object_or_404(CatalogCar, public_id=public_id, is_active=True)
     car.ui_description = _catalog_car_description(car)
     gallery = car.gallery.all()
-    related = list(CatalogCar.objects.filter(is_active=True).exclude(pk=pk)[:3])
+    related = list(CatalogCar.objects.filter(is_active=True).exclude(public_id=public_id)[:3])
     for item in related:
         item.ui_description = _catalog_car_description(item)
     return render(request, 'pages/catalog_detail.html', {
@@ -209,10 +228,10 @@ def catalog_detail(request, pk):
     })
 
 
-def serve_catalog_video(request, pk):
+def serve_catalog_video(request, public_id):
     """Раздаёт видео авто из каталога с поддержкой Range."""
     from core.models import CatalogCar
-    car = CatalogCar.objects.filter(pk=pk).first()
+    car = CatalogCar.objects.filter(public_id=public_id, is_active=True).first()
     if not car or not car.video:
         raise Http404('Video not found')
     return _serve_video_with_range(request, car.video.path)
@@ -224,10 +243,10 @@ def cases(request):
     return render(request, 'pages/cases.html', {'cases': case_list})
 
 
-def serve_case_video(request, pk):
+def serve_case_video(request, public_id):
     """Раздаёт видео кейса с поддержкой Range."""
     from core.models import Case
-    case = Case.objects.filter(pk=pk).first()
+    case = Case.objects.filter(public_id=public_id, is_active=True).first()
     if not case or case.media_type != 'video' or not case.video:
         raise Http404('Video not found')
     return _serve_video_with_range(request, case.video.path)
@@ -247,10 +266,10 @@ def blog_detail(request, slug):
     return render(request, 'pages/blog_detail.html', {'post': post, 'related': related})
 
 
-def serve_blog_video(request, pk):
+def serve_blog_video(request, public_id):
     """Раздаёт видео статьи блога с поддержкой Range."""
     from core.models import BlogPost
-    post = BlogPost.objects.filter(pk=pk).first()
+    post = BlogPost.objects.filter(public_id=public_id, is_published=True).first()
     if not post or not post.video:
         raise Http404('Video not found')
     return _serve_video_with_range(request, post.video.path)
@@ -266,32 +285,196 @@ def contacts(request):
     return render(request, 'pages/contacts.html')
 
 
-# ---------- Пример маршрутов с куки-сессией ----------
+# ---------- Auth ----------
+
+LOGIN_RATE_LIMIT_ATTEMPTS = 5
+LOGIN_RATE_LIMIT_WINDOW_SECONDS = 60
+REGISTER_RATE_LIMIT_ATTEMPTS = 3
+REGISTER_RATE_LIMIT_WINDOW_SECONDS = 3600
+AI_FREE_DAILY_LIMIT = 5
+AI_PRO_DAILY_LIMIT = 50
+
+
+def _get_client_ip(request):
+    return get_client_ip(request)
+
+
+def _login_rate_limit_key(request, username):
+    ip = _get_client_ip(request) or 'unknown'
+    return f'auth:login_attempts:{ip}'
+
+
+def _is_login_limited(request, username):
+    key = _login_rate_limit_key(request, username)
+    attempts = cache.get(key, 0)
+    return attempts >= LOGIN_RATE_LIMIT_ATTEMPTS
+
+
+def _record_failed_login(request, username):
+    key = _login_rate_limit_key(request, username)
+    if not cache.add(key, 1, timeout=LOGIN_RATE_LIMIT_WINDOW_SECONDS):
+        try:
+            cache.incr(key)
+        except ValueError:
+            cache.set(key, 1, timeout=LOGIN_RATE_LIMIT_WINDOW_SECONDS)
+
+
+def _clear_failed_logins(request, username):
+    cache.delete(_login_rate_limit_key(request, username))
+
+
+def check_ai_generation_quota(user, plan):
+    """
+    Использовать в AI-endpoint'ах перед генерацией.
+    """
+    per_day_limit = AI_PRO_DAILY_LIMIT if plan == 'pro' else AI_FREE_DAILY_LIMIT
+    identity = f"user:{user.pk if user and user.is_authenticated else 'anonymous'}:{plan}"
+    return check_rate_limit('ai_generation_daily', identity, per_day_limit, 24 * 60 * 60)
+
+
+def _safe_redirect(request, fallback_name='home'):
+    target = (request.POST.get('next') or request.GET.get('next') or '').strip()
+    if target and url_has_allowed_host_and_scheme(
+        url=target,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return target
+    return reverse(fallback_name)
+
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('profile')
+
+    captcha_question, captcha_answer = ensure_math_captcha(request, "register")
+    if request.method == 'POST':
+        ip = _get_client_ip(request)
+        rate = check_rate_limit(
+            "register_per_ip",
+            ip,
+            REGISTER_RATE_LIMIT_ATTEMPTS,
+            REGISTER_RATE_LIMIT_WINDOW_SECONDS,
+        )
+        if not rate.allowed:
+            log_security_event("register_rate_limited", ip=ip)
+            messages.error(request, 'Слишком много регистраций с этого IP. Попробуйте позже.')
+            form = RegistrationForm(expected_captcha=captcha_answer)
+            return render(
+                request,
+                'pages/register.html',
+                {'form': form, 'captcha_question': captcha_question},
+                status=429,
+            )
+
+        form = RegistrationForm(request.POST, expected_captcha=captcha_answer)
+        if form.is_valid():
+            user = form.save()
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            verify_url = request.build_absolute_uri(
+                reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
+            )
+            send_mail(
+                subject='Подтверждение email',
+                message=f'Подтвердите email по ссылке: {verify_url}',
+                from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', None),
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+            messages.success(request, 'Проверьте email и подтвердите регистрацию.')
+            log_security_event("register_success", ip=ip, user_id=user.pk, username=user.username)
+            clear_rate_limit("register_per_ip", ip)
+            return redirect('login')
+        log_security_event("register_failed_validation", ip=ip)
+    else:
+        form = RegistrationForm(expected_captcha=captcha_answer)
+    return render(
+        request,
+        'pages/register.html',
+        {'form': form, 'captcha_question': captcha_question},
+    )
+
+
+def verify_email_view(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save(update_fields=['is_active'])
+        messages.success(request, 'Email подтвержден. Теперь можно войти.')
+    else:
+        messages.error(request, 'Ссылка подтверждения недействительна или истекла.')
+    return redirect('login')
+
 
 def login_view(request):
-    """Устанавливает session_token в куки и перенаправляет на профиль."""
-    response = redirect('profile')
-    set_session_cookie(response)
-    return response
+    if request.user.is_authenticated:
+        return redirect('profile')
+
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        if _is_login_limited(request, username):
+            log_security_event(
+                "login_rate_limited",
+                ip=_get_client_ip(request),
+                username=(username or '').strip().lower(),
+            )
+            messages.error(request, 'Слишком много попыток входа. Повторите через минуту.')
+            form = AuthenticationForm(request, data=request.POST)
+            return render(
+                request,
+                'pages/login.html',
+                {'form': form, 'next': _safe_redirect(request, 'profile')},
+                status=429,
+            )
+
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            if not user.is_active:
+                _record_failed_login(request, username)
+                log_security_event(
+                    "login_failed_inactive",
+                    ip=_get_client_ip(request),
+                    username=(username or '').strip().lower(),
+                )
+                messages.error(request, 'Подтвердите email перед входом.')
+            else:
+                login(request, user)
+                _clear_failed_logins(request, username)
+                log_security_event(
+                    "login_success",
+                    ip=_get_client_ip(request),
+                    user_id=user.pk,
+                    username=user.username,
+                )
+                return redirect(_safe_redirect(request, 'profile'))
+        else:
+            _record_failed_login(request, username)
+            log_security_event(
+                "login_failed",
+                ip=_get_client_ip(request),
+                username=(username or '').strip().lower(),
+            )
+    else:
+        form = AuthenticationForm()
+    return render(request, 'pages/login.html', {'form': form, 'next': _safe_redirect(request, 'profile')})
 
 
+@login_required(login_url='login')
 def profile_view(request):
-    """
-    Страница профиля: доступна только при наличии валидной куки session_token.
-    Если куки нет — перенаправление на /login/ (для API можно вернуть 401).
-    """
-    token = get_session_cookie(request)
-    if not token:
-        # Для API: return HttpResponse(status=401)
-        return redirect('login')
-    return render(request, 'pages/profile.html', {'session_token': token[:8] + '…'})
+    return render(request, 'pages/profile.html')
 
 
+@require_POST
 def logout_view(request):
-    """Выход: удаляет куки session_token и перенаправляет на главную."""
-    response = redirect('home')
-    delete_session_cookie(response)
-    return response
+    logout(request)
+    return redirect('home')
 
 
 def serve_media(request, path):
@@ -300,6 +483,11 @@ def serve_media(request, path):
     В production встроенный static(DEBUG) может не отдавать файлы — этот view всегда отдаёт.
     """
     from pathlib import Path
+
+    allowed_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.mp4'}
+    ext = Path(path).suffix.lower()
+    if ext not in allowed_extensions:
+        raise Http404
 
     media_root = Path(settings.MEDIA_ROOT).resolve()
     file_path = (media_root / path).resolve()

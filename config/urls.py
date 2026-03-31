@@ -1,6 +1,7 @@
 from django.urls import path, include
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 import config.admin  # noqa: F401 — кастомизация заголовка и названия админки
 from pages import views as pages_views
 from leads import views as leads_views
@@ -33,20 +34,42 @@ urlpatterns = [
     path('process/', pages_views.process, name='process'),
     path('about/', pages_views.about, name='about'),
     path('catalog/', pages_views.catalog, name='catalog'),
-    path('catalog/<int:pk>/', pages_views.catalog_detail, name='catalog_detail'),
-    path('media/catalog/<int:pk>/video/', pages_views.serve_catalog_video, name='serve_catalog_video'),
+    path('catalog/<uuid:public_id>/', pages_views.catalog_detail, name='catalog_detail'),
+    path('media/catalog/<uuid:public_id>/video/', pages_views.serve_catalog_video, name='serve_catalog_video'),
     path('cases/', pages_views.cases, name='cases'),
     path('team/', pages_views.team, name='team'),
     path('contacts/', pages_views.contacts, name='contacts'),
+    path('register/', pages_views.register_view, name='register'),
+    path('verify-email/<uidb64>/<token>/', pages_views.verify_email_view, name='verify_email'),
     path('login/', pages_views.login_view, name='login'),
     path('profile/', pages_views.profile_view, name='profile'),
     path('logout/', pages_views.logout_view, name='logout'),
+    path(
+        'password-reset/',
+        auth_views.PasswordResetView.as_view(template_name='pages/password_reset_form.html'),
+        name='password_reset',
+    ),
+    path(
+        'password-reset/done/',
+        auth_views.PasswordResetDoneView.as_view(template_name='pages/password_reset_done.html'),
+        name='password_reset_done',
+    ),
+    path(
+        'password-reset-confirm/<uidb64>/<token>/',
+        auth_views.PasswordResetConfirmView.as_view(template_name='pages/password_reset_confirm.html'),
+        name='password_reset_confirm',
+    ),
+    path(
+        'password-reset-complete/',
+        auth_views.PasswordResetCompleteView.as_view(template_name='pages/password_reset_complete.html'),
+        name='password_reset_complete',
+    ),
     path('video/hero.mp4', pages_views.serve_hero_video, name='hero_video'),
-    path('media/service/<int:pk>/video/', pages_views.serve_service_video, name='serve_service_video'),
-    path('media/case/<int:pk>/video/', pages_views.serve_case_video, name='serve_case_video'),
+    path('media/service/<uuid:public_id>/video/', pages_views.serve_service_video, name='serve_service_video'),
+    path('media/case/<uuid:public_id>/video/', pages_views.serve_case_video, name='serve_case_video'),
     path('blog/', pages_views.blog, name='blog'),
     path('blog/<slug:slug>/', pages_views.blog_detail, name='blog_detail'),
-    path('media/blog/<int:pk>/video/', pages_views.serve_blog_video, name='serve_blog_video'),
+    path('media/blog/<uuid:public_id>/video/', pages_views.serve_blog_video, name='serve_blog_video'),
     path('admin/', admin.site.urls),
     path('api/cookie-consent/', core_views.CookieConsentView.as_view(), name='api_cookie_consent'),
     # Раздача медиа (фото и т.д.) — явный view, работает при DEBUG=False

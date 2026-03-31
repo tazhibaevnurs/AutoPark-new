@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.utils.html import format_html, mark_safe
+from django.utils.html import format_html
 from .models import CookieConsent, Service, HeroMedia, TeamMember, Case, CatalogCar, CatalogCarImage, BlogPost
 
 
@@ -54,7 +54,7 @@ class ServiceAdmin(admin.ModelAdmin):
                 obj.image.url,
             )
         if obj.media_type == 'video' and obj.video:
-            return mark_safe('<span>Видео</span>')
+            return format_html('<span>Видео</span>')
         return '—'
     media_preview.short_description = 'Превью'
 
@@ -112,7 +112,7 @@ class CaseAdmin(admin.ModelAdmin):
                 obj.image.url,
             )
         if obj.media_type == 'video' and obj.video:
-            return mark_safe('<span>Видео</span>')
+            return format_html('<span>Видео</span>')
         return '—'
     media_preview.short_description = 'Медиа'
 
@@ -206,7 +206,7 @@ class BlogPostAdmin(admin.ModelAdmin):
                 obj.image.url,
             )
         if obj.video:
-            return mark_safe('<span>Видео</span>')
+            return format_html('<span>Видео</span>')
         return '—'
     media_preview.short_description = 'Медиа'
 

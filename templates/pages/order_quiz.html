@@ -435,6 +435,13 @@
           {{ form.comment.errors }}
         </div>
 
+        <div class="oq-field">
+          <label for="id_captcha_answer">CAPTCHA: {{ captcha_question }}</label>
+          {{ form.captcha_answer }}
+          <span class="form-hint">Введите результат, чтобы отправить форму</span>
+          {{ form.captcha_answer.errors }}
+        </div>
+
         <button type="submit" class="oq-submit-btn">Отправить заявку</button>
         <p class="oq-submit-note">Менеджер свяжется в течение 24 часов и предложит до 3 вариантов с расчётом стоимости</p>
       </form>

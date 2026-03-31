@@ -2,6 +2,9 @@ import re
 from django import forms
 from .models import Lead, CarSearchRequest, BuyoutRequest, DeliveryRequest, RegistrationRequest
 
+MAX_COMMENT_LENGTH = 2000
+MAX_MESSAGE_LENGTH = 2000
+
 
 class LeadForm(forms.ModelForm):
     """Форма заявки «Заказать авто» с валидацией телефона и бюджета."""
@@ -11,6 +14,12 @@ class LeadForm(forms.ModelForm):
         choices=[('', 'Выберите страну')] + list(Lead.Country.choices),
         required=True,
     )
+
+    captcha_answer = forms.CharField(required=True, label='Сколько будет?')
+
+    def __init__(self, *args, expected_captcha=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.expected_captcha = (expected_captcha or '').strip()
 
     class Meta:
         model = Lead
@@ -58,6 +67,18 @@ class LeadForm(forms.ModelForm):
         value = self.cleaned_data.get('budget') or ''
         return value.strip() or '—'
 
+    def clean_comment(self):
+        value = (self.cleaned_data.get('comment') or '').strip()
+        if len(value) > MAX_COMMENT_LENGTH:
+            raise forms.ValidationError(f'Комментарий слишком длинный (максимум {MAX_COMMENT_LENGTH} символов).')
+        return value
+
+    def clean_captcha_answer(self):
+        value = (self.cleaned_data.get('captcha_answer') or '').strip()
+        if not self.expected_captcha or value != self.expected_captcha:
+            raise forms.ValidationError('Неверный ответ CAPTCHA.')
+        return value
+
 
 class CarSearchForm(forms.ModelForm):
     """Форма заявки на поиск автомобиля."""
@@ -104,6 +125,14 @@ class CarSearchForm(forms.ModelForm):
             digits = '7' + digits
         return '+7' + digits[-10:].rjust(10, '0')
 
+    def clean_message(self):
+        value = (self.cleaned_data.get('message') or '').strip()
+        if not value:
+            raise forms.ValidationError('Опишите желаемый автомобиль.')
+        if len(value) > MAX_MESSAGE_LENGTH:
+            raise forms.ValidationError(f'Сообщение слишком длинное (максимум {MAX_MESSAGE_LENGTH} символов).')
+        return value
+
 
 class DeliveryForm(forms.ModelForm):
     """Форма заявки на доставку автомобиля."""
@@ -144,6 +173,12 @@ class DeliveryForm(forms.ModelForm):
         elif not digits.startswith('7'):
             digits = '7' + digits
         return '+7' + digits[-10:].rjust(10, '0')
+
+    def clean_message(self):
+        value = (self.cleaned_data.get('message') or '').strip()
+        if len(value) > MAX_MESSAGE_LENGTH:
+            raise forms.ValidationError(f'Комментарий слишком длинный (максимум {MAX_MESSAGE_LENGTH} символов).')
+        return value
 
 
 class RegistrationForm(forms.ModelForm):
@@ -186,6 +221,12 @@ class RegistrationForm(forms.ModelForm):
             digits = '7' + digits
         return '+7' + digits[-10:].rjust(10, '0')
 
+    def clean_message(self):
+        value = (self.cleaned_data.get('message') or '').strip()
+        if len(value) > MAX_MESSAGE_LENGTH:
+            raise forms.ValidationError(f'Комментарий слишком длинный (максимум {MAX_MESSAGE_LENGTH} символов).')
+        return value
+
 
 class BuyoutForm(forms.ModelForm):
     """Форма заявки на выкуп автомобиля."""
@@ -226,3 +267,9 @@ class BuyoutForm(forms.ModelForm):
         elif not digits.startswith('7'):
             digits = '7' + digits
         return '+7' + digits[-10:].rjust(10, '0')
+
+    def clean_message(self):
+        value = (self.cleaned_data.get('message') or '').strip()
+        if len(value) > MAX_MESSAGE_LENGTH:
+            raise forms.ValidationError(f'Комментарий слишком длинный (максимум {MAX_MESSAGE_LENGTH} символов).')
+        return value

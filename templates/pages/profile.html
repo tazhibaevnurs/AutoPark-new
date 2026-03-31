@@ -12,8 +12,12 @@
 <main class="page">
   <div class="container">
     <h1>Профиль</h1>
-    <p>Вы вошли. Сессия: <code>{{ session_token }}</code></p>
-    <p><a href="{% url 'logout' %}" class="btn btn-outline">Выйти</a></p>
+    <p>Вы вошли как: <code>{{ request.user.username }}</code></p>
+    <p>Email: <code>{{ request.user.email|default:"не указан" }}</code></p>
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline">Выйти</button>
+    </form>
   </div>
 </main>
 {% endblock %}

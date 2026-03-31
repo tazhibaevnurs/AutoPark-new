@@ -236,12 +236,12 @@
     <article class="cs-card">
       <div class="cs-card-image{% if case.media_type == 'image' and not case.image or case.media_type == 'video' and not case.video %} cs-card-image--placeholder{% endif %}">
         {% if case.media_type == 'video' and case.video %}
-          <video src="{% url 'serve_case_video' case.pk %}" muted loop playsinline preload="metadata"></video>
+          <video src="{% url 'serve_case_video' case.public_id %}" muted loop playsinline preload="metadata"></video>
           <button type="button" class="cs-sound-btn" aria-label="Включить звук">
             <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
             <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
           </button>
-          <button type="button" class="cs-expand-btn" aria-label="Развернуть" data-type="video" data-src="{% url 'serve_case_video' case.pk %}" data-title="{{ case.title }}" data-meta="{{ case.meta_line }}">
+          <button type="button" class="cs-expand-btn" aria-label="Развернуть" data-type="video" data-src="{% url 'serve_case_video' case.public_id %}" data-title="{{ case.title }}" data-meta="{{ case.meta_line }}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         {% elif case.image %}

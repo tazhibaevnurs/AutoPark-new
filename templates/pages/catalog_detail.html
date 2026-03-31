@@ -287,7 +287,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </div>
         {% elif car.video %}
-          <video src="{% url 'serve_catalog_video' car.pk %}" muted playsinline preload="metadata" id="mainVid"></video>
+          <video src="{% url 'serve_catalog_video' car.public_id %}" muted playsinline preload="metadata" id="mainVid"></video>
           <div class="cdet-play-badge"><span><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span></div>
         {% else %}
           <div class="cdet-main-media--placeholder">
@@ -309,7 +309,7 @@
         </div>
         {% endfor %}
         {% if car.video %}
-        <div class="cdet-thumb cdet-thumb--video" data-type="video" data-src="{% url 'serve_catalog_video' car.pk %}">
+        <div class="cdet-thumb cdet-thumb--video" data-type="video" data-src="{% url 'serve_catalog_video' car.public_id %}">
           {% if car.image %}<img src="{{ car.image.url }}" alt="Видео">{% endif %}
         </div>
         {% endif %}
@@ -379,7 +379,7 @@
     <h2>Другие автомобили</h2>
     <div class="cdet-related-grid">
       {% for r in related %}
-      <a href="{% url 'catalog_detail' r.pk %}" class="cdet-rel-card">
+      <a href="{% url 'catalog_detail' r.public_id %}" class="cdet-rel-card">
         <div class="cdet-rel-image">
           {% if r.image %}<img src="{{ r.image.url }}" alt="{{ r.title }}">{% endif %}
         </div>

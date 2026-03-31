@@ -400,3 +400,87 @@ docker cp autopark-web:/data/db.sqlite3 .\db.sqlite3
 | Суперпользователь | `docker compose exec web python manage.py createsuperuser` |
 | Обновить код | `git pull` → `docker compose build` → `docker compose up -d` |
 | Выгрузить локальную БД на сервер | Локально: `.\scripts\sync-db-to-server.ps1` (задать DEPLOY_HOST, DEPLOY_USER) |
+
+---
+
+## Security Checklist (Prod)
+
+Ниже минимальный чек-лист безопасного деплоя и мониторинга для этого проекта.
+
+### 1) Принудительный HTTPS + HSTS
+
+В `.env` продакшена:
+
+```env
+DEBUG=False
+USE_HTTPS=true
+```
+
+В reverse proxy (Nginx/Cloudflare) обязательно пробрасывайте `X-Forwarded-Proto=https`.
+Приложение уже настроено на `SECURE_SSL_REDIRECT` и HSTS при `USE_HTTPS=true`.
+
+### 2) Секреты только в environment
+
+- Не храните секреты в коде и в Git.
+- Для Vercel: используйте **Project Settings → Environment Variables**.
+- Для Supabase: используйте **Supabase Vault** / Secret store.
+- Для Docker VPS: храните секреты только в серверном `.env`.
+
+### 3) База данных не должна быть доступна из интернета
+
+- Не публикуйте порт БД наружу (`5432/3306`).
+- Разрешите доступ к БД только с backend-сети/хоста приложения.
+- На VPS: закройте порт БД в `ufw`/security group.
+
+### 4) Строгий CORS (без `*`)
+
+В `.env`:
+
+```env
+CORS_ALLOWED_ORIGINS=https://your-domain.com
+```
+
+Поддерживаются только явно перечисленные origin.
+
+### 5) Security headers
+
+Приложение выставляет:
+- `X-Frame-Options: DENY`
+- `X-Content-Type-Options: nosniff`
+- `Content-Security-Policy` (можно переопределить через `CONTENT_SECURITY_POLICY`)
+- `Referrer-Policy: strict-origin-when-cross-origin`
+
+### 6) Логирование security-событий
+
+Включено структурированное логирование:
+- попытки login/register (успех/ошибка/rate-limit);
+- API ошибки `4xx/5xx`;
+- подозрительная активность (burst `401/403`, блокировки CORS, oversized body).
+
+Логи идут в stdout контейнера и доступны через:
+
+```bash
+docker compose logs -f web
+```
+
+### 7) Мониторинг аномалий
+
+Настраиваемые пороги:
+
+```env
+SUSPICIOUS_4XX_PER_IP_10MIN=30
+ANOMALY_REQUESTS_PER_MINUTE=1500
+```
+
+При превышении порогов пишутся отдельные security events.
+
+### 8) Бэкапы БД
+
+- Для Supabase: включите ежедневные autobackups в проекте Supabase.
+- Для VPS SQLite: делайте ежедневный cron backup (`sqlite3 .backup` + ротация + offsite).
+
+### 9) Preview deployments не должны иметь доступ к Prod БД
+
+- Для Vercel создайте отдельные env для `Preview` и `Production`.
+- Preview должен использовать отдельную БД/схему и отдельные ключи.
+- Никогда не используйте production `DATABASE_URL`/service keys в Preview.

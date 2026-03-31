@@ -149,7 +149,7 @@
   <article class="bdet-main">
     <div class="bdet-media{% if not post.image and not post.video %} bdet-media--placeholder{% endif %}" style="position:relative;">
       {% if post.video %}
-        <video src="{% url 'serve_blog_video' post.pk %}" controls playsinline preload="metadata" poster="{% if post.image %}{{ post.image.url }}{% endif %}"></video>
+        <video src="{% url 'serve_blog_video' post.public_id %}" controls playsinline preload="metadata" poster="{% if post.image %}{{ post.image.url }}{% endif %}"></video>
         <div class="bdet-play-badge" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><polygon points="5 3 19 12 5 21 5 3"/></svg></span></div>
       {% elif post.image %}
         <img src="{{ post.image.url }}" alt="{{ post.title }}">

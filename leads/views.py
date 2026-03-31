@@ -6,6 +6,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 
 from .forms import LeadForm, CarSearchForm, BuyoutForm, DeliveryForm, RegistrationForm
+from config.security import ensure_math_captcha
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
@@ -14,6 +15,18 @@ class OrderQuizView(FormView):
     template_name = 'pages/order_quiz.html'
     form_class = LeadForm
     success_url = reverse_lazy('order_quiz_success')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        _, expected = ensure_math_captcha(self.request, 'order_quiz')
+        kwargs['expected_captcha'] = expected
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        question, _ = ensure_math_captcha(self.request, 'order_quiz')
+        ctx['captcha_question'] = question
+        return ctx
 
     def form_valid(self, form):
         form.save()

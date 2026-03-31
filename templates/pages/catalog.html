@@ -249,7 +249,7 @@
         {% if car.specs_line %}<p class="ctlg-card-specs">{{ car.specs_line }}</p>{% endif %}
         <p class="ctlg-card-desc">{{ car.ui_description }}</p>
         {% if car.price %}<p class="ctlg-card-price">{{ car.price }}</p>{% endif %}
-        <a href="{% url 'catalog_detail' car.pk %}" class="ctlg-card-btn">Подробнее</a>
+        <a href="{% url 'catalog_detail' car.public_id %}" class="ctlg-card-btn">Подробнее</a>
       </div>
     </article>
     {% empty %}

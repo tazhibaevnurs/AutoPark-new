@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход — AUTOPARK{% endblock %}
+
+{% block content %}
+<main class="page">
+  <div class="container">
+    <h1>Вход</h1>
+    {% if messages %}
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      {{ form.as_p }}
+      <button type="submit">Войти</button>
+    </form>
+    <p><a href="{% url 'register' %}">Создать аккаунт</a></p>
+    <p><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
+  </div>
+</main>
+{% endblock %}

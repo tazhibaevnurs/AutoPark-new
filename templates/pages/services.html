@@ -161,7 +161,7 @@
     <a href="{{ item.detail_url }}" class="svc-card">
       <div class="svc-card-image{% if not item.service.image and not item.service.video %} svc-card-image--placeholder{% endif %}">
         {% if item.service.media_type == 'video' and item.service.video %}
-          <video src="{% url 'serve_service_video' item.service.pk %}" muted loop playsinline autoplay preload="auto" poster="{% if item.service.image %}{{ item.service.image.url }}{% endif %}"></video>
+          <video src="{% url 'serve_service_video' item.service.public_id %}" muted loop playsinline autoplay preload="auto" poster="{% if item.service.image %}{{ item.service.image.url }}{% endif %}"></video>
         {% elif item.service.media_type == 'image' and item.service.image %}
           <img src="{{ item.service.image.url }}" alt="{{ item.service.title }}">
         {% elif item.service.image %}
