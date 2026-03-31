@@ -2,7 +2,7 @@
 <header class="header" id="header">
   <div class="header-left">
     <a href="{% url 'home' %}" class="logo" aria-label="AUTOPARK">
-      <span class="logo-text">AUTOPARK</span>
+      <img src="{% static 'img/autopark-logo-v2.svg' %}" alt="AUTOPARK" class="logo-img">
     </a>
   </div>
   <div class="header-right">
@@ -19,10 +19,10 @@
     <button type="button" class="burger-close" aria-label="Закрыть меню">×</button>
     <ul class="burger-menu-list">
       <li><a href="{% url 'home' %}">Главная</a></li>
-      <li><a href="{% url 'blog' %}">Блог</a></li>
       <li><a href="{% url 'about' %}">О нас</a></li>
       <li><a href="{% url 'cases' %}">Наши кейсы</a></li>
       <li><a href="{% url 'team' %}">Команда</a></li>
+      <li><a href="{% url 'blog' %}">Блог</a></li>
       <li><a href="{% url 'contacts' %}">Контакты</a></li>
     </ul>
     <div class="burger-menu-buttons">

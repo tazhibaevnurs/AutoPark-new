@@ -147,7 +147,7 @@ video {
 }
 
 .logo-img {
-  height: 40px;
+  height: 24px;
   width: auto;
   display: block;
 }
@@ -313,11 +313,12 @@ video {
 .burger-menu-legal a {
   display: block;
   padding: var(--space-sm) 0;
-  font-size: 0.9rem;
-  color: var(--text-muted, var(--text));
+  font-size: 0.68rem;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.5);
   transition: color var(--transition);
 }
-.burger-menu-legal a:hover { color: var(--accent-light); }
+.burger-menu-legal a:hover { color: rgba(255, 255, 255, 0.78); }
 
 /* ========== FAB — плавающая кнопка контактов (телефон, Telegram, закрыть) ========== */
 .fab {
@@ -454,7 +455,7 @@ video {
     font-size: 0.85rem;
   }
   .logo-img {
-    height: 34px;
+    height: 21px;
   }
   .logo-text {
     font-size: 1.05rem;
@@ -498,7 +499,7 @@ video {
     gap: var(--space-sm);
   }
   .logo-img {
-    height: 28px;
+    height: 18px;
   }
   .logo-text {
     font-size: 0.95rem;

@@ -350,12 +350,10 @@
         {% endif %}
       </div>
 
-      {% if car.description %}
       <div class="cdet-desc">
         <h3>Описание</h3>
-        <p>{{ car.description }}</p>
+        <p>{{ car.ui_description }}</p>
       </div>
-      {% endif %}
 
       <div class="cdet-actions">
         <a href="{% url 'order_quiz' %}" class="cdet-btn cdet-btn--primary">Оставить заявку</a>

@@ -7,6 +7,33 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
 <link rel="stylesheet" href="{% static 'postanovka/app.css' %}">
+<style>
+  /* Hero фон как на странице "Поиск автомобилей" */
+  .postanovka-root section:first-of-type {
+    position: relative;
+    overflow: hidden;
+    background-color: #0a0a0a !important;
+  }
+  .postanovka-root section:first-of-type::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("{% static 'img/postanovka-hero.jpg' %}") center/cover no-repeat;
+    opacity: .38;
+    z-index: 0;
+  }
+  .postanovka-root section:first-of-type::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.78));
+    z-index: 0;
+  }
+  .postanovka-root section:first-of-type > * {
+    position: relative;
+    z-index: 1;
+  }
+</style>
 {% endblock %}
 
 {% block content %}

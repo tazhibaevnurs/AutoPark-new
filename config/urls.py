@@ -25,6 +25,7 @@ urlpatterns = [
         path('', leads_views.DeliveryView.as_view(), name='delivery'),
         path('success/', leads_views.delivery_success_view, name='delivery_success'),
     ])),
+    path('prodazha-motociklov/', pages_views.motorcycle_sales, name='motorcycle_sales'),
     path('postanovka-na-uchet/', include([
         path('', leads_views.RegistrationView.as_view(), name='registration'),
         path('success/', leads_views.registration_success_view, name='registration_success'),

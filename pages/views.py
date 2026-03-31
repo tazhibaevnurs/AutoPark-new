@@ -118,6 +118,8 @@ def _service_detail_url(service, request):
         return reverse('buyout')
     if title in ('Доставка авто', 'Доставка', 'Логистика', 'Логистические услуги') or service.id == 3:
         return reverse('delivery')
+    if title in ('Продажа мотоциклов', 'Мотоциклы', 'Продажа мото') or service.id == 5:
+        return reverse('motorcycle_sales')
     if title in ('Постановка на учет', 'Постановка на учёт', 'Оформление') or service.id == 4:
         return reverse('registration')
     return reverse('order_quiz')
@@ -125,17 +127,44 @@ def _service_detail_url(service, request):
 
 def services(request):
     from core.models import Service
-    from django.urls import reverse
     service_list = list(Service.objects.all())
     services_with_urls = []
+    has_motorcycle_service = False
     for s in service_list:
+        if (s.title or '').strip().lower() in ('продажа мотоциклов', 'мотоциклы', 'продажа мото'):
+            has_motorcycle_service = True
         services_with_urls.append({
             'service': s,
             'detail_url': _service_detail_url(s, request),
         })
     return render(request, 'pages/services.html', {
         'services_with_urls': services_with_urls,
+        'has_motorcycle_service': has_motorcycle_service,
     })
+
+
+def motorcycle_sales(request):
+    return render(request, 'pages/motorcycle_sales.html')
+
+
+def _catalog_car_description(car):
+    """Возвращает описание авто: из БД или сгенерированное по данным."""
+    if car.description and car.description.strip():
+        return car.description.strip()
+
+    country = car.get_country_display()
+    parts = [f'{car.title} из {country}.']
+    details = []
+    if car.year:
+        details.append(f'Год: {car.year}')
+    if car.engine_type:
+        details.append(f'Двигатель: {car.engine_type}')
+    if car.mileage:
+        details.append(f'Пробег: {car.mileage}')
+    if details:
+        parts.append(' '.join(details) + '.')
+    parts.append('Подбор, проверка, доставка и оформление под ключ.')
+    return ' '.join(parts)
 
 
 def process(request):
@@ -148,14 +177,16 @@ def about(request):
 
 def catalog(request):
     from core.models import CatalogCar
-    cars = CatalogCar.objects.filter(is_active=True)
+    cars = list(CatalogCar.objects.filter(is_active=True))
+    for car in cars:
+        car.ui_description = _catalog_car_description(car)
     countries = [('all', 'Все')]
     for code, label in CatalogCar.Country.choices:
-        if cars.filter(country=code).exists():
+        if any(c.country == code for c in cars):
             countries.append((code, label))
     statuses = [('all', 'Все')]
     for code, label in CatalogCar.Status.choices:
-        if cars.filter(status=code).exists():
+        if any(c.status == code for c in cars):
             statuses.append((code, label))
     return render(request, 'pages/catalog.html', {
         'cars': cars,
@@ -168,8 +199,11 @@ def catalog_detail(request, pk):
     from core.models import CatalogCar
     from django.shortcuts import get_object_or_404
     car = get_object_or_404(CatalogCar, pk=pk, is_active=True)
+    car.ui_description = _catalog_car_description(car)
     gallery = car.gallery.all()
-    related = CatalogCar.objects.filter(is_active=True).exclude(pk=pk)[:3]
+    related = list(CatalogCar.objects.filter(is_active=True).exclude(pk=pk)[:3])
+    for item in related:
+        item.ui_description = _catalog_car_description(item)
     return render(request, 'pages/catalog_detail.html', {
         'car': car, 'gallery': gallery, 'related': related,
     })

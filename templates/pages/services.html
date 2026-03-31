@@ -172,6 +172,18 @@
         <h2 class="svc-card-title">{{ item.service.title }}</h2>
         {% if item.service.description %}
           <p class="svc-card-desc">{{ item.service.description }}</p>
+        {% elif item.service.title == 'Поиск авто' or item.service.title == 'Подбор авто на аукционах' %}
+          <p class="svc-card-desc">Подберём автомобиль под ваш бюджет и требования, проверим историю и состояние, согласуем лучший вариант перед покупкой.</p>
+        {% elif item.service.title == 'Выкуп авто' or item.service.title == 'Выкуп' %}
+          <p class="svc-card-desc">Организуем выкуп автомобиля под ключ: проверка, оформление сделки, сопровождение оплаты и передача документов.</p>
+        {% elif item.service.title == 'Доставка авто' or item.service.title == 'Доставка' %}
+          <p class="svc-card-desc">Доставим автомобиль из США, Китая или Кореи с контролем на каждом этапе логистики и прозрачными сроками.</p>
+        {% elif item.service.title == 'Помощь в поставке на учет' or item.service.title == 'Постановка на учет' or item.service.title == 'Постановка на учёт' %}
+          <p class="svc-card-desc">Поможем с постановкой автомобиля на учёт: проверка документов, сопровождение процедуры и экономия вашего времени.</p>
+        {% elif item.service.title == 'Продажа мотоциклов' %}
+          <p class="svc-card-desc">Мотоциклы из Южной Кореи под заказ: японские, американские и европейские марки, минимальный пробег и срок доставки около 40 дней.</p>
+        {% else %}
+          <p class="svc-card-desc">Полное сопровождение сделки: от подбора до получения транспорта и оформления документов.</p>
         {% endif %}
         <span class="svc-card-btn">Подробнее</span>
       </div>
@@ -179,6 +191,18 @@
     {% empty %}
     <p class="svc-empty">Услуги пока не добавлены. Добавьте их через <a href="/admin/core/service/" style="color:#E98733;">админ-панель</a>.</p>
     {% endfor %}
+    {% if not has_motorcycle_service %}
+    <a href="{% url 'motorcycle_sales' %}" class="svc-card">
+      <div class="svc-card-image">
+        <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=80" alt="Продажа мотоциклов">
+      </div>
+      <div class="svc-card-body">
+        <h2 class="svc-card-title">Продажа мотоциклов</h2>
+        <p class="svc-card-desc">Мотоциклы из Южной Кореи под заказ: японские, американские и европейские марки, минимальный пробег и срок доставки около 40 дней.</p>
+        <span class="svc-card-btn">Подробнее</span>
+      </div>
+    </a>
+    {% endif %}
   </div>
 
   <section class="svc-cta">
