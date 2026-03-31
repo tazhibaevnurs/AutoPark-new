@@ -69,6 +69,7 @@
     background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
     overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04);
     transition: border-color .3s, box-shadow .3s, transform .3s;
+    display: flex; flex-direction: column;
   }
   .ctlg-card:hover {
     border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
@@ -111,19 +112,19 @@
   .ctlg-card-expand:hover { background: rgba(233,135,51,.7); }
   .ctlg-card-expand svg { width: 18px; height: 18px; }
 
-  .ctlg-card-body { padding: 1.25rem 1.5rem 1.5rem; }
+  .ctlg-card-body { padding: 1.25rem 1.5rem 1.5rem; display: flex; flex-direction: column; flex: 1; }
   .ctlg-card-country {
     display: inline-block; font-size: .7rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: .08em; color: #E98733; margin-bottom: .3rem;
   }
   .ctlg-card-title { font-size: 1.15rem; font-weight: 600; color: #000; margin: 0 0 .25rem; }
   .ctlg-card-specs { font-size: .85rem; color: #6b7280; margin: 0 0 .75rem; }
-  .ctlg-card-desc { font-size: .9rem; color: #4b5563; line-height: 1.55; margin: 0 0 .85rem; }
   .ctlg-card-price { font-size: 1.1rem; font-weight: 700; color: #111; margin: 0 0 .75rem; }
   .ctlg-card-btn {
     display: inline-block; padding: .6rem 1.5rem; font-size: .875rem; font-weight: 500;
     border-radius: 10px; background: #111; color: #fff; text-decoration: none;
     transition: background .2s, transform .2s;
+    margin-top: auto;
   }
   .ctlg-card-btn:hover { background: #E98733; transform: translateY(-1px); color: #fff; }
 
@@ -247,7 +248,6 @@
         <span class="ctlg-card-country">{{ car.get_country_display }}</span>
         <h2 class="ctlg-card-title">{{ car.title }}</h2>
         {% if car.specs_line %}<p class="ctlg-card-specs">{{ car.specs_line }}</p>{% endif %}
-        <p class="ctlg-card-desc">{{ car.ui_description }}</p>
         {% if car.price %}<p class="ctlg-card-price">{{ car.price }}</p>{% endif %}
         <a href="{% url 'catalog_detail' car.public_id %}" class="ctlg-card-btn">Подробнее</a>
       </div>
