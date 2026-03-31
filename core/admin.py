@@ -3,6 +3,21 @@ from django.utils.html import format_html
 from .models import CookieConsent, Service, HeroMedia, TeamMember, Case, CatalogCar, CatalogCarImage, BlogPost
 
 
+OPTIMIZATION_HINT = (
+    "После сохранения файл может быть автоматически оптимизирован и "
+    "переименован в *_optimized."
+)
+
+
+def _append_optimization_hint(field):
+    if not field:
+        return
+    base_help = (field.help_text or "").strip()
+    if OPTIMIZATION_HINT in base_help:
+        return
+    field.help_text = f"{base_help} {OPTIMIZATION_HINT}".strip()
+
+
 @admin.register(HeroMedia)
 class HeroMediaAdmin(admin.ModelAdmin):
     list_display = ('media_type', 'preview_display')
@@ -14,6 +29,12 @@ class HeroMediaAdmin(admin.ModelAdmin):
         'preview',
     )
     readonly_fields = ('preview',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        _append_optimization_hint(form.base_fields.get('image'))
+        _append_optimization_hint(form.base_fields.get('video'))
+        return form
 
     def preview(self, obj):
         if obj.media_type == 'image' and obj.image:
@@ -47,6 +68,12 @@ class ServiceAdmin(admin.ModelAdmin):
     ordering = ('order',)
     fields = ('title', 'description', 'media_type', 'image', 'video', 'order')
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        _append_optimization_hint(form.base_fields.get('image'))
+        _append_optimization_hint(form.base_fields.get('video'))
+        return form
+
     def media_preview(self, obj):
         if obj.media_type == 'image' and obj.image:
             return format_html(
@@ -69,6 +96,11 @@ class TeamMemberAdmin(admin.ModelAdmin):
     ordering = ('order', 'id')
     fields = ('name', 'role', 'photo', 'order', 'is_active', 'preview')
     readonly_fields = ('preview',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        _append_optimization_hint(form.base_fields.get('photo'))
+        return form
 
     def photo_preview(self, obj):
         if obj.photo:
@@ -105,6 +137,12 @@ class CaseAdmin(admin.ModelAdmin):
     fields = ('title', 'country', 'year', 'engine_type', 'description', 'media_type', 'image', 'video', 'order', 'is_active', 'preview')
     readonly_fields = ('preview',)
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        _append_optimization_hint(form.base_fields.get('image'))
+        _append_optimization_hint(form.base_fields.get('video'))
+        return form
+
     def media_preview(self, obj):
         if obj.media_type == 'image' and obj.image:
             return format_html(
@@ -135,6 +173,11 @@ class CatalogCarImageInline(admin.TabularInline):
     readonly_fields = ('thumb',)
     ordering = ('order', 'id')
 
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        _append_optimization_hint(formset.form.base_fields.get('image'))
+        return formset
+
     def thumb(self, obj):
         if obj.image:
             return format_html(
@@ -161,6 +204,12 @@ class CatalogCarAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('preview',)
     inlines = [CatalogCarImageInline]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        _append_optimization_hint(form.base_fields.get('image'))
+        _append_optimization_hint(form.base_fields.get('video'))
+        return form
 
     def photo_thumb(self, obj):
         if obj.image:
@@ -198,6 +247,12 @@ class BlogPostAdmin(admin.ModelAdmin):
         ('Публикация', {'fields': ('is_published', 'order', 'created_at', 'updated_at')}),
     )
     readonly_fields = ('preview', 'created_at', 'updated_at')
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        _append_optimization_hint(form.base_fields.get('image'))
+        _append_optimization_hint(form.base_fields.get('video'))
+        return form
 
     def media_preview(self, obj):
         if obj.image:
