@@ -21,7 +21,6 @@ from django.utils.http import (
 from .forms import RegistrationForm
 from config.security import (
     check_rate_limit,
-    clear_rate_limit,
     ensure_math_captcha,
     get_client_ip,
     log_security_event,
@@ -384,7 +383,6 @@ def register_view(request):
             )
             messages.success(request, 'Проверьте email и подтвердите регистрацию.')
             log_security_event("register_success", ip=ip, user_id=user.pk, username=user.username)
-            clear_rate_limit("register_per_ip", ip)
             return redirect('login')
         log_security_event("register_failed_validation", ip=ip)
     else:

@@ -11,12 +11,13 @@
 
 {% block content %}
 <div id="vykup-root" class="vykup-root"></div>
+{{ form_errors|json_script:"buyout-errors-data" }}
 <script>
   window.__VYKUP_DATA__ = {
     formAction: "{{ form_action }}",
     csrfToken: "{{ csrf_token }}",
     successUrl: "{{ success_url }}",
-    errors: {{ form_errors_json|safe }}
+    errors: JSON.parse(document.getElementById('buyout-errors-data').textContent)
   };
 </script>
 <script type="module" src="{% static 'vykup/app.js' %}"></script>

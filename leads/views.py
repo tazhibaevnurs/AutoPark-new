@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render, redirect
 from django.views.generic import FormView
 from django.urls import reverse_lazy, reverse
@@ -49,7 +48,7 @@ class CarSearchView(FormView):
         ctx['form_action'] = reverse('car_search')
         ctx['success_url'] = reverse('car_search_success')
         form = ctx.get('form')
-        ctx['form_errors_json'] = json.dumps(dict(form.errors), ensure_ascii=False) if form and form.errors else 'null'
+        ctx['form_errors'] = dict(form.errors) if form and form.errors else None
         return ctx
 
     def form_valid(self, form):
@@ -73,7 +72,7 @@ class BuyoutView(FormView):
         ctx['form_action'] = reverse('buyout')
         ctx['success_url'] = reverse('buyout_success')
         form = ctx.get('form')
-        ctx['form_errors_json'] = json.dumps(dict(form.errors), ensure_ascii=False) if form and form.errors else 'null'
+        ctx['form_errors'] = dict(form.errors) if form and form.errors else None
         return ctx
 
     def form_valid(self, form):
@@ -97,7 +96,7 @@ class DeliveryView(FormView):
         ctx['form_action'] = reverse('delivery')
         ctx['success_url'] = reverse('delivery_success')
         form = ctx.get('form')
-        ctx['form_errors_json'] = json.dumps(dict(form.errors), ensure_ascii=False) if form and form.errors else 'null'
+        ctx['form_errors'] = dict(form.errors) if form and form.errors else None
         return ctx
 
     def form_valid(self, form):
@@ -121,7 +120,7 @@ class RegistrationView(FormView):
         ctx['form_action'] = reverse('registration')
         ctx['success_url'] = reverse('registration_success')
         form = ctx.get('form')
-        ctx['form_errors_json'] = json.dumps(dict(form.errors), ensure_ascii=False) if form and form.errors else 'null'
+        ctx['form_errors'] = dict(form.errors) if form and form.errors else None
         return ctx
 
     def form_valid(self, form):

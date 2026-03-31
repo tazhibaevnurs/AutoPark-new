@@ -11,12 +11,13 @@
 
 {% block content %}
 <div id="poisk-avto-root" class="poisk-avto-root"></div>
+{{ form_errors|json_script:"car-search-errors-data" }}
 <script>
   window.__POISK_AVTO_DATA__ = {
     formAction: "{{ form_action }}",
     csrfToken: "{{ csrf_token }}",
     successUrl: "{{ success_url }}",
-    errors: {{ form_errors_json|safe }}
+    errors: JSON.parse(document.getElementById('car-search-errors-data').textContent)
   };
 </script>
 <script type="module" src="{% static 'poisk-avto/app.js' %}"></script>

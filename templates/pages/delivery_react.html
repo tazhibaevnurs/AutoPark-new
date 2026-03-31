@@ -11,12 +11,13 @@
 
 {% block content %}
 <div id="delivery-root" class="delivery-root"></div>
+{{ form_errors|json_script:"delivery-errors-data" }}
 <script>
   window.__DELIVERY_DATA__ = {
     formAction: "{{ form_action }}",
     csrfToken: "{{ csrf_token }}",
     successUrl: "{{ success_url }}",
-    errors: {{ form_errors_json|safe }}
+    errors: JSON.parse(document.getElementById('delivery-errors-data').textContent)
   };
 </script>
 <script type="module" src="{% static 'delivery/app.js' %}"></script>

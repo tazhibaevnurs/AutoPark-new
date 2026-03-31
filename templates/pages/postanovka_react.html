@@ -38,12 +38,13 @@
 
 {% block content %}
 <div id="postanovka-root" class="postanovka-root"></div>
+{{ form_errors|json_script:"registration-errors-data" }}
 <script>
   window.__POSTANOVKA_DATA__ = {
     formAction: "{{ form_action }}",
     csrfToken: "{{ csrf_token }}",
     successUrl: "{{ success_url }}",
-    errors: {{ form_errors_json|safe }}
+    errors: JSON.parse(document.getElementById('registration-errors-data').textContent)
   };
 </script>
 <script type="module" src="{% static 'postanovka/app.js' %}"></script>

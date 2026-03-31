@@ -5,11 +5,13 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.urls import reverse
 from django.core.cache import cache
+from django.core import mail
 from unittest.mock import patch
 import json
 
 from core.models import BlogPost, Case, CatalogCar
 from pages.views import check_ai_generation_quota
+from config.webhook_security import verify_stripe_signature
 
 
 class HomePageTest(TestCase):
@@ -197,3 +199,68 @@ class AbuseQuotaTest(TestCase):
 
         blocked = check_ai_generation_quota(self.user, "free")
         self.assertFalse(blocked.allowed)
+
+
+class RegistrationRateLimitTest(TestCase):
+    def setUp(self):
+        cache.clear()
+        self.client = Client()
+
+    def _captcha_answer(self):
+        self.client.get(reverse("register"))
+        session = self.client.session
+        return str(session.get("register_captcha_answer"))
+
+    def _register(self, username, email):
+        return self.client.post(
+            reverse("register"),
+            {
+                "username": username,
+                "email": email,
+                "password1": "S3curePass!123",
+                "password2": "S3curePass!123",
+                "captcha_answer": self._captcha_answer(),
+            },
+        )
+
+    def test_register_rate_limit_blocks_fourth_attempt(self):
+        for idx in range(3):
+            response = self._register(f"user{idx}", f"user{idx}@example.com")
+            self.assertEqual(response.status_code, 302)
+
+        blocked = self._register("user-blocked", "blocked@example.com")
+        self.assertEqual(blocked.status_code, 429)
+        self.assertContains(blocked, "Слишком много регистраций", status_code=429)
+
+    def test_register_sends_verification_email(self):
+        response = self._register("mail-user", "mail-user@example.com")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Подтверждение email", mail.outbox[0].subject)
+
+
+class WebhookSecurityTest(TestCase):
+    def test_verify_stripe_signature_valid(self):
+        secret = "whsec_test_secret"
+        raw_body = b'{"id":"evt_1","type":"invoice.payment_succeeded"}'
+        timestamp = "1710000000"
+        signed_payload = f"{timestamp}.{raw_body.decode('utf-8')}".encode("utf-8")
+
+        import hmac
+        import hashlib
+        expected = hmac.new(secret.encode("utf-8"), signed_payload, hashlib.sha256).hexdigest()
+        signature = f"t={timestamp},v1={expected}"
+
+        with patch("config.webhook_security.time.time", return_value=int(timestamp) + 10):
+            self.assertTrue(verify_stripe_signature(raw_body, signature, secret))
+
+    def test_verify_stripe_signature_invalid_or_expired(self):
+        secret = "whsec_test_secret"
+        raw_body = b'{"id":"evt_1"}'
+        bad_signature = "t=1710000000,v1=deadbeef"
+        with patch("config.webhook_security.time.time", return_value=1710000010):
+            self.assertFalse(verify_stripe_signature(raw_body, bad_signature, secret))
+
+        valid_shape_old = "t=1710000000,v1=deadbeef"
+        with patch("config.webhook_security.time.time", return_value=1710001000):
+            self.assertFalse(verify_stripe_signature(raw_body, valid_shape_old, secret))
