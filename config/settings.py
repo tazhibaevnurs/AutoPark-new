@@ -139,6 +139,13 @@ EMAIL_BACKEND = os.environ.get(
     'django.core.mail.backends.console.EmailBackend',
 )
 
+# Оптимизация видео после сохранения (синхронно, может замедлять админку).
+# По умолчанию отключено: загрузка в админке происходит сразу, без долгого ожидания.
+ENABLE_SYNC_VIDEO_OPTIMIZATION = os.environ.get(
+    'ENABLE_SYNC_VIDEO_OPTIMIZATION',
+    'false',
+).lower() == 'true'
+
 # Безопасность. При DEBUG=True — для разработки (редирект и secure-куки выкл.).
 # При DEBUG=False — полные значения для продакшена, если включён HTTPS (USE_HTTPS=true).
 # Если на сервере только HTTP (например, доступ по IP без сертификата) — задайте USE_HTTPS=false.

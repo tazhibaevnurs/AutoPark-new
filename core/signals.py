@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
 
 from core.media_optimizer import (
     optimize_image_file,
@@ -18,6 +19,8 @@ def _optimize_image(instance, field_name):
 
 
 def _optimize_video(instance, field_name):
+    if not getattr(settings, 'ENABLE_SYNC_VIDEO_OPTIMIZATION', False):
+        return
     field_file = getattr(instance, field_name, None)
     if not field_file:
         return
