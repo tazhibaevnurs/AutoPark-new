@@ -45,7 +45,7 @@ class Lead(TimeStampedModel):
     name = models.CharField('Имя', max_length=255)
     phone = models.CharField('Телефон', max_length=30)
     contact = models.CharField(
-        'Telegram или WhatsApp',
+        'Telegram',
         max_length=255,
         blank=True,
     )

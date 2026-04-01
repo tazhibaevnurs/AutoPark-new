@@ -7,7 +7,10 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
 <style>
-  body.ctlg-page { background: #FCFCFC; }
+  body.ctlg-page {
+    background: #FCFCFC;
+    font-family: var(--font);
+  }
   body.ctlg-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
 
   .ctlg-hero {
@@ -19,16 +22,24 @@
     background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80') center/cover no-repeat;
     opacity: 0.35;
   }
-  .ctlg-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.8)); }
+  /* Как на главной: затемнение чуть светлее, фон заметнее */
+  .ctlg-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.42) 0%, rgba(0,0,0,.56) 100%);
+  }
   .ctlg-hero-inner {
     position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
     padding: 5rem 1.5rem 4rem 5rem;
   }
   .ctlg-hero-accent { display: flex; align-items: center; gap: 1rem; }
   .ctlg-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
-  .ctlg-hero h1 {
-    font-size: clamp(2rem,5vw,3.5rem); font-weight: 600; color: #fff;
+  .ctlg-hero h1.ctlg-hero-title {
+    font-family: var(--font);
+    font-size: clamp(1.5rem, 4.2vw, 2.85rem);
+    font-weight: 600; color: #fff;
     letter-spacing: -.02em; margin: 0; line-height: 1.15;
+    text-align: left;
+    white-space: nowrap;
   }
 
   .ctlg-heading { text-align: center; padding: 3rem 1.5rem 1rem; }
@@ -191,7 +202,7 @@
     .ctlg-cta { padding: 3rem 1rem; }
   }
   @media (max-width:480px) {
-    .ctlg-hero h1 { font-size: 1.5rem; }
+    .ctlg-hero h1.ctlg-hero-title { font-size: clamp(1.25rem, 5vw, 1.65rem); }
     .ctlg-hero-inner { padding: 4.5rem 1rem 2.5rem; }
     .ctlg-grid { grid-template-columns: 1fr; }
     .ctlg-card { border-radius: 20px; }
@@ -211,7 +222,7 @@
     <div class="ctlg-hero-inner">
       <div class="ctlg-hero-accent">
         <div class="ctlg-hero-line"></div>
-        <h1>Каталог авто</h1>
+        <h1 class="ctlg-hero-title">Каталог авто</h1>
       </div>
     </div>
   </section>

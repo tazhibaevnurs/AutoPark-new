@@ -1,0 +1,6 @@
+/* Tailwind preflight in bundled React apps sets html { font-family: Inter, ... }.
+   This sheet loads after {% block extra_css %} so Montserrat wins site-wide. */
+html,
+:host {
+  font-family: var(--font) !important;
+}

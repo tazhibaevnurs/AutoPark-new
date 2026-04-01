@@ -7,7 +7,10 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
 <style>
-  body.order-quiz-page { background: #FCFCFC; }
+  body.order-quiz-page {
+    background: #FCFCFC;
+    font-family: var(--font);
+  }
   body.order-quiz-page .page { padding-top: 0; padding-bottom: 0; }
 
   .oq-hero {
@@ -50,6 +53,7 @@
     flex-shrink: 0;
   }
   .oq-hero h1 {
+    font-family: var(--font);
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 600;
     color: #fff;
@@ -422,7 +426,7 @@
         </div>
 
         <div class="oq-field">
-          <label for="id_contact">Telegram или WhatsApp</label>
+          <label for="id_contact">Telegram</label>
           {{ form.contact }}
           <span class="form-hint">@username или номер — ответим при необходимости</span>
           {{ form.contact.errors }}

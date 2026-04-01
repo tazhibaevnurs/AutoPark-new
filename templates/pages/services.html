@@ -7,7 +7,10 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
 <style>
-  body.svc-page { background: #FCFCFC; }
+  body.svc-page {
+    background: #FCFCFC;
+    font-family: var(--font);
+  }
   body.svc-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
 
   .svc-hero {
@@ -27,6 +30,7 @@
   .svc-hero-accent { display: flex; align-items: center; gap: 1rem; }
   .svc-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
   .svc-hero h1 {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: clamp(2rem,5vw,3.5rem); font-weight: 600; color: #fff;
     letter-spacing: -.02em; margin: 0; line-height: 1.15;
   }

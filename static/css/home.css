@@ -1,5 +1,15 @@
 /* ========== HERO ========== */
 .hero {
+  /* Оранжевый акцент как у «PARK» в логотипе (= --accent в variables.css) */
+  --hero-gold: var(--accent);
+  --hero-gold-soft: rgba(233, 135, 51, 0.14);
+  --hero-orange-gradient: linear-gradient(
+    168deg,
+    #ffc98a 0%,
+    #f0a04d 28%,
+    #e98733 58%,
+    #a85f14 100%
+  );
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -7,7 +17,7 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 6rem var(--space-lg) 3rem;
+  padding: 6rem clamp(1.25rem, 5vw, 4.5rem) 3rem;
 }
 
 .hero-video-wrap {
@@ -20,13 +30,20 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(10,10,11,0.4) 0%, rgba(10,10,11,0.7) 100%);
-  transition: opacity 0.6s var(--ease);
+  z-index: 2;
+  pointer-events: none;
+  /* Тёмный «графитовый» слой как в референсе (#1a1a1a ощущение) */
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 26, 26, 0.82) 0%,
+    rgba(10, 10, 10, 0.9) 100%
+  );
+  transition: background 0.6s var(--ease), opacity 0.6s var(--ease);
 }
 
 .hero.scrolled .hero-video-wrap::after {
   opacity: 1;
-  background: rgba(10, 10, 11, 0.85);
+  background: rgba(18, 18, 18, 0.94);
 }
 
 .hero-video {
@@ -51,16 +68,61 @@
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 800px;
+  max-width: 42rem;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--hero-gold);
 }
 
 .hero-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-family: 'Montserrat', var(--font), sans-serif;
+  font-size: clamp(1.1rem, 2.1vw + 0.55rem, 2.65rem);
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
-  margin: 0 0 var(--space-md);
+  margin: 0 0 1.25rem;
+  color: #fff;
   transition: transform 0.6s var(--ease), opacity 0.6s var(--ease);
+}
+
+.hero-accent {
+  font-weight: 600;
+  color: var(--hero-gold);
+}
+
+/* Градиент на оранжевом тексте (как у букв PARK в логотипе): светлее сверху, глубже снизу */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-eyebrow,
+  .hero-accent {
+    background-image: var(--hero-orange-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .hero-stat:hover .hero-stat-value {
+    background-image: var(--hero-orange-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+/* Ровно две строки: каждая не переносится внутри себя */
+.hero-title-line {
+  display: block;
+  white-space: nowrap;
 }
 
 .hero.scrolled .hero-title {
@@ -69,10 +131,12 @@
 }
 
 .hero-subtitle {
-  font-size: 1.15rem;
-  color: var(--text-muted);
-  margin: 0 0 var(--space-xl);
+  font-size: clamp(1rem, 1.2vw + 0.85rem, 1.2rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0 auto var(--space-xl);
   font-weight: 400;
+  max-width: 36rem;
   transition: transform 0.6s var(--ease), opacity 0.6s var(--ease);
 }
 
@@ -103,6 +167,9 @@
   gap: var(--space-2xl);
   position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 56rem;
+  margin: 0 auto;
 }
 
 .hero-stat {
@@ -113,93 +180,137 @@
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: var(--text);
+  color: #fff;
+  -webkit-text-fill-color: currentColor;
   display: block;
   margin-bottom: var(--space-xs);
 }
 
-.hero-stat-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+.hero-stat:hover .hero-stat-value {
+  color: var(--hero-gold);
 }
 
-/* Нижняя строка Hero: контакты слева, кнопки по центру */
+.hero-stat-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Нижняя строка Hero: контакты слева (как в макете), навигация по центру */
 .hero-bottom {
   position: absolute;
   left: 0;
   right: 0;
   bottom: var(--space-xl);
   z-index: 1;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding: 0 clamp(1.25rem, 5vw, 4.5rem);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  padding: 0 var(--space-lg);
-  gap: var(--space-xl);
   flex-wrap: wrap;
+  gap: var(--space-lg);
 }
 
 .hero-contact {
+  font-family: var(--font);
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 17.5rem;
   text-align: left;
-  min-width: 200px;
-  max-width: 240px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
 .hero-service-icons {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-md);
   padding: 0;
   margin: 0;
-  min-width: 0;
+  min-width: 12rem;
 }
 
 .hero-bottom-spacer {
-  min-width: 200px;
+  display: block;
+  flex: 0 0 min(200px, 14vw);
+  min-width: 0;
+  pointer-events: none;
 }
 
 .hero-contact-phone {
   display: block;
-  font-size: 1.1rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--text);
-  margin-bottom: var(--space-xs);
-  transition: color var(--transition);
+  line-height: 1.35;
+  color: #fff;
+  text-decoration: none;
+  margin: 0 0 0.35rem;
+  transition: color var(--transition), opacity var(--transition), transform 0.2s var(--ease);
 }
 
 .hero-contact-phone:hover {
-  color: var(--accent-light);
+  color: var(--hero-gold);
+  opacity: 1;
+}
+
+.hero-contact-phone:focus-visible {
+  outline: 2px solid var(--hero-gold);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .hero-contact-address {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin: 0 0 var(--space-md);
-  line-height: 1.4;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #fff;
+  margin: 0 0 1.125rem;
   max-width: 100%;
 }
 
 .hero-contact-btn {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
+  padding: 0.65rem 1.6rem;
+  font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: var(--bg);
-  background: var(--text);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: var(--radius);
-  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  color: #0a0a0a;
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 3px;
+  text-decoration: none;
+  text-align: center;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    transform 0.2s var(--ease),
+    box-shadow 0.25s var(--ease);
 }
 
 .hero-contact-btn:hover {
-  background: var(--accent-light);
-  color: var(--bg);
-  border-color: var(--accent-light);
+  background: var(--hero-gold);
+  color: #0a0a0a;
+  border-color: var(--hero-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(233, 135, 51, 0.35);
+}
+
+.hero-contact-btn:focus-visible {
+  outline: 2px solid var(--hero-gold);
+  outline-offset: 3px;
+}
+
+.hero-contact-btn:active {
+  color: #0a0a0a;
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(233, 135, 51, 0.25);
 }
 
 /* ========== Кнопки в Hero (с hover) ========== */
@@ -217,18 +328,18 @@
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: var(--text);
+  color: rgba(255, 255, 255, 0.92);
   text-decoration: none;
   background: transparent;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius);
   transition: color var(--transition), border-color var(--transition), background var(--transition), transform 0.25s var(--ease);
 }
 
-.hero-service-btn:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: rgba(233, 135, 51, 0.08);
+.hero .hero-service-btn:hover {
+  color: var(--hero-gold);
+  border-color: var(--hero-gold);
+  background: var(--hero-gold-soft);
   transform: translateY(-2px);
 }
 
@@ -277,11 +388,8 @@
     min-height: 100vh;
     min-height: 100dvh;
   }
-  .hero-br {
-    display: none;
-  }
   .hero-title {
-    font-size: clamp(1.5rem, 6vw, 2.25rem);
+    font-size: clamp(1rem, 3.2vw + 0.35rem, 2rem);
     margin-bottom: var(--space-sm);
   }
   .hero-subtitle {
@@ -311,29 +419,35 @@
   .hero-bottom {
     position: relative;
     bottom: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    max-width: 100%;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: var(--space-lg) var(--space-md) var(--space-md);
     gap: var(--space-lg);
     margin-top: var(--space-xl);
   }
   .hero-contact {
-    min-width: 0;
-    max-width: 100%;
+    max-width: 22rem;
     width: 100%;
     text-align: center;
     align-items: center;
   }
   .hero-contact-btn {
-    width: 100%;
+    width: auto;
+    min-width: 12rem;
     text-align: center;
   }
   .hero-bottom .hero-contact-address {
-    margin-top: var(--space-xs);
+    margin-top: 0;
   }
   .hero-service-icons {
     flex: none;
     width: 100%;
+    min-width: 0;
     justify-content: center;
     flex-wrap: wrap;
   }
@@ -356,11 +470,15 @@
     max-width: 100%;
   }
   .hero-title {
-    font-size: clamp(1.25rem, 7vw, 1.6rem);
-    line-height: 1.25;
+    font-size: clamp(0.85rem, 2.6vw + 0.4rem, 1.45rem);
+    line-height: 1.22;
   }
   .hero-subtitle {
     font-size: 0.95rem;
+  }
+  .hero-eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
   }
   .hero-stats {
     flex-direction: column;
@@ -406,5 +524,11 @@
   .footer {
     padding: var(--space-md) var(--space-sm);
     padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: clamp(0.72rem, 1.9vw + 0.32rem, 1.25rem);
   }
 }
