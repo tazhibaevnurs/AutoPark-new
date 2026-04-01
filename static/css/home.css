@@ -101,13 +101,31 @@
 
 /* Градиент на оранжевом тексте (как у букв PARK в логотипе): светлее сверху, глубже снизу */
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .hero-eyebrow,
-  .hero-accent {
+  .hero-eyebrow {
     background-image: var(--hero-orange-gradient);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
+  }
+
+  .hero-accent {
+    background-image:
+      var(--hero-orange-gradient),
+      linear-gradient(
+        100deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.85) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    background-size: 100% 100%, 220% 100%;
+    background-position: 0 0, -150% 0;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: heroAccentShimmer 3.1s ease-in-out infinite;
   }
 
   .hero-stat .hero-stat-value {
@@ -122,6 +140,18 @@
     background-image: none;
     -webkit-text-fill-color: #fff;
     color: #fff;
+  }
+}
+
+@keyframes heroAccentShimmer {
+  0% {
+    background-position: 0 0, -150% 0;
+  }
+  36% {
+    background-position: 0 0, 190% 0;
+  }
+  100% {
+    background-position: 0 0, 190% 0;
   }
 }
 
@@ -283,6 +313,9 @@
 
 .hero-contact-btn {
   display: inline-block;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   padding: 0.65rem 1.6rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -303,6 +336,31 @@
     box-shadow 0.25s var(--ease);
 }
 
+.hero-contact-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -45%;
+  width: 42%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.42) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0;
+  transform: translateX(-120%) skewX(-18deg);
+  animation: heroContactBtnShimmer 3.1s ease-in-out infinite;
+  z-index: 0;
+}
+
+.hero-contact-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
 .hero-contact-btn:hover {
   background: var(--hero-gold);
   color: #0a0a0a;
@@ -320,6 +378,24 @@
   color: #0a0a0a;
   transform: translateY(0);
   box-shadow: 0 2px 10px rgba(233, 135, 51, 0.25);
+}
+
+@keyframes heroContactBtnShimmer {
+  0% {
+    opacity: 0;
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  12% {
+    opacity: 0.82;
+  }
+  35% {
+    opacity: 0;
+    transform: translateX(340%) skewX(-18deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(340%) skewX(-18deg);
+  }
 }
 
 /* ========== Кнопки в Hero (с hover) ========== */
@@ -392,10 +468,18 @@
   color: var(--accent-light);
 }
 
+.hero-mobile-menu {
+  display: none;
+}
+
 /* ========== АДАПТИВ: планшет ========== */
 @media (max-width: 768px) {
+  .fab {
+    bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px));
+  }
   .hero {
     padding: 5rem var(--space-md) 2rem;
+    padding-bottom: 2rem;
     min-height: 100vh;
     min-height: 100dvh;
   }
@@ -464,42 +548,98 @@
     margin-top: 0;
   }
   .hero-service-icons {
-    order: 1;
-    flex: none;
-    width: 100%;
-    min-width: 0;
-    justify-content: center;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-sm);
+    display: none;
   }
   .hero-bottom-spacer {
     display: none;
   }
   .hero-service-btn {
-    width: 100%;
-    text-align: center;
-    padding: 0.72rem 0.9rem;
-    font-size: 0.9rem;
+    display: none;
+  }
+  .hero-mobile-menu {
+    position: absolute !important;
+    left: 0;
+    right: 0;
+    bottom: .7rem !important;
+    z-index: 60 !important;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.2rem;
+    padding: 0.38rem 0.32rem;
+    background: rgba(12, 12, 14, 0.78);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: none;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.28);
+  }
+  .hero-mobile-menu-btn {
     min-height: 46px;
+    padding: 0.18rem 0.2rem 0.12rem;
+    border-radius: 8px;
+    border: 0;
+    color: rgba(255, 255, 255, 0.72);
+    text-decoration: none;
+    font-size: 0.66rem;
+    font-weight: 600;
+    line-height: 1.12;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.12rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .hero-mobile-menu-icon {
+    width: 1.15rem;
+    height: 1.15rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-mobile-menu-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .hero-mobile-menu-label {
+    display: block;
+    white-space: nowrap;
+  }
+  .hero-mobile-menu-btn--active {
+    color: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .hero-mobile-menu-btn:hover {
+    color: var(--accent);
   }
 }
 
 /* ========== АДАПТИВ: мобильный ========== */
 @media (max-width: 480px) {
+  .fab {
+    bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
   .hero {
     padding: 4.5rem var(--space-sm) 1.5rem;
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 1.5rem;
   }
   .hero-content {
     max-width: 100%;
   }
   .hero-title {
-    font-size: clamp(0.85rem, 2.6vw + 0.4rem, 1.45rem);
-    line-height: 1.22;
+    font-size: clamp(1.37rem, 4.16vw + 0.59rem, 2.21rem);
+    line-height: 1.18;
   }
   .hero-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
   }
   .hero-eyebrow {
     font-size: 0.625rem;
@@ -529,21 +669,12 @@
     gap: 0.75rem;
     padding: 0.8rem 0 0;
   }
-  .hero-service-icons {
-    order: 1;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.6rem;
-  }
+  .hero-service-icons,
   .hero-service-btn {
-    width: 100%;
-    min-height: 44px;
-    padding: 0.62rem 0.65rem;
-    font-size: 0.82rem;
+    display: none;
   }
   .hero-contact {
-    order: 2;
+    order: 1;
     max-width: 100%;
     margin-top: 0.2rem;
   }
@@ -561,6 +692,18 @@
     min-height: 42px;
     padding: 0.58rem 0.9rem;
     font-size: 0.8rem;
+  }
+  .hero-mobile-menu {
+    gap: 0.16rem;
+    padding: 0.34rem 0.2rem;
+  }
+  .hero-mobile-menu-btn {
+    min-height: 44px;
+    font-size: 0.62rem;
+  }
+  .hero-mobile-menu-icon {
+    width: 1.08rem;
+    height: 1.08rem;
   }
   .footer {
     padding: var(--space-md) var(--space-sm);
