@@ -164,7 +164,7 @@ video {
 }
 
 .logo-img {
-  height: 20px;
+  height: 18px;
   width: auto;
   display: block;
 }
@@ -472,7 +472,7 @@ video {
     font-size: 0.85rem;
   }
   .logo-img {
-    height: 18px;
+    height: 16px;
   }
   .logo-text {
     font-size: 1.05rem;
@@ -516,7 +516,7 @@ video {
     gap: var(--space-sm);
   }
   .logo-img {
-    height: 15px;
+    height: 14px;
   }
   .logo-text {
     font-size: 0.95rem;

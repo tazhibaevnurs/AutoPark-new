@@ -1,152 +1,397 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Контакты — AUTOPARK{% endblock %}
-{% block body_class %}page-inner ct-new-page{% endblock %}
+{% block title %}Связаться с нами — AUTOPARK{% endblock %}
+{% block body_class %}page-inner ct-expert-page{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
 <style>
-  body.ct-new-page { background: #FCFCFC; }
-  body.ct-new-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
-
+  body.ct-expert-page { background: #FCFCFC; }
+  body.ct-expert-page .page {
+    padding-top: 0;
+    padding-bottom: 3.5rem;
+  }
   .ct-hero {
     position: relative; min-height: 32vh;
     display: flex; align-items: center; background: #0a0a0a; overflow: hidden;
   }
-  .ct-hero-bg {
-    position: absolute; inset: 0;
-    background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80') center/cover no-repeat;
-    opacity: 0.3;
+  .ct-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.8)),
+      url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=80') center/cover no-repeat;
   }
-  .ct-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.8)); }
   .ct-hero-inner {
-    position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
     padding: 5rem 1.5rem 4rem 5rem;
   }
-  .ct-hero-accent { display: flex; align-items: center; gap: 1rem; }
-  .ct-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
-  .ct-hero h1 {
-    font-size: clamp(2rem,5vw,3.5rem); font-weight: 600; color: #fff;
-    letter-spacing: -.02em; margin: 0; line-height: 1.15;
+  .ct-hero-accent {
+    display: flex;
+    align-items: center;
+    gap: 0.95rem;
   }
-
-  .ct-heading { text-align: center; padding: 3rem 1.5rem 1.5rem; }
+  .ct-hero-line {
+    width: 4px; height: 5rem; border-radius: 9999px;
+    background: var(--accent);
+    box-shadow: 0 0 12px rgba(233, 135, 51, 0.4);
+  }
+  .ct-hero h1 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(2rem,5vw,3.5rem);
+    line-height: 1.15;
+    letter-spacing: -.02em;
+  }
+  .ct-intro {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 1.25rem;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  .ct-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 0;
+  }
+  .ct-head {
+    text-align: center;
+    margin-bottom: 0;
+    padding: .5rem 0 1.5rem;
+  }
   .ct-pill {
     display: inline-flex; align-items: center; gap: .5rem;
     padding: .5rem 1rem; border-radius: 9999px;
     border: 1px solid rgba(233,135,51,.3); background: rgba(233,135,51,.06);
-    color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
+    color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1rem;
   }
   .ct-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #E98733; }
-  .ct-heading h2 {
-    font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 600; color: #000;
-    letter-spacing: -.02em; margin: 0 0 .75rem;
+  .ct-head h1 {
+    margin: 0 0 0.55rem;
+    color: var(--text-strong);
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    line-height: 1.1;
   }
-  .ct-heading p {
-    font-size: 1.05rem; color: #374151; max-width: 700px; margin: 0 auto; line-height: 1.6;
+  .ct-head p {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 1.05rem;
   }
-
-  .ct-grid {
-    max-width: 1280px; margin: 0 auto; padding: 1rem 1.5rem 2rem;
-    display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+  .ct-layout {
+    display: grid;
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
   }
-  .ct-card {
-    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
-    padding: 2rem 1.5rem; text-align: center;
+  .ct-benefits {
+    background: linear-gradient(160deg, #161616 0%, #101012 100%);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 1.35rem 1rem;
+    color: #fff;
+  }
+  .ct-benefits h2 {
+    margin: 0 0 1rem;
+    font-size: 1.45rem;
+    line-height: 1.15;
+  }
+  .ct-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .ct-list li {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 0.7rem;
+  }
+  .ct-ico {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-lg);
+    background: rgba(233, 135, 51, 0.16);
+    border: 1px solid rgba(233, 135, 51, 0.4);
+    color: #f0a04d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .ct-txt strong {
+    display: block;
+    font-size: 0.98rem;
+    margin-bottom: 0.15rem;
+  }
+  .ct-txt span {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.85rem;
+    line-height: 1.3;
+  }
+  .ct-call {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.85rem;
+  }
+  .ct-call a {
+    display: inline-block;
+    margin-top: 0.35rem;
+    color: #f0a04d;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  .ct-form-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 24px;
     box-shadow: 0 1px 3px rgba(0,0,0,.04);
-    transition: border-color .3s, box-shadow .3s, transform .3s;
+    padding: 1.25rem;
   }
-  .ct-card:hover {
-    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
-    transform: translateY(-3px);
+  .ct-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
   }
-  .ct-card-icon {
-    width: 56px; height: 56px; border-radius: 16px; margin: 0 auto 1.25rem;
-    display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, rgba(233,135,51,.1), rgba(233,135,51,.05));
+  .ct-field,
+  .ct-area {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.11);
+    background: var(--surface-2);
+    border-radius: var(--radius-lg);
+    padding: 0.72rem 0.85rem;
+    color: var(--text-strong);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
   }
-  .ct-card-icon svg { width: 26px; height: 26px; color: #E98733; }
-  .ct-card-label {
-    font-size: .75rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: .08em; color: #9ca3af; margin-bottom: .5rem;
+  .ct-field-wrap {
+    position: relative;
   }
-  .ct-card-value {
-    font-size: 1.05rem; color: #111; margin: 0; line-height: 1.5;
+  .ct-field-wrap .ct-field {
+    padding-left: 2.35rem;
   }
-  .ct-card-link {
-    color: #E98733; text-decoration: none; font-weight: 500;
-    transition: color .2s;
+  .ct-field-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.8rem;
+    transform: translateY(-50%);
+    width: 1rem;
+    height: 1rem;
+    color: var(--text-soft);
+    pointer-events: none;
   }
-  .ct-card-link:hover { color: #d47620; }
-
-  .ct-address {
-    max-width: 1280px; margin: 0 auto; padding: 0 1.5rem 3rem;
+  .ct-field-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-  .ct-address-card {
-    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
-    padding: 2rem 2.5rem; display: flex; align-items: flex-start; gap: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,.04);
-    transition: border-color .3s, box-shadow .3s;
+  .ct-field:focus,
+  .ct-area:focus {
+    border-color: #e98733;
+    box-shadow: 0 0 0 3px rgba(233, 135, 51, 0.12);
   }
-  .ct-address-card:hover {
-    border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
+  .ct-full {
+    grid-column: 1 / -1;
   }
-  .ct-address-icon {
-    width: 56px; height: 56px; border-radius: 16px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, rgba(233,135,51,.1), rgba(233,135,51,.05));
+  .ct-type {
+    margin: 0.55rem 0 0.75rem;
   }
-  .ct-address-icon svg { width: 26px; height: 26px; color: #E98733; }
-  .ct-address-label {
-    font-size: .75rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: .08em; color: #9ca3af; margin-bottom: .35rem;
+  .ct-type-title {
+    margin: 0 0 0.5rem;
+    color: var(--text-strong);
+    font-size: 0.92rem;
+    font-weight: 600;
   }
-  .ct-address-value {
-    font-size: 1.05rem; color: #111; margin: 0; line-height: 1.6;
+  .ct-type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.65rem;
   }
-
-  .ct-cta { background: #131313; padding: 4rem 1.5rem; text-align: center; }
-  .ct-cta h2 {
-    font-size: clamp(1.5rem,3vw,2rem); font-weight: 600; color: #fff; margin: 0 0 .75rem;
+  .ct-type-item input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
   }
-  .ct-cta p {
-    font-size: 1rem; color: rgba(255,255,255,.55); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6;
+  .ct-type-item label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    text-align: center;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: var(--surface-2);
+    color: var(--text-strong);
+    font-size: 0.92rem;
+    cursor: pointer;
+    gap: 0.4rem;
+    transition: all .2s;
   }
-  .ct-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-  .ct-cta-btn {
-    display: inline-block; padding: .875rem 2rem; font-size: 1rem; font-weight: 500;
-    border-radius: 12px; text-decoration: none; transition: background .2s, transform .2s;
+  .ct-type-item-icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--text-soft);
   }
-  .ct-cta-btn--primary { background: #fff; color: #131313; }
-  .ct-cta-btn--primary:hover { background: #f0a04d; color: #131313; transform: translateY(-1px); }
-  .ct-cta-btn--outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
-  .ct-cta-btn--outline:hover { border-color: #E98733; color: #f0a04d; }
-
-  .ct-footer {
-    background: #131313; border-top: 1px solid rgba(255,255,255,.08);
-    padding: 1.5rem; text-align: center; font-size: .85rem; color: rgba(255,255,255,.4);
+  .ct-type-item-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-
-  @media (max-width:1024px) {
-    .ct-hero-inner { padding-left: 2.5rem; }
+  .ct-type-item input:checked + label {
+    border-color: #e98733;
+    background: rgba(233, 135, 51, 0.12);
+    color: var(--text-strong);
+    font-weight: 600;
   }
-  @media (max-width:768px) {
+  .ct-type-item input:checked + label .ct-type-item-icon {
+    color: #966822;
+  }
+  .ct-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
+    color: var(--text-soft);
+    font-size: 0.84rem;
+  }
+  .ct-consent input {
+    margin-top: 0.12rem;
+  }
+  .ct-btn {
+    width: 100%;
+    margin-top: 0.8rem;
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-lg);
+    min-height: 62px;
+    padding: 1rem 1.1rem;
+    background: var(--accent);
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s, transform .2s;
+  }
+  .ct-btn:hover {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .ct-errors {
+    margin-bottom: 0.65rem;
+    border: 1px solid rgba(194, 65, 12, 0.22);
+    background: rgba(194, 65, 12, 0.07);
+    border-radius: var(--radius-lg);
+    padding: 0.6rem 0.7rem;
+    color: #9a3412;
+    font-size: 0.86rem;
+  }
+  .ct-info {
+    margin-top: 2.4rem;
+  }
+  .ct-block-title {
+    text-align: center;
+    margin: 0 0 1.2rem;
+    color: var(--text-strong);
+    font-size: clamp(1.45rem, 2.5vw, 2rem);
+    line-height: 1.2;
+  }
+  .ct-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+  .ct-info-item {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-xl);
+    padding: 1rem;
+  }
+  .ct-info-item-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 999px;
+    background: rgba(233, 135, 51, 0.14);
+    color: #b66f25;
+    font-size: 0.84rem;
+    font-weight: 700;
+    margin-bottom: 0.55rem;
+  }
+  .ct-info-item h3 {
+    margin: 0 0 0.35rem;
+    color: var(--text-strong);
+    font-size: 1.02rem;
+  }
+  .ct-info-item p {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.5;
+    font-size: 0.92rem;
+  }
+  .ct-success {
+    margin-bottom: 0.65rem;
+    border: 1px solid rgba(5, 150, 105, 0.3);
+    background: rgba(5, 150, 105, 0.09);
+    border-radius: var(--radius-lg);
+    padding: 0.62rem 0.75rem;
+    color: #065f46;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+  @media (max-width: 920px) {
+    .ct-layout {
+      grid-template-columns: 1fr;
+    }
     .ct-hero-inner { padding: 5rem 1.5rem 3rem; }
-    .ct-hero-line { height: 3.5rem; }
-    .ct-grid { grid-template-columns: 1fr; padding: 1rem 1rem 1.5rem; gap: 1rem; }
-    .ct-heading { padding: 2rem 1rem 1rem; }
-    .ct-address { padding: 0 1rem 2rem; }
-    .ct-address-card { padding: 1.5rem; flex-direction: column; align-items: center; text-align: center; }
-    .ct-cta { padding: 3rem 1rem; }
   }
-  @media (max-width:480px) {
-    .ct-hero h1 { font-size: 1.5rem; }
-    .ct-hero-inner { padding: 4.5rem 1rem 2.5rem; }
-    .ct-card { border-radius: 20px; }
-    .ct-address-card { border-radius: 20px; }
-    .ct-cta-buttons { flex-direction: column; align-items: stretch; }
-    .ct-cta-btn { text-align: center; }
+  @media (max-width: 640px) {
+    body.ct-expert-page .page {
+      padding-bottom: 2rem;
+    }
+    .ct-hero {
+      min-height: 32vh;
+    }
+    .ct-hero-inner {
+      padding: 4.5rem 1rem 2.5rem;
+    }
+    .ct-intro {
+      font-size: 0.95rem;
+      margin-bottom: 0;
+      padding: 2rem 1rem 1rem;
+    }
+    .ct-form-grid {
+      grid-template-columns: 1fr;
+    }
+    .ct-type-grid {
+      grid-template-columns: 1fr;
+    }
+    .ct-info-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 {% endblock %}
@@ -154,65 +399,208 @@
 {% block content %}
 <main class="page">
   <section class="ct-hero">
-    <div class="ct-hero-bg" aria-hidden="true"></div>
-    <div class="ct-hero-overlay" aria-hidden="true"></div>
     <div class="ct-hero-inner">
       <div class="ct-hero-accent">
         <div class="ct-hero-line"></div>
-        <h1>Контакты</h1>
+        <h1>Задать вопрос эксперту</h1>
       </div>
     </div>
   </section>
 
-  <div class="ct-heading">
-    <div class="ct-pill"><span class="ct-pill-dot"></span> Свяжитесь с нами</div>
-    <h2>Мы всегда на связи</h2>
-    <p>Консультация и расчёт стоимости — бесплатно, без обязательств. Звоните, пишите или приезжайте в офис.</p>
-  </div>
+  <p class="ct-intro">
+    Наша задача — стать надежным партнером для каждого клиента. Мы всегда на связи,
+    чтобы ответить на все вопросы и помочь с выбором автомобиля.
+  </p>
 
-  <div class="ct-grid">
-    <div class="ct-card">
-      <div class="ct-card-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      </div>
-      <p class="ct-card-label">Телефон</p>
-      <p class="ct-card-value"><a href="tel:+79611634157" class="ct-card-link">+7 (961) 163-41-57</a></p>
-    </div>
-    <div class="ct-card">
-      <div class="ct-card-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      </div>
-      <p class="ct-card-label">Telegram</p>
-      <p class="ct-card-value"><a href="https://t.me/Auto_Park31" target="_blank" rel="noopener" class="ct-card-link">@Auto_Park31</a></p>
-    </div>
-    <div class="ct-card">
-      <div class="ct-card-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      </div>
-      <p class="ct-card-label">Рабочее время</p>
-      <p class="ct-card-value">9:00 — 17:00, Пн — Сб</p>
-    </div>
-  </div>
+  <section class="ct-wrap">
+    <header class="ct-head">
+      <div class="ct-pill"><span class="ct-pill-dot"></span> Персональная консультация</div>
+      <h1>Задайте ваш вопрос</h1>
+      <p>Наши эксперты помогут разобраться с любым вопросом о покупке, обслуживании или продаже автомобиля</p>
+    </header>
 
-  <div class="ct-address">
-    <div class="ct-address-card">
-      <div class="ct-address-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      </div>
-      <div>
-        <p class="ct-address-label">Адрес офиса</p>
-        <p class="ct-address-value">г. Белгород, Харьковский пер., 36А, бизнес-центр «Панорама», каб. 402<br>(напротив отеля «Амакс»)</p>
-      </div>
-    </div>
-  </div>
+    <div class="ct-layout">
+      <aside class="ct-benefits">
+        <h2>Почему выбирают нас</h2>
+        <ul class="ct-list">
+          <li><div class="ct-ico">◷</div><div class="ct-txt"><strong>Быстрый ответ</strong><span>Ответим в течение 30 минут в рабочее время</span></div></li>
+          <li><div class="ct-ico">⌁</div><div class="ct-txt"><strong>24/7 Поддержка</strong><span>Всегда на связи для наших клиентов</span></div></li>
+          <li><div class="ct-ico">◇</div><div class="ct-txt"><strong>Экспертный совет</strong><span>Профессиональная консультация по всем вопросам</span></div></li>
+          <li><div class="ct-ico">✓</div><div class="ct-txt"><strong>Бесплатно</strong><span>Консультация без каких-либо обязательств</span></div></li>
+        </ul>
+        <div class="ct-call">
+          Или позвоните нам<br>
+          <a href="tel:+79611634157">+7 (961) 163-41-57</a>
+        </div>
+      </aside>
 
-  <section class="ct-cta">
-    <h2>Остались вопросы?</h2>
-    <p>Оставьте заявку — мы перезвоним и ответим на все вопросы. Без обязательств.</p>
-    <div class="ct-cta-buttons">
-      <a href="{% url 'order_quiz' %}" class="ct-cta-btn ct-cta-btn--primary">Оставить заявку</a>
-      <a href="https://t.me/Auto_Park31" target="_blank" rel="noopener" class="ct-cta-btn ct-cta-btn--outline">Написать в Telegram</a>
+      <section class="ct-form-card">
+        {% if form.non_field_errors %}
+          <div class="ct-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="ct-form-grid">
+            <div class="ct-field-wrap">
+              <span class="ct-field-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </span>
+              {{ form.name }}
+              {% if form.name.errors %}<div class="ct-errors">{{ form.name.errors }}</div>{% endif %}
+            </div>
+            <div class="ct-field-wrap">
+              <span class="ct-field-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.11.93.35 1.84.7 2.7a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.86.35 1.77.59 2.7.7a2 2 0 0 1 1.82 2.04z"></path></svg>
+              </span>
+              {{ form.phone }}
+              {% if form.phone.errors %}<div class="ct-errors">{{ form.phone.errors }}</div>{% endif %}
+            </div>
+            <div class="ct-full ct-field-wrap">
+              <span class="ct-field-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M4 9h16"></path></svg>
+              </span>
+              {{ form.subject }}
+              {% if form.subject.errors %}<div class="ct-errors">{{ form.subject.errors }}</div>{% endif %}
+            </div>
+          </div>
+
+          <div class="ct-type">
+            <p class="ct-type-title">Тип вопроса</p>
+            <div class="ct-type-grid">
+              {% for choice in form.question_type %}
+                <div class="ct-type-item">
+                  {{ choice.tag }}
+                  <label for="{{ choice.id_for_label }}">
+                    {% if choice.data.value == 'purchase' %}
+                      <span class="ct-type-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.8"></circle><circle cx="18" cy="20" r="1.8"></circle><path d="M2 3h3l2.4 11.2a2 2 0 0 0 2 1.6H18a2 2 0 0 0 2-1.5L22 7H7"></path></svg></span>
+                    {% elif choice.data.value == 'service' %}
+                      <span class="ct-type-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .4 1.7 1.7 0 0 0-.6 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-.6-1.56 1.7 1.7 0 0 0-1-.39 1.7 1.7 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.4-1 1.7 1.7 0 0 0-1.55-.6H2.6a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-.6 1.7 1.7 0 0 0 .39-1 1.7 1.7 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.4 1.7 1.7 0 0 0 .6-1.55V2.6a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 .6 1.56 1.7 1.7 0 0 0 1 .39 1.7 1.7 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.2.32.34.67.4 1.04.05.33.04.67-.02 1 .36.07.7.2 1.01.4.4.25.72.58.96.96.2.31.33.65.4 1.01h.09a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56.6 1.7 1.7 0 0 0-.39 1z"></path></svg></span>
+                    {% else %}
+                      <span class="ct-type-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"></path><path d="M12 17h.01"></path></svg></span>
+                    {% endif %}
+                    {{ choice.choice_label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+            {% if form.question_type.errors %}<div class="ct-errors">{{ form.question_type.errors }}</div>{% endif %}
+          </div>
+
+          <div class="ct-form-grid" id="ct-car-row">
+            <div id="ct-brand-wrap">{{ form.car_brand }}</div>
+            <div id="ct-model-wrap">{{ form.car_model }}</div>
+            <div class="ct-full">
+              {{ form.message }}
+              {% if form.message.errors %}<div class="ct-errors">{{ form.message.errors }}</div>{% endif %}
+            </div>
+          </div>
+
+          <label class="ct-consent">
+            {{ form.consent }}
+            <span>Я соглашаюсь с <a href="{% url 'privacy_policy' %}">политикой конфиденциальности</a></span>
+          </label>
+          {% if form.consent.errors %}<div class="ct-errors">{{ form.consent.errors }}</div>{% endif %}
+
+          <button type="submit" class="ct-btn">Отправить сообщение</button>
+        </form>
+      </section>
     </div>
+
+    <section class="ct-info">
+      <h2 class="ct-block-title">Полезная Информация</h2>
+      <div class="ct-info-grid">
+        <article class="ct-info-item">
+          <span class="ct-info-item-num">01</span>
+          <h3>Консультация по вашему кейсу</h3>
+          <p>Поможем определить оптимальный сценарий: покупка, сервис или другой вопрос по автомобилю.</p>
+        </article>
+        <article class="ct-info-item">
+          <span class="ct-info-item-num">02</span>
+          <h3>Срок ответа</h3>
+          <p>Обычно отвечаем в рабочее время в течение 30 минут, в сложных кейсах связываемся для уточнений.</p>
+        </article>
+        <article class="ct-info-item">
+          <span class="ct-info-item-num">03</span>
+          <h3>Без обязательств</h3>
+          <p>Первичная консультация бесплатная: вы получаете ориентир по шагам и бюджету без навязанных услуг.</p>
+        </article>
+        <article class="ct-info-item">
+          <span class="ct-info-item-num">04</span>
+          <h3>Как ускорить ответ</h3>
+          <p>Укажите тему обращения и детали в описании — так эксперт быстрее подготовит конкретные рекомендации.</p>
+        </article>
+      </div>
+    </section>
+
   </section>
 </main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    var input = document.getElementById('id_expert_phone');
+    if (!input) return;
+
+    function digitsOnly(value) {
+      return (value || '').replace(/\D/g, '').replace(/^8/, '7');
+    }
+
+    function formatPhone(value) {
+      var digits = digitsOnly(value);
+      if (!digits) return '';
+      if (digits[0] !== '7') digits = '7' + digits;
+      digits = digits.slice(0, 11);
+      var d = digits.slice(1);
+      var out = '+7';
+      if (d.length) out += ' (' + d.slice(0, 3);
+      if (d.length >= 3) out += ')';
+      if (d.length > 3) out += ' ' + d.slice(3, 6);
+      if (d.length > 6) out += '-' + d.slice(6, 8);
+      if (d.length > 8) out += '-' + d.slice(8, 10);
+      return out;
+    }
+
+    function onInput() {
+      input.value = formatPhone(input.value);
+    }
+
+    input.addEventListener('input', onInput);
+    input.addEventListener('focus', function () {
+      if (!input.value) input.value = '+7 (';
+    });
+    input.addEventListener('blur', function () {
+      if (digitsOnly(input.value).length < 11) input.value = '';
+    });
+    onInput();
+  })();
+
+  (function () {
+    var typeInputs = document.querySelectorAll('input[name="question_type"]');
+    var brandWrap = document.getElementById('ct-brand-wrap');
+    var modelWrap = document.getElementById('ct-model-wrap');
+    var brandInput = document.getElementById('id_car_brand');
+    var modelInput = document.getElementById('id_car_model');
+    if (!typeInputs.length || !brandWrap || !modelWrap) return;
+
+    function toggleCarFields() {
+      var selected = document.querySelector('input[name="question_type"]:checked');
+      var isOther = selected && selected.value === 'other';
+      brandWrap.style.display = isOther ? 'none' : '';
+      modelWrap.style.display = isOther ? 'none' : '';
+      if (isOther) {
+        if (brandInput) brandInput.value = '';
+        if (modelInput) modelInput.value = '';
+      }
+    }
+
+    typeInputs.forEach(function (el) {
+      el.addEventListener('change', toggleCarFields);
+    });
+    toggleCarFields();
+  })();
+
+</script>
 {% endblock %}

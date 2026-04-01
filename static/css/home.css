@@ -110,12 +110,18 @@
     color: transparent;
   }
 
-  .hero-stat:hover .hero-stat-value {
+  .hero-stat .hero-stat-value {
     background-image: var(--hero-orange-gradient);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
+  }
+
+  .hero-stat:hover .hero-stat-value {
+    background-image: none;
+    -webkit-text-fill-color: #fff;
+    color: #fff;
   }
 }
 
@@ -180,14 +186,15 @@
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--hero-gold);
   -webkit-text-fill-color: currentColor;
   display: block;
   margin-bottom: var(--space-xs);
 }
 
 .hero-stat:hover .hero-stat-value {
-  color: var(--hero-gold);
+  color: #fff;
+  -webkit-text-fill-color: #fff;
 }
 
 .hero-stat-label {
@@ -280,9 +287,11 @@
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: #0a0a0a;
-  background: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 3px;
   text-decoration: none;
   text-align: center;
@@ -330,8 +339,10 @@
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.92);
   text-decoration: none;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius);
   transition: color var(--transition), border-color var(--transition), background var(--transition), transform 0.25s var(--ease);
 }
@@ -407,14 +418,21 @@
     justify-content: center;
   }
   .hero-stats {
-    gap: var(--space-lg);
+    flex-wrap: nowrap;
+    gap: clamp(0.5rem, 2.2vw, 0.95rem);
     margin-bottom: var(--space-lg);
+    justify-content: space-between;
+  }
+  .hero-stat {
+    flex: 1 1 0;
+    min-width: 0;
   }
   .hero-stat-value {
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: clamp(1.22rem, 3.4vw, 1.7rem);
   }
   .hero-stat-label {
-    font-size: 0.8rem;
+    font-size: clamp(0.68rem, 1.45vw, 0.8rem);
+    line-height: 1.3;
   }
   .hero-bottom {
     position: relative;
@@ -449,14 +467,19 @@
     width: 100%;
     min-width: 0;
     justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
   }
   .hero-bottom-spacer {
     display: none;
   }
   .hero-service-btn {
-    padding: 0.75rem 1.25rem;
+    width: 100%;
+    text-align: center;
+    padding: 0.72rem 0.9rem;
     font-size: 0.9rem;
+    min-height: 46px;
   }
 }
 
@@ -481,45 +504,61 @@
     letter-spacing: 0.16em;
   }
   .hero-stats {
-    flex-direction: column;
-    gap: 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
   .hero-stat {
-    padding: var(--space-sm) 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .hero-stat:last-child {
     border-bottom: none;
+    padding: 0;
+    flex: 1 1 0;
+    min-width: 0;
   }
   .hero-stat-value {
-    font-size: 1.5rem;
+    font-size: clamp(1.15rem, 5vw, 1.45rem);
+    margin-bottom: 0.35rem;
   }
   .hero-stat-label {
-    font-size: 0.78rem;
+    font-size: 0.69rem;
+    line-height: 1.25;
   }
   .hero-bottom {
-    gap: var(--space-md);
-    padding: var(--space-md) 0;
-  }
-  .hero-contact-phone {
-    font-size: 1.05rem;
-  }
-  .hero-contact-address {
-    font-size: 0.85rem;
-  }
-  .hero-contact-btn {
-    padding: 0.85rem 1.5rem;
-    font-size: 0.9rem;
+    gap: 0.75rem;
+    padding: 0.8rem 0 0;
   }
   .hero-service-icons {
-    flex-direction: column;
-    gap: var(--space-sm);
+    order: 1;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
   }
   .hero-service-btn {
     width: 100%;
-    text-align: center;
-    padding: 0.85rem 1.25rem;
-    font-size: 0.9rem;
+    min-height: 44px;
+    padding: 0.62rem 0.65rem;
+    font-size: 0.82rem;
+  }
+  .hero-contact {
+    order: 2;
+    max-width: 100%;
+    margin-top: 0.2rem;
+  }
+  .hero-contact-phone {
+    font-size: 0.98rem;
+    margin-bottom: 0.25rem;
+  }
+  .hero-contact-address {
+    font-size: 0.78rem;
+    margin-bottom: 0.6rem;
+  }
+  .hero-contact-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding: 0.58rem 0.9rem;
+    font-size: 0.8rem;
   }
   .footer {
     padding: var(--space-md) var(--space-sm);

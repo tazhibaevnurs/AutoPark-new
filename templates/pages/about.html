@@ -7,7 +7,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
 <style>
-  body.about-new-page { background: #FCFCFC; }
+  body.about-new-page { background: var(--surface-1); }
   body.about-new-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
 
   /* Hero */
@@ -37,16 +37,19 @@
   .abt-pill {
     display: inline-flex; align-items: center; gap: .5rem;
     padding: .5rem 1rem; border-radius: 9999px;
-    border: 1px solid rgba(233,135,51,.3); background: rgba(233,135,51,.06);
-    color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
+    border: 1px solid rgba(233,135,51,.26);
+    background: rgba(255,255,255,.46);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text-strong); font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
   }
   .abt-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #E98733; }
   .abt-heading h2 {
-    font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 600; color: #000;
+    font-size: clamp(1.75rem,4vw,2.5rem); font-weight: 600; color: var(--text-strong);
     letter-spacing: -.02em; margin: 0 0 .75rem;
   }
   .abt-heading p {
-    font-size: 1.05rem; color: #374151; max-width: 700px; margin: 0 auto; line-height: 1.6;
+    font-size: 1.05rem; color: var(--text-soft); max-width: 700px; margin: 0 auto; line-height: 1.6;
   }
 
   /* Advantages grid */
@@ -55,8 +58,12 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
   }
   .abt-adv {
-    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
-    padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    background: rgba(255,255,255,.52);
+    border: 1px solid rgba(255,255,255,.52);
+    border-radius: var(--radius-3xl);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: 2rem; box-shadow: 0 10px 28px rgba(0,0,0,.06);
     transition: border-color .3s, box-shadow .3s, transform .3s;
   }
   .abt-adv:hover {
@@ -77,8 +84,8 @@
     width: 22px; height: 22px; stroke: #E98733; fill: none;
     stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
   }
-  .abt-adv h3 { font-size: 1.15rem; font-weight: 600; color: #000; margin: 0; }
-  .abt-adv p { font-size: .95rem; color: #6b7280; line-height: 1.6; margin: 0; }
+  .abt-adv h3 { font-size: 1.15rem; font-weight: 600; color: var(--text-strong); margin: 0; }
+  .abt-adv p { font-size: .95rem; color: var(--text-soft); line-height: 1.6; margin: 0; }
 
   /* Stats — dark section */
   .abt-stats { background: #0a0a0a; padding: 4rem 1.5rem; }
@@ -86,7 +93,10 @@
   .abt-stats-pill {
     display: inline-flex; align-items: center; gap: .5rem;
     padding: .5rem 1rem; border-radius: 9999px;
-    border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.22);
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: rgba(255,255,255,.8); font-size: .875rem; font-weight: 500;
   }
   .abt-stats-head { text-align: center; margin-bottom: 3rem; }
@@ -101,7 +111,10 @@
     display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem;
   }
   .abt-stat-card {
-    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.16);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 20px; padding: 2rem 1.5rem; text-align: center;
     transition: border-color .3s, background .3s;
   }

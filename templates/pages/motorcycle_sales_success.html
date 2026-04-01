@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Заявка отправлена — мотоциклы | AUTOPARK{% endblock %}
+{% block body_class %}page-inner moto-success-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  .moto-success { max-width: 900px; margin: 4.5rem auto; padding: 0 1rem; }
+  .moto-success-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 18px;
+    padding: 1.4rem;
+    text-align: center;
+  }
+  .moto-success-card h1 { margin: 0 0 .65rem; color: var(--text-strong); font-size: clamp(1.7rem, 4vw, 2.35rem); }
+  .moto-success-card p { margin: 0 0 1.1rem; color: var(--text-soft); }
+  .moto-success-actions { display: flex; justify-content: center; gap: .7rem; flex-wrap: wrap; }
+  .moto-success-btn {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 52px;
+    padding: .8rem 1.1rem; border-radius: 10px; font-weight: 700; border: 2px solid var(--accent);
+  }
+  .moto-success-btn--primary { background: var(--accent); color: #fff; }
+  .moto-success-btn--primary:hover { background: transparent; color: var(--accent); }
+  .moto-success-btn--ghost { background: transparent; color: var(--accent); }
+  .moto-success-btn--ghost:hover { background: rgba(233,135,51,.08); }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <section class="moto-success">
+    <div class="moto-success-card">
+      <h1>Спасибо! Заявка отправлена</h1>
+      <p>Мы свяжемся с вами для уточнения параметров подбора мотоцикла.</p>
+      <div class="moto-success-actions">
+        <a href="{% url 'motorcycle_sales' %}" class="moto-success-btn moto-success-btn--primary">Вернуться к мотоциклам</a>
+        <a href="{% url 'contacts' %}" class="moto-success-btn moto-success-btn--ghost">Связаться с нами</a>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

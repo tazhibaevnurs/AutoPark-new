@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Политика конфиденциальности — AUTOPARK{% endblock %}
+{% block body_class %}page-inner legal-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.legal-page { background: #FCFCFC; }
+  body.legal-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .lp-hero { position: relative; min-height: 32vh; display: flex; align-items: center; background: #0a0a0a; overflow: hidden; }
+  .lp-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.52), rgba(0,0,0,.82)),
+      url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&q=80') center/cover no-repeat;
+    opacity: .95;
+  }
+  .lp-hero-inner { position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto; padding: 5rem 1.5rem 4rem 5rem; }
+  .lp-hero-accent { display: flex; align-items: center; gap: 1rem; }
+  .lp-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
+  .lp-hero h1 { margin: 0; color: #fff; font-size: clamp(2rem,5vw,3.5rem); line-height: 1.15; letter-spacing: -.02em; }
+
+  .lp-wrap { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+  .lp-nav { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .lp-nav a {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: .55rem .95rem; border-radius: 9999px; text-decoration: none;
+    border: 1px solid rgba(0,0,0,.12); background: #fff; color: rgba(0,0,0,.7); font-size: .85rem;
+  }
+  .lp-nav a.active { border-color: rgba(233,135,51,.42); background: rgba(233,135,51,.08); color: #a15a16; font-weight: 600; }
+
+  .lp-card { background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 20px; padding: 2rem; }
+  .lp-lead { margin: 0 0 1rem; color: rgba(0,0,0,.66); line-height: 1.65; }
+  .lp-meta { margin: 0 0 1.2rem; color: rgba(0,0,0,.64); line-height: 1.6; }
+  .lp-card h2 { margin: 1.5rem 0 .6rem; font-size: 1.08rem; color: #1f2937; }
+  .lp-card h3 { margin: 1rem 0 .45rem; font-size: .95rem; color: #374151; }
+  .lp-card p, .lp-card li { color: rgba(0,0,0,.68); line-height: 1.65; }
+  .lp-card ul { margin: .35rem 0 0; padding-left: 1.2rem; }
+  .lp-date { margin-top: 1.2rem; font-size: .85rem; color: #9ca3af; }
+
+  @media (max-width: 768px) {
+    .lp-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .lp-wrap { padding: 2rem 1rem 2rem; }
+  }
+  @media (max-width: 480px) {
+    .lp-hero h1 { font-size: 1.5rem; }
+    .lp-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .lp-hero-line { height: 3.5rem; }
+    .lp-card { border-radius: 16px; padding: 1.25rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <section class="lp-hero">
+    <div class="lp-hero-inner">
+      <div class="lp-hero-accent">
+        <div class="lp-hero-line"></div>
+        <h1>Правовая информация</h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-wrap">
+    <div id="lp-content">
+      <nav class="lp-nav" aria-label="Разделы правовой информации">
+        <a href="{% url 'privacy_policy' %}" class="active">Политика конфиденциальности</a>
+        <a href="{% url 'terms_of_use' %}">Пользовательское соглашение</a>
+        <a href="{% url 'data_processing_policy' %}">Политика обработки данных</a>
+      </nav>
+      <article class="lp-card">
+        <p class="lp-lead">Политика конфиденциальности определяет порядок сбора, хранения, обработки и защиты персональных данных пользователей сайта AUTOPARK.</p>
+        <p class="lp-meta"><strong>Оператор:</strong> AUTOPARK<br><strong>Контакты:</strong> +7 (961) 163-41-57, г. Белгород, Харьковский пер., 36А, БЦ «Панорама», каб. 402</p>
+
+      <h2>1. Общие положения</h2>
+      <p>Используя сайт и отправляя заявки через формы обратной связи, пользователь подтверждает согласие с настоящей Политикой и дает согласие на обработку персональных данных в объеме, необходимом для оказания консультаций и сопровождения обращений.</p>
+
+      <h2>2. Какие данные мы собираем</h2>
+      <h3>2.1. Данные, которые пользователь указывает самостоятельно</h3>
+      <ul>
+        <li>имя;</li>
+        <li>номер телефона;</li>
+        <li>адрес электронной почты (если указан);</li>
+        <li>марка/модель и комментарии в формах сайта;</li>
+        <li>иные сведения, добровольно переданные пользователем.</li>
+      </ul>
+      <h3>2.2. Технические данные</h3>
+      <ul>
+        <li>IP-адрес, тип браузера и ОС;</li>
+        <li>посещенные страницы и действия на сайте;</li>
+        <li>cookie и технические идентификаторы сессии.</li>
+      </ul>
+
+      <h2>3. Цели обработки персональных данных</h2>
+      <ul>
+        <li>обработка заявок и обратной связи;</li>
+        <li>коммуникация с пользователем по вопросам услуг AUTOPARK;</li>
+        <li>улучшение качества сервиса и работы сайта;</li>
+        <li>анализ посещаемости и эффективности рекламных каналов;</li>
+        <li>выполнение требований законодательства РФ.</li>
+      </ul>
+
+      <h2>4. Передача данных третьим лицам</h2>
+      <p>Передача персональных данных третьим лицам допускается только в случаях, предусмотренных законодательством, либо при необходимости технической обработки заявок (например, через используемые сервисы учета обращений), в объеме, необходимом для достижения заявленных целей.</p>
+
+      <h2>5. Защита и хранение данных</h2>
+      <p>AUTOPARK применяет организационные и технические меры защиты данных, включая ограничение доступа, использование защищенных каналов передачи и регулярный контроль безопасности.</p>
+      <p>Данные хранятся в течение срока, необходимого для достижения целей обработки, либо в сроки, установленные законодательством.</p>
+
+      <h2>6. Права пользователя</h2>
+      <ul>
+        <li>запросить информацию об обработке персональных данных;</li>
+        <li>потребовать уточнения, блокирования или удаления данных;</li>
+        <li>отозвать согласие на обработку персональных данных.</li>
+      </ul>
+
+      <h2>7. Файлы cookie</h2>
+      <p>Сайт использует cookie для корректной работы и аналитики. Пользователь может ограничить использование cookie в настройках браузера. Это может повлиять на работу отдельных функций сайта.</p>
+
+      <h2>8. Изменения политики</h2>
+      <p>AUTOPARK вправе обновлять настоящую Политику. Актуальная версия всегда публикуется на данной странице.</p>
+        <p class="lp-date">Дата последнего обновления: 01 апреля 2026 г.</p>
+      </article>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    function wireAjaxTabs() {
+      var root = document.getElementById('lp-content');
+      if (!root) return;
+      var links = root.querySelectorAll('.lp-nav a');
+      links.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          var href = link.getAttribute('href');
+          if (!href || link.classList.contains('active')) return;
+          e.preventDefault();
+          fetch(href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(function (r) { return r.text(); })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, 'text/html');
+              var next = doc.getElementById('lp-content');
+              if (!next) {
+                window.location.href = href;
+                return;
+              }
+              root.innerHTML = next.innerHTML;
+              document.title = doc.title || document.title;
+              history.pushState({ url: href }, '', href);
+              wireAjaxTabs();
+            })
+            .catch(function () { window.location.href = href; });
+        });
+      });
+    }
+
+    window.addEventListener('popstate', function () {
+      var href = window.location.pathname + window.location.search;
+      fetch(href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function (r) { return r.text(); })
+        .then(function (html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var current = document.getElementById('lp-content');
+          var next = doc.getElementById('lp-content');
+          if (current && next) {
+            current.innerHTML = next.innerHTML;
+            document.title = doc.title || document.title;
+            wireAjaxTabs();
+          }
+        })
+        .catch(function () {});
+    });
+
+    wireAjaxTabs();
+  })();
+</script>
+{% endblock %}

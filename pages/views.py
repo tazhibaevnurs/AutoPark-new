@@ -284,6 +284,18 @@ def contacts(request):
     return render(request, 'pages/contacts.html')
 
 
+def privacy_policy(request):
+    return render(request, 'pages/privacy_policy.html')
+
+
+def data_processing_policy(request):
+    return render(request, 'pages/data_processing_policy.html')
+
+
+def terms_of_use(request):
+    return render(request, 'pages/terms_of_use.html')
+
+
 # ---------- Auth ----------
 
 LOGIN_RATE_LIMIT_ATTEMPTS = 5

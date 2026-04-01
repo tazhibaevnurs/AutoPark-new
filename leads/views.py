@@ -2,32 +2,30 @@ from django.shortcuts import render, redirect
 from django.views.generic import FormView
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 
-from .forms import LeadForm, CarSearchForm, BuyoutForm, DeliveryForm, RegistrationForm
-from config.security import ensure_math_captcha
+from .forms import (
+    LeadForm,
+    CarSearchForm,
+    BuyoutForm,
+    DeliveryForm,
+    RegistrationForm,
+    ExpertQuestionForm,
+    MotorcycleSalesForm,
+)
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class OrderQuizView(FormView):
     """Отображение формы заявки и сохранение в БД при валидном POST."""
     template_name = 'pages/order_quiz.html'
     form_class = LeadForm
     success_url = reverse_lazy('order_quiz_success')
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        _, expected = ensure_math_captcha(self.request, 'order_quiz')
-        kwargs['expected_captcha'] = expected
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        question, _ = ensure_math_captcha(self.request, 'order_quiz')
-        ctx['captcha_question'] = question
-        return ctx
-
     def form_valid(self, form):
+        form.instance.vehicle_type = 'car'
         form.save()
         return redirect(self.get_success_url())
 
@@ -52,6 +50,7 @@ class CarSearchView(FormView):
         return ctx
 
     def form_valid(self, form):
+        form.instance.vehicle_type = 'car'
         form.save()
         return redirect(self.get_success_url())
 
@@ -76,6 +75,7 @@ class BuyoutView(FormView):
         return ctx
 
     def form_valid(self, form):
+        form.instance.vehicle_type = 'car'
         form.save()
         return redirect(self.get_success_url())
 
@@ -100,6 +100,7 @@ class DeliveryView(FormView):
         return ctx
 
     def form_valid(self, form):
+        form.instance.vehicle_type = 'car'
         form.save()
         return redirect(self.get_success_url())
 
@@ -124,6 +125,7 @@ class RegistrationView(FormView):
         return ctx
 
     def form_valid(self, form):
+        form.instance.vehicle_type = 'car'
         form.save()
         return redirect(self.get_success_url())
 
@@ -131,3 +133,39 @@ class RegistrationView(FormView):
 def registration_success_view(request):
     """Успешная отправка заявки на постановку на учёт."""
     return render(request, 'pages/registration_success.html')
+
+
+class ExpertQuestionView(FormView):
+    """Страница контактов с формой «вопрос эксперту»."""
+    template_name = 'pages/contacts.html'
+    form_class = ExpertQuestionForm
+    success_url = reverse_lazy('contacts_success')
+
+    def form_valid(self, form):
+        form.instance.vehicle_type = 'car'
+        form.save()
+        return redirect(self.get_success_url())
+
+
+def contacts_success_view(request):
+    """Страница успешной отправки заявки с контактов."""
+    return render(request, 'pages/contacts_success.html')
+
+
+@method_decorator(ensure_csrf_cookie, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class MotorcycleSalesView(FormView):
+    """Страница «Продажа мотоциклов» с формой заявки."""
+    template_name = 'pages/motorcycle_sales.html'
+    form_class = MotorcycleSalesForm
+    success_url = reverse_lazy('motorcycle_sales_success')
+
+    def form_valid(self, form):
+        form.instance.vehicle_type = 'moto'
+        form.save()
+        return redirect(self.get_success_url())
+
+
+def motorcycle_sales_success_view(request):
+    """Успешная отправка заявки на мотоцикл."""
+    return render(request, 'pages/motorcycle_sales_success.html')

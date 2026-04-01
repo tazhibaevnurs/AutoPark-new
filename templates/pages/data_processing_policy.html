@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Политика обработки данных — AUTOPARK{% endblock %}
+{% block body_class %}page-inner legal-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.legal-page { background: #FCFCFC; }
+  body.legal-page .page { padding-top: 0; padding-bottom: 0; min-height: auto; }
+
+  .lp-hero { position: relative; min-height: 32vh; display: flex; align-items: center; background: #0a0a0a; overflow: hidden; }
+  .lp-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.52), rgba(0,0,0,.82)),
+      url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80') center/cover no-repeat;
+    opacity: .95;
+  }
+  .lp-hero-inner { position: relative; z-index: 1; max-width: 1280px; width: 100%; margin: 0 auto; padding: 5rem 1.5rem 4rem 5rem; }
+  .lp-hero-accent { display: flex; align-items: center; gap: 1rem; }
+  .lp-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: #E98733; flex-shrink: 0; }
+  .lp-hero h1 { margin: 0; color: #fff; font-size: clamp(2rem,5vw,3.5rem); line-height: 1.15; letter-spacing: -.02em; }
+
+  .lp-wrap { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+  .lp-nav { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .lp-nav a {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: .55rem .95rem; border-radius: 9999px; text-decoration: none;
+    border: 1px solid rgba(0,0,0,.12); background: #fff; color: rgba(0,0,0,.7); font-size: .85rem;
+  }
+  .lp-nav a.active { border-color: rgba(233,135,51,.42); background: rgba(233,135,51,.08); color: #a15a16; font-weight: 600; }
+
+  .lp-card { background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 20px; padding: 2rem; }
+  .lp-lead { margin: 0 0 1rem; color: rgba(0,0,0,.66); line-height: 1.65; }
+  .lp-card h2 { margin: 1.5rem 0 .6rem; font-size: 1.08rem; color: #1f2937; }
+  .lp-card p, .lp-card li { color: rgba(0,0,0,.68); line-height: 1.65; }
+  .lp-card ul { margin: .35rem 0 0; padding-left: 1.2rem; }
+  .lp-date { margin-top: 1.2rem; font-size: .85rem; color: #9ca3af; }
+
+  @media (max-width: 768px) {
+    .lp-hero-inner { padding: 5rem 1.5rem 3rem; }
+    .lp-wrap { padding: 2rem 1rem 2rem; }
+  }
+  @media (max-width: 480px) {
+    .lp-hero h1 { font-size: 1.5rem; }
+    .lp-hero-inner { padding: 4.5rem 1rem 2.5rem; }
+    .lp-hero-line { height: 3.5rem; }
+    .lp-card { border-radius: 16px; padding: 1.25rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <section class="lp-hero">
+    <div class="lp-hero-inner">
+      <div class="lp-hero-accent">
+        <div class="lp-hero-line"></div>
+        <h1>Правовая информация</h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-wrap">
+    <div id="lp-content">
+      <nav class="lp-nav" aria-label="Разделы правовой информации">
+        <a href="{% url 'privacy_policy' %}">Политика конфиденциальности</a>
+        <a href="{% url 'terms_of_use' %}">Пользовательское соглашение</a>
+        <a href="{% url 'data_processing_policy' %}" class="active">Политика обработки данных</a>
+      </nav>
+      <article class="lp-card">
+        <p class="lp-lead">Настоящая Политика определяет порядок и условия обработки персональных данных пользователей сайта AUTOPARK в соответствии с требованиями законодательства Российской Федерации.</p>
+
+      <h2>1. Принципы обработки данных</h2>
+      <ul>
+        <li>законность и справедливая основа обработки;</li>
+        <li>обработка данных только для заранее определенных целей;</li>
+        <li>соразмерность объема данных целям обработки;</li>
+        <li>достоверность и актуальность обрабатываемых сведений;</li>
+        <li>ограничение срока хранения данных.</li>
+      </ul>
+
+      <h2>2. Категории обрабатываемых данных</h2>
+      <p>Оператор может обрабатывать: имя, телефон, адрес электронной почты, текст обращений в формах сайта, а также технические данные (IP-адрес, cookie, параметры браузера и сведения о сессии).</p>
+
+      <h2>3. Цели обработки</h2>
+      <ul>
+        <li>прием и обработка заявок;</li>
+        <li>обратная связь с пользователями;</li>
+        <li>повышение качества сервиса и поддержки;</li>
+        <li>выполнение требований законодательства.</li>
+      </ul>
+
+      <h2>4. Правовые основания обработки</h2>
+      <p>Правовыми основаниями являются добровольное согласие пользователя, выраженное при заполнении форм сайта, а также нормы действующего законодательства РФ.</p>
+
+      <h2>5. Порядок хранения и защиты</h2>
+      <p>Доступ к персональным данным ограничен. Используются организационные и технические меры для предотвращения несанкционированного доступа, изменения, блокирования, копирования или распространения данных.</p>
+
+      <h2>6. Передача персональных данных</h2>
+      <p>Передача возможна только в объеме, необходимом для обработки обращений, либо в случаях, прямо предусмотренных законодательством РФ.</p>
+
+      <h2>7. Права субъекта персональных данных</h2>
+      <p>Пользователь вправе получить информацию об обработке данных, потребовать их уточнения, блокирования или удаления, а также отозвать согласие на обработку.</p>
+
+      <h2>8. Контакты по вопросам персональных данных</h2>
+      <p>По вопросам обработки персональных данных можно обратиться через страницу <a href="{% url 'contacts' %}">контактов</a> или по телефону +7 (961) 163-41-57.</p>
+        <p class="lp-date">Дата последнего обновления: 01 апреля 2026 г.</p>
+      </article>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    function wireAjaxTabs() {
+      var root = document.getElementById('lp-content');
+      if (!root) return;
+      var links = root.querySelectorAll('.lp-nav a');
+      links.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          var href = link.getAttribute('href');
+          if (!href || link.classList.contains('active')) return;
+          e.preventDefault();
+          fetch(href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(function (r) { return r.text(); })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, 'text/html');
+              var next = doc.getElementById('lp-content');
+              if (!next) {
+                window.location.href = href;
+                return;
+              }
+              root.innerHTML = next.innerHTML;
+              document.title = doc.title || document.title;
+              history.pushState({ url: href }, '', href);
+              wireAjaxTabs();
+            })
+            .catch(function () { window.location.href = href; });
+        });
+      });
+    }
+
+    window.addEventListener('popstate', function () {
+      var href = window.location.pathname + window.location.search;
+      fetch(href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function (r) { return r.text(); })
+        .then(function (html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var current = document.getElementById('lp-content');
+          var next = doc.getElementById('lp-content');
+          if (current && next) {
+            current.innerHTML = next.innerHTML;
+            document.title = doc.title || document.title;
+            wireAjaxTabs();
+          }
+        })
+        .catch(function () {});
+    });
+
+    wireAjaxTabs();
+  })();
+</script>
+{% endblock %}

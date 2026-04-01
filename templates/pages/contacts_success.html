@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Заявка отправлена — AUTOPARK{% endblock %}
+{% block body_class %}page-inner{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  body.page-inner .cts-success { padding-top: 0; padding-bottom: 0; }
+  .cts-success-hero {
+    position: relative;
+    min-height: 28vh;
+    display: flex;
+    align-items: center;
+    background: #0a0a0a;
+    overflow: hidden;
+  }
+  .cts-success-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,0.58), rgba(0,0,0,0.82)),
+      url('https://images.unsplash.com/photo-1556155092-490a1ba16284?w=1920&q=80') center/cover no-repeat;
+  }
+  .cts-success-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 5rem 1.25rem 3rem;
+  }
+  .cts-success-accent {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .cts-success-line {
+    width: 4px;
+    height: clamp(44px, 6vw, 58px);
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 12px rgba(233, 135, 51, 0.4);
+    flex-shrink: 0;
+  }
+  .cts-success-inner h1 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .cts-success-body {
+    background: var(--surface-1);
+    min-height: 44vh;
+    padding: 3rem 1.25rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .cts-success-card {
+    width: 100%;
+    max-width: 620px;
+    background: var(--surface-0);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-2xl);
+    padding: 2rem 1.35rem;
+  }
+  .cts-success-check {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    background: rgba(233, 135, 51, 0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e98733;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  .cts-success-card h2 {
+    margin: 0 0 0.6rem;
+    color: var(--text-strong);
+    font-size: 1.8rem;
+  }
+  .cts-success-card p {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .cts-success-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cts-success-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    padding: 0.85rem 1.2rem;
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform .2s, filter .2s;
+  }
+  .cts-success-btn--primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .cts-success-btn--primary:hover {
+    color: #0a0a0a;
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+  }
+  .cts-success-btn--ghost {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: #111;
+  }
+  .cts-success-btn--ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page cts-success">
+  <section class="cts-success-hero">
+    <div class="cts-success-inner">
+      <div class="cts-success-accent">
+        <div class="cts-success-line"></div>
+        <h1>Заявка принята</h1>
+      </div>
+    </div>
+  </section>
+  <section class="cts-success-body">
+    <div class="cts-success-card">
+      <div class="cts-success-check">✓</div>
+      <h2>Спасибо за обращение!</h2>
+      <p>Мы получили ваш вопрос и свяжемся с вами в ближайшее время.</p>
+      <div class="cts-success-actions">
+        <a href="{% url 'home' %}" class="cts-success-btn cts-success-btn--primary">На главную</a>
+        <a href="{% url 'contacts' %}" class="cts-success-btn cts-success-btn--ghost">Отправить еще</a>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

@@ -1,6 +1,11 @@
 from django.db import models
 from core.models import TimeStampedModel
 
+VEHICLE_TYPE_CHOICES = (
+    ('car', 'Автомобиль'),
+    ('moto', 'Мотоцикл'),
+)
+
 
 class Lead(TimeStampedModel):
     """Заявка с формы «Заказать авто» (квиз)."""
@@ -50,6 +55,12 @@ class Lead(TimeStampedModel):
         blank=True,
     )
     comment = models.TextField('Комментарий', blank=True)
+    vehicle_type = models.CharField(
+        'Тип транспорта',
+        max_length=10,
+        choices=VEHICLE_TYPE_CHOICES,
+        default='car',
+    )
 
     class Meta:
         verbose_name = 'Заявка'
@@ -73,6 +84,12 @@ class CarSearchRequest(TimeStampedModel):
     consent = models.BooleanField(
         'Согласие с политикой конфиденциальности',
         default=False,
+    )
+    vehicle_type = models.CharField(
+        'Тип транспорта',
+        max_length=10,
+        choices=VEHICLE_TYPE_CHOICES,
+        default='car',
     )
 
     class Meta:
@@ -98,6 +115,12 @@ class BuyoutRequest(TimeStampedModel):
         'Согласие с политикой конфиденциальности',
         default=False,
     )
+    vehicle_type = models.CharField(
+        'Тип транспорта',
+        max_length=10,
+        choices=VEHICLE_TYPE_CHOICES,
+        default='car',
+    )
 
     class Meta:
         verbose_name = 'Заявка на выкуп'
@@ -121,6 +144,12 @@ class DeliveryRequest(TimeStampedModel):
     consent = models.BooleanField(
         'Согласие с политикой конфиденциальности',
         default=False,
+    )
+    vehicle_type = models.CharField(
+        'Тип транспорта',
+        max_length=10,
+        choices=VEHICLE_TYPE_CHOICES,
+        default='car',
     )
 
     class Meta:
@@ -146,10 +175,88 @@ class RegistrationRequest(TimeStampedModel):
         'Согласие с политикой конфиденциальности',
         default=False,
     )
+    vehicle_type = models.CharField(
+        'Тип транспорта',
+        max_length=10,
+        choices=VEHICLE_TYPE_CHOICES,
+        default='car',
+    )
 
     class Meta:
         verbose_name = 'Заявка на постановку на учёт'
         verbose_name_plural = 'Заявки на постановку на учёт'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.name} — {self.phone}'
+
+
+class ExpertQuestionRequest(TimeStampedModel):
+    """Заявка «Связаться с нами» / «Вопрос эксперту» со страницы контактов."""
+
+    class QuestionType(models.TextChoices):
+        PURCHASE = 'purchase', 'Покупка'
+        SERVICE = 'service', 'Сервис'
+        OTHER = 'other', 'Другое'
+
+    name = models.CharField('Имя', max_length=255)
+    phone = models.CharField('Телефон', max_length=30)
+    subject = models.CharField('Тема обращения', max_length=255)
+    question_type = models.CharField(
+        'Тип вопроса',
+        max_length=20,
+        choices=QuestionType.choices,
+        default=QuestionType.PURCHASE,
+    )
+    car_brand = models.CharField('Марка автомобиля', max_length=255, blank=True)
+    car_model = models.CharField('Модель автомобиля', max_length=255, blank=True)
+    message = models.TextField('Описание вопроса')
+    vehicle_type = models.CharField(
+        'Тип транспорта',
+        max_length=10,
+        choices=VEHICLE_TYPE_CHOICES,
+        default='car',
+    )
+    consent = models.BooleanField(
+        'Согласие с политикой конфиденциальности',
+        default=False,
+    )
+
+    class Meta:
+        verbose_name = 'Заявка: вопрос эксперту'
+        verbose_name_plural = 'Заявки: вопрос эксперту'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.name} — {self.phone} ({self.get_question_type_display()})'
+
+
+class MotorcycleSalesRequest(TimeStampedModel):
+    """Заявка со страницы «Продажа мотоциклов»."""
+
+    name = models.CharField('Имя', max_length=255)
+    phone = models.CharField('Телефон', max_length=30)
+    city = models.CharField('Город', max_length=255, blank=True)
+    brand = models.CharField('Марка мотоцикла', max_length=255, blank=True)
+    message = models.TextField(
+        'Комментарий к заявке',
+        blank=True,
+        help_text='Пожелания по модели, бюджету и срокам',
+    )
+    consent = models.BooleanField(
+        'Согласие с политикой конфиденциальности',
+        default=False,
+    )
+    vehicle_type = models.CharField(
+        'Тип транспорта',
+        max_length=10,
+        choices=VEHICLE_TYPE_CHOICES,
+        default='moto',
+    )
+
+    class Meta:
+        verbose_name = 'Заявка на продажу мотоциклов'
+        verbose_name_plural = 'Заявки на продажу мотоциклов'
         ordering = ['-created_at']
 
     def __str__(self):
