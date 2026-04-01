@@ -81,7 +81,7 @@ class ServiceAdmin(admin.ModelAdmin):
                 obj.image.url,
             )
         if obj.media_type == 'video' and obj.video:
-            return format_html('<span>Видео</span>')
+            return 'Видео'
         return '—'
     media_preview.short_description = 'Превью'
 
@@ -150,7 +150,7 @@ class CaseAdmin(admin.ModelAdmin):
                 obj.image.url,
             )
         if obj.media_type == 'video' and obj.video:
-            return format_html('<span>Видео</span>')
+            return 'Видео'
         return '—'
     media_preview.short_description = 'Медиа'
 
@@ -261,7 +261,7 @@ class BlogPostAdmin(admin.ModelAdmin):
                 obj.image.url,
             )
         if obj.video:
-            return format_html('<span>Видео</span>')
+            return 'Видео'
         return '—'
     media_preview.short_description = 'Медиа'
 
