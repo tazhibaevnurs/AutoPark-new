@@ -449,6 +449,7 @@
     margin-top: var(--space-xl);
   }
   .hero-contact {
+    order: 2;
     max-width: 22rem;
     width: 100%;
     text-align: center;
@@ -463,6 +464,7 @@
     margin-top: 0;
   }
   .hero-service-icons {
+    order: 1;
     flex: none;
     width: 100%;
     min-width: 0;

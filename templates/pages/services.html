@@ -56,17 +56,19 @@
     display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
   }
   .svc-card {
-    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
+    position: relative;
+    min-height: 320px;
+    background: #111; border: 1px solid rgba(0,0,0,.06); border-radius: 24px;
     overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04);
     transition: border-color .3s, box-shadow .3s, transform .3s;
-    text-decoration: none; color: inherit; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit; display: block;
   }
   .svc-card:hover {
     border-color: rgba(233,135,51,.3); box-shadow: 0 8px 24px rgba(233,135,51,.08);
     transform: translateY(-3px); color: inherit;
   }
   .svc-card-image {
-    aspect-ratio: 16/10; position: relative; overflow: hidden;
+    position: absolute; inset: 0; overflow: hidden;
     background: linear-gradient(145deg, rgba(233,135,51,.08) 0%, #f3f4f6 100%);
   }
   .svc-card-image img,
@@ -76,6 +78,13 @@
   }
   .svc-card:hover .svc-card-image img,
   .svc-card:hover .svc-card-image video { transform: scale(1.04); }
+  .svc-card-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.92) 8%, rgba(0,0,0,.66) 45%, rgba(0,0,0,.28) 100%);
+    z-index: 1;
+  }
   .svc-card-image--placeholder::after {
     content: '';
     position: absolute; inset: 0;
@@ -86,16 +95,40 @@
     position: absolute; inset: 0;
     background: rgba(0,0,0,.25) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='%23fff' opacity='0.9'%3E%3Cpolygon points='5 3 19 12 5 21 5 3'/%3E%3C/svg%3E") center/48px no-repeat;
   }
-  .svc-card-body { padding: 1.5rem 1.5rem 1.75rem; flex: 1; display: flex; flex-direction: column; }
-  .svc-card-title { font-size: 1.2rem; font-weight: 600; color: #000; margin: 0 0 .5rem; }
-  .svc-card-desc { font-size: .95rem; color: #6b7280; line-height: 1.55; margin: 0 0 1rem; flex: 1; }
+  .svc-card-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 1rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+  }
+  .svc-card-title { font-size: 1.2rem; font-weight: 600; color: #fff; margin: 0; }
+  .svc-card .svc-card-desc {
+    font-size: .9rem;
+    color: rgba(255,255,255,.98) !important;
+    line-height: 1.45;
+    margin: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,.75);
+    opacity: 1 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .svc-card-btn {
     display: inline-flex; align-items: center; justify-content: center;
     padding: .6rem 1.25rem; font-size: .9rem; font-weight: 500;
-    border-radius: 10px; background: #111; color: #fff;
+    width: fit-content;
+    border-radius: 10px; background: rgba(255,255,255,.16); color: #fff;
+    border: 1px solid rgba(255,255,255,.28);
     transition: background .2s, transform .2s; margin-top: auto;
   }
-  .svc-card:hover .svc-card-btn { background: #E98733; color: #fff; }
+  .svc-card:hover .svc-card-btn { background: #E98733; border-color: #E98733; color: #fff; }
 
   .svc-empty {
     grid-column: 1/-1; text-align: center; color: #6b7280; padding: 3rem 0;
@@ -177,17 +210,17 @@
         {% if item.service.description %}
           <p class="svc-card-desc">{{ item.service.description }}</p>
         {% elif item.service.title == 'Поиск авто' or item.service.title == 'Подбор авто на аукционах' %}
-          <p class="svc-card-desc">Подберём автомобиль под ваш бюджет и требования, проверим историю и состояние, согласуем лучший вариант перед покупкой.</p>
+          <p class="svc-card-desc">Подбор авто под бюджет и проверка перед покупкой.</p>
         {% elif item.service.title == 'Выкуп авто' or item.service.title == 'Выкуп' %}
-          <p class="svc-card-desc">Организуем выкуп автомобиля под ключ: проверка, оформление сделки, сопровождение оплаты и передача документов.</p>
+          <p class="svc-card-desc">Выкуп под ключ: проверка, сделка и документы.</p>
         {% elif item.service.title == 'Доставка авто' or item.service.title == 'Доставка' %}
-          <p class="svc-card-desc">Доставим автомобиль из США, Китая или Кореи с контролем на каждом этапе логистики и прозрачными сроками.</p>
+          <p class="svc-card-desc">Доставка авто с контролем на каждом этапе.</p>
         {% elif item.service.title == 'Помощь в поставке на учет' or item.service.title == 'Постановка на учет' or item.service.title == 'Постановка на учёт' %}
-          <p class="svc-card-desc">Поможем с постановкой автомобиля на учёт: проверка документов, сопровождение процедуры и экономия вашего времени.</p>
+          <p class="svc-card-desc">Постановка на учёт с сопровождением и проверкой.</p>
         {% elif item.service.title == 'Продажа мотоциклов' %}
-          <p class="svc-card-desc">Мотоциклы из Южной Кореи под заказ: японские, американские и европейские марки, минимальный пробег и срок доставки около 40 дней.</p>
+          <p class="svc-card-desc">Мотоциклы из Кореи под заказ и с минимальным пробегом.</p>
         {% else %}
-          <p class="svc-card-desc">Полное сопровождение сделки: от подбора до получения транспорта и оформления документов.</p>
+          <p class="svc-card-desc">Сопровождение сделки от подбора до выдачи.</p>
         {% endif %}
         <span class="svc-card-btn">Подробнее</span>
       </div>
@@ -202,7 +235,7 @@
       </div>
       <div class="svc-card-body">
         <h2 class="svc-card-title">Продажа мотоциклов</h2>
-        <p class="svc-card-desc">Мотоциклы из Южной Кореи под заказ: японские, американские и европейские марки, минимальный пробег и срок доставки около 40 дней.</p>
+        <p class="svc-card-desc">Мотоциклы из Кореи под заказ и с минимальным пробегом.</p>
         <span class="svc-card-btn">Подробнее</span>
       </div>
     </a>

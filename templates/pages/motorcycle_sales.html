@@ -7,53 +7,145 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
 <style>
-  .moto-page .page { padding: 0 0 3rem; min-height: auto; background: var(--surface-1); }
-  .moto-hero { position: relative; min-height: 32vh; display: flex; align-items: center; background: #0a0a0a; overflow: hidden; }
-  .moto-hero::before { content: ""; position: absolute; inset: 0; background: url("{% static 'img/moto/moto-hero-bg.jpg' %}") center/cover no-repeat; opacity: .38; }
-  .moto-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.5), rgba(0,0,0,.82)); }
-  .moto-hero-inner { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; width: 100%; padding: 5rem 1.5rem 3.2rem 5rem; color: #fff; }
-  .moto-hero-accent { display: flex; align-items: center; gap: 1rem; }
-  .moto-hero-line { width: 4px; height: 5rem; border-radius: 9999px; background: var(--accent); flex-shrink: 0; }
-  .moto-hero h1 { margin: 0 0 .6rem; font-size: clamp(2rem, 5vw, 3.4rem); letter-spacing: -.02em; line-height: 1.1; }
-  .moto-hero p { margin: 0; max-width: 760px; color: rgba(255,255,255,.86); line-height: 1.7; font-size: 1.02rem; }
-
-  .moto-wrap { max-width: 1280px; margin: 0 auto; padding: 1.4rem 1.5rem 0; }
-  .moto-pill { display: inline-flex; align-items: center; gap: .5rem; padding: .5rem 1rem; border-radius: 9999px; border: 1px solid rgba(233,135,51,.3); background: rgba(233,135,51,.08); color: #374151; font-size: .875rem; font-weight: 500; margin-bottom: 1rem; }
-  .moto-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-
-  .moto-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-  .moto-card { background: var(--surface-0); border: 1px solid rgba(0,0,0,.08); border-radius: 18px; padding: 1.2rem; }
-  .moto-card h2 { margin: 0 0 .8rem; color: var(--text-strong); font-size: 1.3rem; }
-  .moto-card p { margin: 0; color: var(--text-soft); line-height: 1.65; }
-  .moto-chips { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1rem; }
-  .moto-chip { display: inline-flex; align-items: center; border: 1px solid rgba(233,135,51,.35); background: rgba(233,135,51,.08); color: #374151; border-radius: 999px; padding: .42rem .8rem; font-size: .86rem; }
-  .moto-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1rem; }
-  .moto-gallery img { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; display: block; }
-
-  .moto-form .moto-field { margin-bottom: .75rem; }
-  .moto-form input[type="text"], .moto-form input[type="tel"], .moto-form textarea {
-    width: 100%; border: 1px solid rgba(0,0,0,.14); border-radius: 12px; padding: .82rem .88rem; font: inherit; color: var(--text-strong); background: #fff;
+  .moto-page .page {
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: auto;
+    background: #fcfcfc;
   }
-  .moto-form textarea { min-height: 112px; resize: vertical; }
-  .moto-form input:focus, .moto-form textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(233,135,51,.14); }
-  .moto-consent { display: flex; gap: .55rem; align-items: flex-start; color: var(--text-soft); font-size: .92rem; line-height: 1.45; margin: .35rem 0 1rem; }
-  .moto-consent input { margin-top: .22rem; accent-color: var(--accent); }
-  .moto-submit {
-    width: 100%; min-height: 62px; padding: 1rem 1.1rem; border: 2px solid var(--accent);
-    border-radius: 12px; background: var(--accent); color: #fff; font-size: 1.05rem; font-weight: 700;
-    transition: background .2s, color .2s, border-color .2s, transform .2s;
+  .moto-hero {
+    position: relative;
+    min-height: 30vh;
+    display: flex;
+    align-items: flex-end;
+    background: #0a0a0a;
+    overflow: hidden;
   }
-  .moto-submit:hover { background: transparent; color: var(--accent); transform: translateY(-1px); }
-  .moto-errors { color: #b42318; font-size: .9rem; margin: .4rem 0 .6rem; }
+  .moto-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("{% static 'img/moto/moto-hero-bg.jpg' %}") center/cover no-repeat;
+    opacity: .42;
+  }
+  .moto-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.8));
+  }
+  .moto-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 5.25rem 1.25rem 2.25rem;
+    color: #fff;
+  }
+  .moto-hero h1 {
+    margin: 0 0 .7rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: -.02em;
+  }
+  .moto-hero p {
+    margin: 0;
+    max-width: 760px;
+    color: rgba(255,255,255,.86);
+    line-height: 1.7;
+    font-size: 1.05rem;
+  }
+  .moto-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 1.25rem 2.5rem;
+    background: rgba(252, 252, 252, 0.96);
+    backdrop-filter: blur(1px);
+  }
+  .moto-lead {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 18px;
+    padding: 1.25rem 1.15rem;
+    color: #1f2937;
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+  }
+  .moto-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-bottom: 1.4rem;
+  }
+  .moto-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    border: 1px solid rgba(233,135,51,.35);
+    background: rgba(233,135,51,.08);
+    color: #374151;
+    border-radius: 999px;
+    padding: .45rem .8rem;
+    font-size: .88rem;
+  }
+  .moto-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .moto-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .moto-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+  .moto-card-body {
+    padding: .9rem .95rem 1rem;
+  }
+  .moto-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #111827;
+  }
+  .moto-card p {
+    margin: .35rem 0 0;
+    color: #6b7280;
+    font-size: .9rem;
+  }
+  .moto-cta {
+    margin-top: 1.6rem;
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+  }
+  .moto-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .8rem 1.35rem;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .moto-btn--primary { background: #111; color: #fff; }
+  .moto-btn--primary:hover { background: #e98733; color: #fff; }
+  .moto-btn--ghost { border: 1px solid rgba(0,0,0,.18); color: #111; }
+  .moto-btn--ghost:hover { border-color: #e98733; color: #e98733; }
 
-  .moto-info { margin-top: 1.2rem; background: #111; border-radius: 18px; padding: 1.1rem 1.15rem; color: rgba(255,255,255,.92); }
-  .moto-info h3 { margin: 0 0 .6rem; color: #fff; }
-  .moto-info ul { margin: 0; padding-left: 1.1rem; color: rgba(255,255,255,.78); }
-  .moto-info li + li { margin-top: .35rem; }
-
-  @media (max-width:1024px) { .moto-hero-inner { padding-left: 2.5rem; } .moto-gallery { grid-template-columns: 1fr 1fr; } }
-  @media (max-width:860px) { .moto-layout { grid-template-columns: 1fr; } }
-  @media (max-width:640px) { .moto-hero-inner { padding: 4.6rem 1rem 2.4rem; } .moto-hero-line { height: 3.4rem; } .moto-wrap { padding: 1rem; } .moto-gallery { grid-template-columns: 1fr; } }
+  @media (max-width: 960px) {
+    .moto-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .moto-hero { min-height: 24vh; }
+    .moto-hero-inner { padding-top: 4.5rem; padding-bottom: 1.5rem; }
+    .moto-grid { grid-template-columns: 1fr; }
+    .moto-card img { height: 210px; }
+  }
 </style>
 {% endblock %}
 
@@ -61,100 +153,54 @@
 <main class="page">
   <section class="moto-hero">
     <div class="moto-hero-inner">
-      <div class="moto-hero-accent">
-        <div class="moto-hero-line"></div>
-        <div>
-          <h1>Продажа мотоциклов</h1>
-          <p>Подбор и поставка мотоциклов из Южной Кореи под заказ: японские, американские и европейские марки, проверка и сопровождение сделки под ключ.</p>
-        </div>
-      </div>
+      <h1>Продажа мотоциклов</h1>
+      <p>Из Южной Кореи под заказ: мотоциклы японских, американских и европейских марок в идеальном состоянии и с минимальным пробегом.</p>
     </div>
   </section>
 
-  <section class="moto-wrap">
-    <div class="moto-pill"><span class="moto-pill-dot"></span> Мотоциклы под заказ</div>
-    <div class="moto-layout">
+  <section class="moto-section">
+    <div class="moto-lead">
+      Срок доставки в среднем <strong>40 дней</strong>. Подбираем технику под ваш бюджет и задачи, проверяем состояние перед отправкой и сопровождаем сделку до передачи мотоцикла в РФ.
+    </div>
+
+    <div class="moto-meta">
+      <span class="moto-chip">Южная Корея</span>
+      <span class="moto-chip">Минимальный пробег</span>
+      <span class="moto-chip">Свежие модели</span>
+      <span class="moto-chip">Доставка ~40 дней</span>
+    </div>
+
+    <div class="moto-grid">
       <article class="moto-card">
-        <h2>Что вы получаете</h2>
-        <p>Срок доставки в среднем <strong>40 дней</strong>. Подбираем технику под бюджет и задачи, проверяем состояние перед отправкой и сопровождаем сделку до передачи в РФ.</p>
-        <div class="moto-chips">
-          <span class="moto-chip">Южная Корея</span>
-          <span class="moto-chip">Минимальный пробег</span>
-          <span class="moto-chip">Свежие модели</span>
-          <span class="moto-chip">Доставка ~40 дней</span>
-        </div>
-        <div class="moto-gallery">
-          <img src="{% static 'img/moto/harley.jpg' %}" alt="Harley-Davidson" loading="lazy">
-          <img src="{% static 'img/moto/ducati.jpg' %}" alt="Ducati" loading="lazy">
-          <img src="{% static 'img/moto/bmw.jpg' %}" alt="BMW Motorrad" loading="lazy">
-        </div>
+        <img src="{% static 'img/moto/harley.jpg' %}" alt="Harley-Davidson" loading="lazy">
+        <div class="moto-card-body"><h3>Harley-Davidson</h3><p>Современные круизеры и touring-модели.</p></div>
       </article>
-
       <article class="moto-card">
-        <h2>Заявка на мотоцикл</h2>
-        <form method="post" class="moto-form" novalidate>
-          {% csrf_token %}
-          {% if form.non_field_errors %}
-            <div class="moto-errors">{{ form.non_field_errors }}</div>
-          {% endif %}
-
-          <div class="moto-field">{{ form.name }}</div>
-          {% if form.name.errors %}<div class="moto-errors">{{ form.name.errors }}</div>{% endif %}
-          <div class="moto-field">{{ form.phone }}</div>
-          {% if form.phone.errors %}<div class="moto-errors">{{ form.phone.errors }}</div>{% endif %}
-          <div class="moto-field">{{ form.city }}</div>
-          {% if form.city.errors %}<div class="moto-errors">{{ form.city.errors }}</div>{% endif %}
-          <div class="moto-field">{{ form.brand }}</div>
-          {% if form.brand.errors %}<div class="moto-errors">{{ form.brand.errors }}</div>{% endif %}
-          <div class="moto-field">{{ form.message }}</div>
-          {% if form.message.errors %}<div class="moto-errors">{{ form.message.errors }}</div>{% endif %}
-          {{ form.vehicle_type }}
-
-          <label class="moto-consent">
-            {{ form.consent }}
-            <span>Я соглашаюсь с <a href="{% url 'privacy_policy' %}" target="_blank" rel="noopener">политикой конфиденциальности</a>.</span>
-          </label>
-          {% if form.consent.errors %}<div class="moto-errors">{{ form.consent.errors }}</div>{% endif %}
-          <button type="submit" class="moto-submit">Отправить заявку</button>
-        </form>
+        <img src="{% static 'img/moto/ducati.jpg' %}" alt="Ducati" loading="lazy">
+        <div class="moto-card-body"><h3>Ducati</h3><p>Спорт и roadster с актуальными поколениями.</p></div>
+      </article>
+      <article class="moto-card">
+        <img src="{% static 'img/moto/bmw.jpg' %}" alt="BMW Motorrad" loading="lazy">
+        <div class="moto-card-body"><h3>BMW Motorrad</h3><p>Городские и туринговые модели BMW.</p></div>
+      </article>
+      <article class="moto-card">
+        <img src="{% static 'img/moto/yamaha.jpg' %}" alt="YAMAHA" loading="lazy">
+        <div class="moto-card-body"><h3>YAMAHA</h3><p>Свежие линейки для города и трека.</p></div>
+      </article>
+      <article class="moto-card">
+        <img src="{% static 'img/moto/honda.jpg' %}" alt="Honda" loading="lazy">
+        <div class="moto-card-body"><h3>Honda</h3><p>Надежные мотоциклы в отличном состоянии.</p></div>
+      </article>
+      <article class="moto-card">
+        <img src="{% static 'img/moto/suzuki.jpg' %}" alt="Suzuki" loading="lazy">
+        <div class="moto-card-body"><h3>Suzuki</h3><p>Сбалансированные модели на каждый день.</p></div>
       </article>
     </div>
 
-    <div class="moto-info">
-      <h3>Полезная информация</h3>
-      <ul>
-        <li>Перед покупкой проверяем VIN, историю обслуживания и состояние ключевых узлов.</li>
-        <li>Подбираем варианты под ваш бюджет и формат эксплуатации (город/трасса/туринг).</li>
-        <li>Сопровождаем логистику и документы до получения мотоцикла в вашем регионе.</li>
-      </ul>
+    <div class="moto-cta">
+      <a href="{% url 'order_quiz' %}" class="moto-btn moto-btn--primary">Оставить заявку</a>
+      <a href="{% url 'contacts' %}" class="moto-btn moto-btn--ghost">Связаться</a>
     </div>
   </section>
 </main>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-  (function () {
-    var phoneInput = document.getElementById('id_phone');
-    if (!phoneInput) return;
-
-    function applyMask(value) {
-      var digits = (value || '').replace(/\D/g, '');
-      if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-      if (!digits.startsWith('7')) digits = '7' + digits;
-      digits = digits.slice(0, 11);
-      var d = digits.slice(1).split('');
-      var out = '+7';
-      if (d.length) out += ' (' + d.slice(0, 3).join('');
-      if (d.length >= 3) out += ') ' + d.slice(3, 6).join('');
-      if (d.length >= 6) out += '-' + d.slice(6, 8).join('');
-      if (d.length >= 8) out += '-' + d.slice(8, 10).join('');
-      return out;
-    }
-
-    phoneInput.addEventListener('input', function () {
-      phoneInput.value = applyMask(phoneInput.value);
-    });
-  })();
-</script>
 {% endblock %}

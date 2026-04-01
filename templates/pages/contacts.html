@@ -431,7 +431,7 @@
         <div class="ct-call">
           Или позвоните нам<br>
           <a href="tel:+79611634157">+7 (961) 163-41-57</a>
-        </div>
+  </div>
       </aside>
 
       <section class="ct-form-card">
@@ -449,22 +449,22 @@
               </span>
               {{ form.name }}
               {% if form.name.errors %}<div class="ct-errors">{{ form.name.errors }}</div>{% endif %}
-            </div>
+      </div>
             <div class="ct-field-wrap">
               <span class="ct-field-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.11.93.35 1.84.7 2.7a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.86.35 1.77.59 2.7.7a2 2 0 0 1 1.82 2.04z"></path></svg>
               </span>
               {{ form.phone }}
               {% if form.phone.errors %}<div class="ct-errors">{{ form.phone.errors }}</div>{% endif %}
-            </div>
+    </div>
             <div class="ct-full ct-field-wrap">
               <span class="ct-field-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M4 9h16"></path></svg>
               </span>
               {{ form.subject }}
               {% if form.subject.errors %}<div class="ct-errors">{{ form.subject.errors }}</div>{% endif %}
-            </div>
-          </div>
+    </div>
+  </div>
 
           <div class="ct-type">
             <p class="ct-type-title">Тип вопроса</p>
@@ -484,9 +484,9 @@
                   </label>
                 </div>
               {% endfor %}
-            </div>
+      </div>
             {% if form.question_type.errors %}<div class="ct-errors">{{ form.question_type.errors }}</div>{% endif %}
-          </div>
+      </div>
 
           <div class="ct-form-grid" id="ct-car-row">
             <div id="ct-brand-wrap">{{ form.car_brand }}</div>
@@ -494,8 +494,8 @@
             <div class="ct-full">
               {{ form.message }}
               {% if form.message.errors %}<div class="ct-errors">{{ form.message.errors }}</div>{% endif %}
-            </div>
-          </div>
+    </div>
+  </div>
 
           <label class="ct-consent">
             {{ form.consent }}
