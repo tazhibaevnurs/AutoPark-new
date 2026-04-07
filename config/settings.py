@@ -17,7 +17,7 @@ if not SECRET_KEY:
 # В продакшене обязательно задать DEBUG=False в .env (иначе check --deploy выдаст W018)
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
 CORS_ALLOWED_ORIGINS = [
     origin.strip() for origin in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if origin.strip()
 ]
