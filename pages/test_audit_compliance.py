@@ -241,3 +241,13 @@ class AuditComplianceTest(TestCase):
         content = r.content.decode("utf-8")
         self.assertNotIn("fonts.googleapis.com", content)
         self.assertIn("fonts-montserrat.css", content)
+
+    # --- После HTTPS: прокси, долгий кэш статики (аудит «После HTTPS») ---
+
+    def test_secure_proxy_and_static_cache_configured(self):
+        """WhiteNoise max-age 1 год; заголовок X-Forwarded-Proto для TLS за reverse proxy."""
+        self.assertEqual(getattr(settings, "WHITENOISE_MAX_AGE", None), 31536000)
+        self.assertEqual(
+            getattr(settings, "SECURE_PROXY_SSL_HEADER", None),
+            ("HTTP_X_FORWARDED_PROTO", "https"),
+        )

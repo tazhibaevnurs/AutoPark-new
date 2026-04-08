@@ -132,8 +132,12 @@ nano .env
 DJANGO_SECRET_KEY=ваш-длинный-секретный-ключ-минимум-50-символов
 DEBUG=False
 ALLOWED_HOSTS=IP_ВАШЕГО_СЕРВЕРА,ваш-домен.ru
+USE_HTTPS=false
+CSRF_TRUSTED_ORIGINS=
 DATABASE_PATH=/data/db.sqlite3
 ```
+
+После настройки SSL на домене задайте `USE_HTTPS=true` и `CSRF_TRUSTED_ORIGINS=https://ваш-домен.ru` (см. раздел «Домен и HTTPS» ниже).
 
 - **DJANGO_SECRET_KEY** — случайная строка. Сгенерировать можно так (на сервере или локально):
   ```bash
@@ -260,7 +264,48 @@ docker compose down -v
 2. На сервере установите Nginx и Certbot (Let's Encrypt).
 3. Настройте Nginx как reverse proxy на `127.0.0.1:8000` и выдайте сертификат для домена.
 
-Отдельная инструкция по Nginx + SSL может быть добавлена в этот документ по запросу.
+#### После того как SSL работает (чек-лист по техническому аудиту)
+
+1. **Переменные в `.env`** (перезапуск: `docker compose up -d`):
+   - `USE_HTTPS=true`
+   - `ALLOWED_HOSTS=ваш-домен.ru,www.ваш-домен.ru,127.0.0.1` — без схемы, через запятую.
+   - `CSRF_TRUSTED_ORIGINS=https://ваш-домен.ru,https://www.ваш-домен.ru` — со схемой `https://`.
+   - `DEBUG=False`
+
+   Django тогда включает редирект HTTP→HTTPS, `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`, HSTS (см. `config/settings.py`). За прокси нужен заголовок `X-Forwarded-Proto: https` (ниже в примере Nginx).
+
+2. **Кэш статики** — в проекте уже задано `WHITENOISE_MAX_AGE=31536000` (1 год); версии в URL (`?v=…`) сбрасывают кэш при обновлении CSS/JS.
+
+3. **Сжатие и заголовки в Nginx** (рекомендуется для PageSpeed):
+
+   ```nginx
+   gzip on;
+   gzip_types text/css application/javascript application/json image/svg+xml;
+   gzip_min_length 256;
+
+   # опционально: brotli — если модуль подключён
+   # brotli on;
+   # brotli_types text/css application/javascript application/json;
+
+   location /static/ {
+       alias /путь/к/staticfiles/;
+       expires 365d;
+       add_header Cache-Control "public, immutable";
+   }
+
+   location / {
+       proxy_pass http://127.0.0.1:8000;
+       proxy_set_header Host $host;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header X-Forwarded-Proto $scheme;
+   }
+   ```
+
+   Путь к статике после `collectstatic` уточните под вашу установку (Docker volume или каталог на хосте).
+
+4. **Шрифты** — Montserrat подключается локально (`static/css/fonts-montserrat.css`), без `fonts.googleapis.com`.
+
+5. **Schema.org** — на главной и странице кейсов разметка уже в шаблонах; после HTTPS поисковики смогут стабильно обходить `https://`.
 
 ---
 
