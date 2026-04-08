@@ -63,6 +63,7 @@
 {% block content %}
 <div id="postanovka-root" class="postanovka-root"></div>
 {{ form_errors|json_script:"registration-errors-data" }}
+<script src="{% static 'js/lead-form-honeypot-shim.js' %}"></script>
 <script>
   window.__POSTANOVKA_DATA__ = {
     formAction: "{{ form_action }}",

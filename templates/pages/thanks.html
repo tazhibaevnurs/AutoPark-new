@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Спасибо за заявку — AUTOPARK{% endblock %}
+{% block meta_description_content %}Заявка принята. Менеджер AUTOPARK свяжется с вами в ближайшее рабочее время.{% endblock %}
+{% block body_class %}page-inner thanks-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inner.css' %}">
+<style>
+  .thanks-page .page {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .thanks-page h1 {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+  .thanks-lead {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: #374151;
+    margin: 0 0 1.25rem;
+  }
+  .thanks-note {
+    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0 0 1.75rem;
+  }
+  .thanks-back {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    color: #e98733;
+    text-decoration: none;
+  }
+  .thanks-back:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <h1>Спасибо за заявку</h1>
+  <p class="thanks-lead">{{ thanks_message }}</p>
+  <p class="thanks-note">
+    Мы свяжемся с вами по указанному телефону в рабочее время. Если вопрос срочный — позвоните:
+    <a href="tel:+79611634157">+7 (961) 163-41-57</a>.
+  </p>
+  <p><a href="{% url 'home' %}" class="thanks-back">На главную</a></p>
+</main>
+{% endblock %}

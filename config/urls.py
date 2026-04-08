@@ -9,6 +9,7 @@ from core import views as core_views
 
 urlpatterns = [
     path('', pages_views.home, name='home'),
+    path('thanks/', pages_views.thanks, name='thanks'),
     path('uslugi/', pages_views.services, name='services'),
     path('zakaz/', include([
         path('', leads_views.OrderQuizView.as_view(), name='order_quiz'),

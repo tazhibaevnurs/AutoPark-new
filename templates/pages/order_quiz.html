@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block title %}Заказать авто — подбор под ваш бюджет{% endblock %}
+{% block meta_description_content %}Заявка на подбор авто из Кореи, Китая или США под ключ. Укажите бюджет и пожелания — менеджер AUTOPARK свяжется и предложит варианты с расчётом.{% endblock %}
 {% block body_class %}page-inner order-quiz-page{% endblock %}
 
 {% block extra_css %}
@@ -204,6 +205,7 @@
     color: #374151;
     margin-bottom: 0.375rem;
   }
+  .oq-field .oq-req { color: #dc2626; font-weight: 600; }
   .oq-field input,
   .oq-field select,
   .oq-field textarea {
@@ -379,13 +381,10 @@
     </div>
 
     <div class="oq-form-card">
-      <form action="{% url 'order_quiz' %}" method="post">
+      <form action="{% url 'order_quiz' %}" method="post" novalidate>
         {% csrf_token %}
-        {% if form.non_field_errors %}
-          <ul class="errorlist" style="margin-bottom: 1rem; color: #dc2626; font-size: 0.85rem; list-style: none; padding: 0;">
-            {{ form.non_field_errors }}
-          </ul>
-        {% endif %}
+        {{ form.hp_company }}
+        {% include 'includes/form_error_summary.html' %}
 
         <div class="form-section-title">Параметры подбора</div>
 
@@ -420,12 +419,12 @@
 
         <div class="oq-row">
           <div class="oq-field">
-            <label for="id_name">Имя</label>
+            <label for="id_name">Имя <span class="oq-req" aria-hidden="true">*</span></label>
             {{ form.name }}
             {{ form.name.errors }}
           </div>
           <div class="oq-field">
-            <label for="id_phone">Телефон</label>
+            <label for="id_phone">Телефон <span class="oq-req" aria-hidden="true">*</span></label>
             {{ form.phone }}
             {{ form.phone.errors }}
           </div>

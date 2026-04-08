@@ -1,0 +1,117 @@
+/**
+ * Подсказки и подсветка ошибок форм (лиды, контакты).
+ */
+
+.form-error-summary {
+  border: 1px solid #fecaca;
+  background: linear-gradient(180deg, #fff7f7 0%, #fef2f2 100%);
+  border-radius: 14px;
+  padding: 1rem 1.15rem 1.05rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 2px rgba(185, 28, 28, 0.06);
+}
+
+.form-error-summary__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #991b1b;
+  letter-spacing: -0.01em;
+}
+
+.form-error-summary__lead {
+  margin: 0 0 0.65rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #7f1d1d;
+}
+
+.form-error-summary__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-error-summary__item {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #450a0a;
+  padding-left: 0.1rem;
+}
+
+.form-error-summary__link {
+  color: #c2410c;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.form-error-summary__link:hover {
+  color: #9a3412;
+}
+
+.form-error-summary__msg {
+  display: inline;
+  color: #7f1d1d;
+  font-weight: 400;
+}
+
+.form-error-summary__item--global {
+  padding: 0.45rem 0.55rem;
+  background: rgba(254, 202, 202, 0.45);
+  border-radius: 8px;
+}
+
+/* Подсветка контролов с ошибкой (Django рендерит ul.errorlist рядом с полем) */
+.order-quiz-page .oq-field:has(ul.errorlist) input,
+.order-quiz-page .oq-field:has(ul.errorlist) select,
+.order-quiz-page .oq-field:has(ul.errorlist) textarea {
+  box-shadow: 0 0 0 2px #dc2626 !important;
+  background: #fff5f5 !important;
+}
+
+.ct-expert-page .ct-field-wrap:has(ul.errorlist) .ct-field,
+.ct-expert-page .ct-full:has(ul.errorlist) .ct-area {
+  border-color: #dc2626 !important;
+  background: #fffbeb !important;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+}
+
+.ct-expert-page .ct-type:has(ul.errorlist) {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+  border-radius: var(--radius-lg, 12px);
+}
+
+.ct-expert-page label.ct-consent:has(ul.errorlist) {
+  color: #991b1b;
+}
+
+.moto-page .moto-field:has(ul.errorlist) input,
+.moto-page .moto-field:has(ul.errorlist) textarea {
+  border-color: #dc2626 !important;
+  background: #fff5f5 !important;
+  box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.35);
+}
+
+.ct-expert-page label.ct-consent--error {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+  border-radius: 10px;
+  padding: 0.4rem 0.35rem;
+}
+
+.moto-page label.moto-consent--error {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+  border-radius: 10px;
+  padding: 0.35rem;
+}
+
+.order-quiz-page .oq-field .errorlist {
+  font-size: 0.875rem;
+  font-weight: 500;
+}

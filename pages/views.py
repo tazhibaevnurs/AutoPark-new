@@ -1,3 +1,4 @@
+import json
 import os
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -189,6 +190,46 @@ def process(request):
     return render(request, 'pages/process.html')
 
 
+THANKS_MESSAGES = {
+    'order': (
+        'Менеджер AUTOPARK свяжется с вами в рабочее время в течение 24 часов: уточнит параметры подбора '
+        'и предложит до трёх вариантов с расчётом стоимости «под ключ».'
+    ),
+    'contacts': (
+        'Менеджер просмотрит ваше обращение и перезвонит в рабочее время в течение 24 часов, '
+        'чтобы ответить на вопросы и согласовать дальнейшие шаги.'
+    ),
+    'search': (
+        'Специалист по подбору свяжется с вами, уточнит бюджет и пожелания и предложит варианты автомобилей.'
+    ),
+    'buyout': (
+        'Менеджер по выкупу оценит вашу заявку и перезвонит, чтобы обсудить условия и следующий шаг.'
+    ),
+    'delivery': (
+        'Логист свяжется с вами для уточнения маршрута, сроков и стоимости доставки.'
+    ),
+    'registration': (
+        'Менеджер по оформлению свяжется с вами в рабочее время и поможет с подготовкой документов и постановкой на учёт.'
+    ),
+    'moto': (
+        'Менеджер по мототехнике свяжется с вами в рабочее время в течение 24 часов, '
+        'уточнит запрос и расскажет о доступных вариантах и сроках.'
+    ),
+}
+
+
+def thanks(request):
+    """Страница благодарности после отправки заявки (редирект с форм лидов)."""
+    code = (request.GET.get('s') or '').strip() or 'order'
+    allowed = frozenset(THANKS_MESSAGES)
+    if code not in allowed:
+        code = 'order'
+    return render(request, 'pages/thanks.html', {
+        'thanks_code': code,
+        'thanks_message': THANKS_MESSAGES[code],
+    })
+
+
 def about(request):
     return render(request, 'pages/about.html')
 
@@ -238,8 +279,24 @@ def serve_catalog_video(request, public_id):
 
 def cases(request):
     from core.models import Case
+
     case_list = Case.objects.filter(is_active=True)
-    return render(request, 'pages/cases.html', {'cases': case_list})
+    items = []
+    for i, c in enumerate(case_list, start=1):
+        items.append({
+            '@type': 'ListItem',
+            'position': i,
+            'name': c.title,
+        })
+    cases_json_ld = json.dumps({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'itemListElement': items,
+    }, ensure_ascii=False)
+    return render(request, 'pages/cases.html', {
+        'cases': case_list,
+        'cases_json_ld': cases_json_ld,
+    })
 
 
 def serve_case_video(request, public_id):

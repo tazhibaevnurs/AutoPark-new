@@ -19,6 +19,13 @@
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --transition: 0.35s var(--ease);
 
+  /* Межстрочный интервал: единый диапазон 1.4–1.6 для читаемости */
+  --line-height-heading: 1.45;
+  --line-height-body: 1.5;
+  /* Подписи/второстепенный текст — плотнее, без «двойного» интервала */
+  --line-height-caption: 1.45;
+  --line-height-relaxed: 1.55;
+
   /* Design tokens: surfaces/text */
   --surface-0: #ffffff;
   --surface-1: #f7f7f8;

@@ -1,5 +1,6 @@
 import re
 from django import forms
+from .antispam import LeadAntiSpamMixin, validate_person_name
 from .models import (
     Lead,
     CarSearchRequest,
@@ -14,7 +15,7 @@ MAX_COMMENT_LENGTH = 2000
 MAX_MESSAGE_LENGTH = 2000
 
 
-class LeadForm(forms.ModelForm):
+class LeadForm(LeadAntiSpamMixin, forms.ModelForm):
     """Форма заявки «Заказать авто» с валидацией телефона и бюджета."""
 
     country = forms.ChoiceField(
@@ -23,9 +24,18 @@ class LeadForm(forms.ModelForm):
         required=True,
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, request=request, **kwargs)
         self.fields['vehicle_type'].required = False
+        self.fields['name'].required = True
+        self.fields['phone'].required = True
+        # Явно в разметку: BoundField иногда не проставляет required для кастомных attrs
+        self.fields['name'].widget.attrs['required'] = 'required'
+        self.fields['name'].widget.attrs['aria-required'] = 'true'
+        self.fields['phone'].widget.attrs['required'] = 'required'
+        self.fields['phone'].widget.attrs['aria-required'] = 'true'
+        # CharField(max_length=30) подставляет maxlength=30; для маски достаточно 18
+        self.fields['phone'].widget.attrs['maxlength'] = '18'
 
     class Meta:
         model = Lead
@@ -41,11 +51,19 @@ class LeadForm(forms.ModelForm):
             }),
             'body_type': forms.Select(attrs={'id': 'id_body_type'}),
             'urgency': forms.Select(attrs={'id': 'id_urgency'}),
-            'name': forms.TextInput(attrs={'id': 'id_name'}),
+            'name': forms.TextInput(attrs={
+                'id': 'id_name',
+                'autocomplete': 'name',
+                'placeholder': 'Ваше имя *',
+            }),
             'phone': forms.TextInput(attrs={
                 'id': 'id_phone',
                 'type': 'tel',
-                'placeholder': '+7 (999) 123-45-67',
+                'inputmode': 'tel',
+                'autocomplete': 'tel',
+                'placeholder': '+7 (___) ___-__-__ *',
+                'maxlength': '18',
+                'data-phone-mask': '+7 (___) ___-__-__',
             }),
             'contact': forms.TextInput(attrs={
                 'id': 'id_contact',
@@ -58,6 +76,12 @@ class LeadForm(forms.ModelForm):
             }),
             'vehicle_type': forms.HiddenInput(),
         }
+
+    def clean_name(self):
+        value = (self.cleaned_data.get('name') or '').strip()
+        if not value:
+            raise forms.ValidationError('Укажите имя.')
+        return validate_person_name(value)
 
     def clean_phone(self):
         value = self.cleaned_data.get('phone') or ''
@@ -80,11 +104,11 @@ class LeadForm(forms.ModelForm):
             raise forms.ValidationError(f'Комментарий слишком длинный (максимум {MAX_COMMENT_LENGTH} символов).')
         return value
 
-class CarSearchForm(forms.ModelForm):
+class CarSearchForm(LeadAntiSpamMixin, forms.ModelForm):
     """Форма заявки на поиск автомобиля."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, request=request, **kwargs)
         self.fields['vehicle_type'].required = False
 
     class Meta:
@@ -120,6 +144,9 @@ class CarSearchForm(forms.ModelForm):
             'vehicle_type': 'Тип транспорта',
         }
 
+    def clean_name(self):
+        return validate_person_name(self.cleaned_data.get('name'))
+
     def clean_phone(self):
         value = self.cleaned_data.get('phone') or ''
         digits = re.sub(r'\D', '', value)
@@ -140,11 +167,11 @@ class CarSearchForm(forms.ModelForm):
         return value
 
 
-class DeliveryForm(forms.ModelForm):
+class DeliveryForm(LeadAntiSpamMixin, forms.ModelForm):
     """Форма заявки на доставку автомобиля."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, request=request, **kwargs)
         self.fields['vehicle_type'].required = False
 
     class Meta:
@@ -175,6 +202,9 @@ class DeliveryForm(forms.ModelForm):
             'vehicle_type': 'Тип транспорта',
         }
 
+    def clean_name(self):
+        return validate_person_name(self.cleaned_data.get('name'))
+
     def clean_phone(self):
         value = self.cleaned_data.get('phone') or ''
         digits = re.sub(r'\D', '', value)
@@ -193,11 +223,11 @@ class DeliveryForm(forms.ModelForm):
         return value
 
 
-class RegistrationForm(forms.ModelForm):
+class RegistrationForm(LeadAntiSpamMixin, forms.ModelForm):
     """Форма заявки на постановку на учёт."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, request=request, **kwargs)
         self.fields['vehicle_type'].required = False
 
     class Meta:
@@ -228,6 +258,9 @@ class RegistrationForm(forms.ModelForm):
             'vehicle_type': 'Тип транспорта',
         }
 
+    def clean_name(self):
+        return validate_person_name(self.cleaned_data.get('name'))
+
     def clean_phone(self):
         value = self.cleaned_data.get('phone') or ''
         digits = re.sub(r'\D', '', value)
@@ -246,11 +279,11 @@ class RegistrationForm(forms.ModelForm):
         return value
 
 
-class BuyoutForm(forms.ModelForm):
+class BuyoutForm(LeadAntiSpamMixin, forms.ModelForm):
     """Форма заявки на выкуп автомобиля."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, request=request, **kwargs)
         self.fields['vehicle_type'].required = False
 
     class Meta:
@@ -281,6 +314,9 @@ class BuyoutForm(forms.ModelForm):
             'vehicle_type': 'Тип транспорта',
         }
 
+    def clean_name(self):
+        return validate_person_name(self.cleaned_data.get('name'))
+
     def clean_phone(self):
         value = self.cleaned_data.get('phone') or ''
         digits = re.sub(r'\D', '', value)
@@ -299,11 +335,11 @@ class BuyoutForm(forms.ModelForm):
         return value
 
 
-class ExpertQuestionForm(forms.ModelForm):
+class ExpertQuestionForm(LeadAntiSpamMixin, forms.ModelForm):
     """Форма страницы «Связаться с нами» (в стиле экспертной консультации)."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, request=request, **kwargs)
         self.fields['name'].widget.attrs['class'] = 'ct-field'
         self.fields['phone'].widget.attrs.update({
             'class': 'ct-field',
@@ -349,6 +385,9 @@ class ExpertQuestionForm(forms.ModelForm):
             'vehicle_type': 'Тип транспорта',
         }
 
+    def clean_name(self):
+        return validate_person_name(self.cleaned_data.get('name'))
+
     def clean_phone(self):
         value = self.cleaned_data.get('phone') or ''
         digits = re.sub(r'\D', '', value)
@@ -375,11 +414,11 @@ class ExpertQuestionForm(forms.ModelForm):
         return value
 
 
-class MotorcycleSalesForm(forms.ModelForm):
+class MotorcycleSalesForm(LeadAntiSpamMixin, forms.ModelForm):
     """Форма заявки на подбор/покупку мотоцикла."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, request=request, **kwargs)
         self.fields['vehicle_type'].required = False
 
     class Meta:
@@ -403,6 +442,9 @@ class MotorcycleSalesForm(forms.ModelForm):
             'consent': 'Я соглашаюсь с политикой конфиденциальности',
             'vehicle_type': 'Тип транспорта',
         }
+
+    def clean_name(self):
+        return validate_person_name(self.cleaned_data.get('name'))
 
     def clean_phone(self):
         value = self.cleaned_data.get('phone') or ''

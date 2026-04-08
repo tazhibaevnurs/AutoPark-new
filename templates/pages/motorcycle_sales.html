@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block title %}Продажа мотоциклов — AUTOPARK{% endblock %}
+{% block meta_description_content %}Заявка на подбор и покупку мотоцикла: импорт и консультация AUTOPARK. Свяжитесь с нами для подбора техники под ваш запрос.{% endblock %}
 {% block body_class %}page-inner moto-page{% endblock %}
 
 {% block extra_css %}
@@ -118,11 +119,68 @@
     color: #6b7280;
     font-size: .9rem;
   }
+  .moto-form {
+    width: 100%;
+    max-width: 640px;
+    margin-bottom: 1rem;
+  }
+  .moto-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem 1rem;
+    margin-bottom: 0.85rem;
+  }
+  .moto-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .moto-field label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #374151;
+  }
+  .moto-field input,
+  .moto-field textarea {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 10px;
+    font: inherit;
+    box-sizing: border-box;
+  }
+  .moto-field textarea { min-height: 100px; resize: vertical; }
+  .moto-field-full { grid-column: 1 / -1; }
+  .moto-errors {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.75rem;
+    color: #b91c1c;
+    font-size: 0.9rem;
+  }
+  .moto-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+    color: #4b5563;
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
+  .moto-consent input { margin-top: 0.2rem; }
+  .moto-field .errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #b91c1c;
+    font-size: 0.82rem;
+  }
   .moto-cta {
     margin-top: 1.6rem;
     display: flex;
     gap: .75rem;
     flex-wrap: wrap;
+    align-items: flex-start;
   }
   .moto-btn {
     display: inline-flex;
@@ -145,6 +203,7 @@
     .moto-hero-inner { padding-top: 4.5rem; padding-bottom: 1.5rem; }
     .moto-grid { grid-template-columns: 1fr; }
     .moto-card img { height: 210px; }
+    .moto-form-grid { grid-template-columns: 1fr; }
   }
 </style>
 {% endblock %}
@@ -197,8 +256,46 @@
       </article>
     </div>
 
-    <div class="moto-cta">
-      <a href="{% url 'order_quiz' %}" class="moto-btn moto-btn--primary">Оставить заявку</a>
+    <div class="moto-cta" id="moto-lead-form">
+      <form method="post" action="{% url 'motorcycle_sales' %}" class="moto-form" novalidate>
+        {% csrf_token %}
+        {{ form.hp_company }}
+        {% include 'includes/form_error_summary.html' %}
+        <div class="moto-form-grid">
+          <div class="moto-field">
+            <label for="id_name">Имя *</label>
+            {{ form.name }}
+            {{ form.name.errors }}
+          </div>
+          <div class="moto-field">
+            <label for="id_phone">Телефон *</label>
+            {{ form.phone }}
+            {{ form.phone.errors }}
+          </div>
+          <div class="moto-field">
+            <label for="id_city">Город</label>
+            {{ form.city }}
+            {{ form.city.errors }}
+          </div>
+          <div class="moto-field">
+            <label for="id_brand">Марка</label>
+            {{ form.brand }}
+            {{ form.brand.errors }}
+          </div>
+          <div class="moto-field moto-field-full">
+            <label for="id_message">Комментарий</label>
+            {{ form.message }}
+            {{ form.message.errors }}
+          </div>
+        </div>
+        <label class="moto-consent{% if form.consent.errors %} moto-consent--error{% endif %}">
+          {{ form.consent }}
+          <span>Я соглашаюсь с <a href="{% url 'privacy_policy' %}">политикой конфиденциальности</a></span>
+        </label>
+        {{ form.consent.errors }}
+        {{ form.vehicle_type }}
+        <button type="submit" class="moto-btn moto-btn--primary">Отправить заявку</button>
+      </form>
       <a href="{% url 'contacts' %}" class="moto-btn moto-btn--ghost">Связаться</a>
     </div>
   </section>

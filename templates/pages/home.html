@@ -2,11 +2,30 @@
 {% load static %}
 
 {% block title %}Импорт авто из США, Китая, Кореи — персональный расчёт{% endblock %}
+{% block meta_description_content %}AUTOPARK — импорт авто из США, Китая и Кореи под ключ. Белгород. Экономия до 50% от цен дилеров. Доставка, таможня, оформление.{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "AUTOPARK",
+  "telephone": "+79611634157",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Харьковский пер., 36А, каб. 402, БЦ «Панорама»",
+    "addressLocality": "Белгород",
+    "addressCountry": "RU"
+  },
+  "foundingDate": "2019"
+}
+</script>
+{% endblock %}
 
 {% block footer %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}?v=20260401-hero-mobile-overlay">
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=20260409-hero-title-center">
 {% endblock %}
 
 {% block content %}
@@ -33,16 +52,16 @@
 
   <div class="hero-stats reveal">
     <div class="hero-stat">
-      <span class="hero-stat-value" data-value="450" data-prefix="" data-suffix="+">0</span>
-      <span class="hero-stat-label">доставленных автомобилей</span>
+      <span class="hero-stat-value" data-value="450" data-prefix="" data-suffix="+">450+</span>
+      <p class="hero-stat-label">доставленных автомобилей</p>
     </div>
     <div class="hero-stat">
-      <span class="hero-stat-value" data-value="870" data-prefix="" data-suffix=" 000 ₽">0</span>
-      <span class="hero-stat-label">средняя экономия клиента</span>
+      <span class="hero-stat-value" data-value="870" data-prefix="" data-suffix=" 000 ₽">870 000 ₽</span>
+      <p class="hero-stat-label">средняя экономия клиента</p>
     </div>
     <div class="hero-stat">
-      <span class="hero-stat-value" data-value="97" data-prefix="" data-suffix="%">0</span>
-      <span class="hero-stat-label">клиентов приходят по рекомендации</span>
+      <span class="hero-stat-value" data-value="97" data-prefix="" data-suffix="%">97%</span>
+      <p class="hero-stat-label">клиентов приходят по рекомендации</p>
     </div>
   </div>
 

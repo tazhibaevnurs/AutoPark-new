@@ -1,0 +1,23 @@
+{% comment %}
+  Сводка ошибок валидации: видно сразу после отправки, ссылки ведут к полям.
+  Подключать внутри <form>, когда в контексте есть {{ form }}.
+{% endcomment %}
+{% if form.errors %}
+  <div class="form-error-summary" role="alert" id="form-error-summary" tabindex="-1">
+    <p class="form-error-summary__title">Не удалось отправить форму</p>
+    <p class="form-error-summary__lead">Проверьте выделенные поля ниже или перейдите по ссылкам:</p>
+    <ul class="form-error-summary__list">
+      {% for field in form %}
+        {% if field.name != 'hp_company' and field.errors %}
+          <li class="form-error-summary__item">
+            <a class="form-error-summary__link" href="#{{ field.id_for_label }}">{{ field.label }}</a>
+            <span class="form-error-summary__msg">{% for err in field.errors %} {{ err }}{% endfor %}</span>
+          </li>
+        {% endif %}
+      {% endfor %}
+      {% for err in form.non_field_errors %}
+        <li class="form-error-summary__item form-error-summary__item--global">{{ err }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

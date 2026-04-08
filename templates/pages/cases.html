@@ -2,7 +2,12 @@
 {% load static %}
 
 {% block title %}Наши кейсы — авто из Кореи и Китая под ключ{% endblock %}
+{% block meta_description_content %}Реальные кейсы AUTOPARK: привезённые из Кореи, Китая и США авто под ключ. Доставка, таможня, оформление в Белгороде.{% endblock %}
 {% block body_class %}page-inner cases-new-page{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{{ cases_json_ld|safe }}</script>
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/inner.css' %}">
@@ -157,7 +162,13 @@
   .cs-card-image--placeholder::after {
     content: '';
     position: absolute; inset: 0;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23E98733' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round' opacity='0.2'%3E%3Cpath d='M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11'/%3E%3Cpath d='M14 9h4l4 4v4c0 .6-.4 1-1 1h-2'/%3E%3Ccircle cx='7' cy='18' r='2'/%3E%3Cpath d='M15 18H9'/%3E%3Ccircle cx='17' cy='18' r='2'/%3E%3C/svg%3E") center/48px no-repeat;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23E98733' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round' opacity='0.2'%3E%3Cpath d='M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11'/%3E%3Cpath d='M14 9h4l4 4v4c0 .6-.4 1-1 1h-2'/%3E%3Ccircle cx='7' cy='18' r='2'/%3E%3Cpath d='M15 18H9'/%3E%3Ccircle cx='17' cy='18' r='2'/%3E%3C/svg%3E") center 42% no-repeat;
+    background-size: 48px;
+  }
+  .cs-card-placeholder-title {
+    position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
+    max-width: 92%; text-align: center; font-size: .88rem; font-weight: 600;
+    color: #6b7280; line-height: 1.35; z-index: 1;
   }
   .cs-card-body { padding: 1.25rem 1.5rem 1.5rem; }
   .cs-card-country {
@@ -249,6 +260,8 @@
           <button type="button" class="cs-expand-btn" aria-label="Развернуть" data-type="image" data-src="{{ case.image.url }}" data-title="{{ case.title }}" data-meta="{{ case.meta_line }}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
+        {% else %}
+          <span class="cs-card-placeholder-title">{{ case.title }}</span>
         {% endif %}
       </div>
       <div class="cs-card-body">

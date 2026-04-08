@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block title %}Поиск автомобилей — персональный подбор | AUTOPARK{% endblock %}
+{% block meta_description_content %}Персональный подбор автомобиля из Кореи, Китая и США: оставьте заявку — подберём варианты под бюджет и сроки. AUTOPARK Белгород.{% endblock %}
 {% block body_class %}page-inner poisk-avto-page{% endblock %}
 
 {% block extra_css %}
@@ -38,6 +39,7 @@
 {% block content %}
 <div id="poisk-avto-root" class="poisk-avto-root"></div>
 {{ form_errors|json_script:"car-search-errors-data" }}
+<script src="{% static 'js/lead-form-honeypot-shim.js' %}"></script>
 <script>
   window.__POISK_AVTO_DATA__ = {
     formAction: "{{ form_action }}",

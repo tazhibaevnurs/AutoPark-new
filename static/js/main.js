@@ -42,6 +42,39 @@
     initBurger();
   }
 
+  // Маска +7 для телефона (форма заказа и др.; контакты — отдельный скрипт на #id_expert_phone)
+  (function initPhoneMask() {
+    function digitsOnly(value) {
+      return (value || '').replace(/\D/g, '').replace(/^8/, '7');
+    }
+    function formatPhone(value) {
+      var digits = digitsOnly(value);
+      if (!digits) return '';
+      if (digits[0] !== '7') digits = '7' + digits;
+      digits = digits.slice(0, 11);
+      var d = digits.slice(1);
+      var out = '+7';
+      if (d.length) out += ' (' + d.slice(0, 3);
+      if (d.length >= 3) out += ')';
+      if (d.length > 3) out += ' ' + d.slice(3, 6);
+      if (d.length > 6) out += '-' + d.slice(6, 8);
+      if (d.length > 8) out += '-' + d.slice(8, 10);
+      return out;
+    }
+    document.querySelectorAll('input[data-phone-mask]').forEach(function (input) {
+      if (input.id === 'id_expert_phone') return;
+      input.addEventListener('input', function () {
+        input.value = formatPhone(input.value);
+      });
+      input.addEventListener('focus', function () {
+        if (!input.value) input.value = '+7 (';
+      });
+      input.addEventListener('blur', function () {
+        if (digitsOnly(input.value).length < 11) input.value = '';
+      });
+    });
+  })();
+
   // FAB — плавающая кнопка контактов (открыть / закрыть)
   (function () {
     var fab = document.getElementById('fab');
@@ -118,6 +151,18 @@
     advantagesObserver.observe(aboutAdvantages);
   }
 
+  // Счётчики: до анимации показываем целевые значения (fallback при отключённом JS / позднем IO)
+  (function statFallback() {
+    function apply(el) {
+      var end = parseInt(el.getAttribute('data-value'), 10);
+      if (isNaN(end)) return;
+      var prefix = el.getAttribute('data-prefix') || '';
+      var suffix = el.getAttribute('data-suffix') || '';
+      el.textContent = prefix + end + suffix;
+    }
+    document.querySelectorAll('.hero-stat-value[data-value], .abt-stat-value[data-value]').forEach(apply);
+  })();
+
   // Счётчик цифр «как спидометр» в блоке «За цифрами — наш успех»
   (function () {
     var statsSection = document.querySelector('.about-stats') || document.querySelector('.abt-stats');
@@ -161,11 +206,12 @@
             var end = parseInt(el.getAttribute('data-value'), 10);
             var prefix = el.getAttribute('data-prefix') || '';
             var suffix = el.getAttribute('data-suffix') || '';
+            el.textContent = prefix + 0 + suffix;
             animateValue(el, 0, end, 1800, prefix, suffix);
           });
         });
       },
-      { threshold: 0.25 }
+      { threshold: 0.15, rootMargin: '0px 0px 10% 0px' }
     );
     statsObserver.observe(statsSection);
   })();
@@ -208,11 +254,12 @@
             var end = parseInt(el.getAttribute('data-value'), 10);
             var prefix = el.getAttribute('data-prefix') || '';
             var suffix = el.getAttribute('data-suffix') || '';
+            el.textContent = prefix + 0 + suffix;
             animateValue(el, 0, end, 5500, prefix, suffix);
           });
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.1, rootMargin: '0px 0px 15% 0px' }
     );
     heroStatsObserver.observe(heroStatsSection);
   })();
@@ -301,5 +348,23 @@
         onChoice(btn.getAttribute('data-action'));
       });
     });
+  })();
+
+  // После POST с ошибками — прокрутка к сводке, чтобы было видно, что исправить
+  (function scrollToFormErrorSummary() {
+    var summary = document.getElementById('form-error-summary');
+    if (!summary) return;
+    function run() {
+      try {
+        summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (e) {
+        summary.scrollIntoView(true);
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run);
+    } else {
+      run();
+    }
   })();
 })();

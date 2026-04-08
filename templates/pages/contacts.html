@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block title %}Связаться с нами — AUTOPARK{% endblock %}
+{% block meta_description_content %}Задайте вопрос эксперту AUTOPARK по импорту авто из США, Китая и Кореи. Консультация в Белгороде, ответ в рабочее время. Телефон +7 (961) 163-41-57.{% endblock %}
 {% block body_class %}page-inner ct-expert-page{% endblock %}
 
 {% block extra_css %}
@@ -435,12 +436,10 @@
       </aside>
 
       <section class="ct-form-card">
-        {% if form.non_field_errors %}
-          <div class="ct-errors">{{ form.non_field_errors }}</div>
-        {% endif %}
-
         <form method="post" novalidate>
           {% csrf_token %}
+          {{ form.hp_company }}
+          {% include 'includes/form_error_summary.html' %}
 
           <div class="ct-form-grid">
             <div class="ct-field-wrap">
@@ -497,7 +496,7 @@
     </div>
   </div>
 
-          <label class="ct-consent">
+          <label class="ct-consent{% if form.consent.errors %} ct-consent--error{% endif %}">
             {{ form.consent }}
             <span>Я соглашаюсь с <a href="{% url 'privacy_policy' %}">политикой конфиденциальности</a></span>
           </label>

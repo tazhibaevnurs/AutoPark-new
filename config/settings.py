@@ -1,7 +1,20 @@
 import os
+import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def _lead_form_min_seconds_after_page_load():
+    """В unit-тестах задержку отключаем; в проде — 2 с (или LEAD_FORM_MIN_SECONDS из env)."""
+    if os.environ.get('PYTEST_CURRENT_TEST'):
+        return 0
+    if len(sys.argv) >= 2 and sys.argv[1] == 'test':
+        return 0
+    return int(os.environ.get('LEAD_FORM_MIN_SECONDS', '2'))
+
+
+LEAD_FORM_MIN_SECONDS_AFTER_PAGE_LOAD = _lead_form_min_seconds_after_page_load()
 
 # Загрузка .env при наличии (опционально)
 try:
@@ -95,6 +108,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# Версионирование статики через ?v= в шаблонах; долгий кеш безопасен
+WHITENOISE_MAX_AGE = 31536000
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -121,8 +136,8 @@ ANOMALY_REQUESTS_PER_MINUTE = int(os.environ.get('ANOMALY_REQUESTS_PER_MINUTE', 
 CONTENT_SECURITY_POLICY = os.environ.get(
     'CONTENT_SECURITY_POLICY',
     "default-src 'self'; img-src 'self' data: https:; media-src 'self' https:; "
-    "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-    "font-src 'self' https://fonts.gstatic.com data:; frame-ancestors 'none'; base-uri 'self';",
+    "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "
+    "font-src 'self' data:; frame-ancestors 'none'; base-uri 'self';",
 )
 
 # Надёжные алгоритмы хеширования паролей (без legacy md5/sha1).

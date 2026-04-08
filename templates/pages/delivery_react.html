@@ -38,6 +38,7 @@
 {% block content %}
 <div id="delivery-root" class="delivery-root"></div>
 {{ form_errors|json_script:"delivery-errors-data" }}
+<script src="{% static 'js/lead-form-honeypot-shim.js' %}"></script>
 <script>
   window.__DELIVERY_DATA__ = {
     formAction: "{{ form_action }}",

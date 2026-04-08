@@ -12,6 +12,7 @@
 {% block content %}
 <div id="vykup-root" class="vykup-root"></div>
 {{ form_errors|json_script:"buyout-errors-data" }}
+<script src="{% static 'js/lead-form-honeypot-shim.js' %}"></script>
 <script>
   window.__VYKUP_DATA__ = {
     formAction: "{{ form_action }}",
