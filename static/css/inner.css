@@ -8,16 +8,9 @@ body.page-inner {
   --border: rgba(0, 0, 0, 0.12);
 }
 
-/* Хедер на внутренних страницах — как на главной (полупрозрачный тёмный) */
-body.page-inner .header {
-  background: rgba(10, 10, 11, 0.4);
-}
-body.page-inner .header.scrolled {
-  background: rgba(10, 10, 11, 0.92);
-}
+/* Хедер на внутренних страницах — тот же стеклянный стиль, что в base.css */
 /* Бургер-меню на внутренних страницах — идентично главной: тёмный фон, светлый текст, те же кнопки */
 body.page-inner .burger-menu {
-  background: #141416 !important;
   --bg: #0a0a0b;
   --bg-soft: #141416;
   --text: #f5f5f5;
@@ -1614,7 +1607,7 @@ body.page-inner .order-intro-benefits li::before {
 /* ========== Страница «Процесс» ========== */
 .process-page {
   position: relative;
-  padding-top: 5.5rem;
+  padding-top: 4.6rem;
   min-height: 100vh;
   overflow: hidden;
 }

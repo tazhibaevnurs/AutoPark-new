@@ -16,7 +16,12 @@
 
 <div class="burger-overlay" id="burger-overlay">
   <nav class="burger-menu burger-menu--left">
-    <button type="button" class="burger-close" aria-label="Закрыть меню">×</button>
+    <div class="burger-menu-header">
+      <a href="{% url 'home' %}" class="logo" aria-label="AUTOPARK">
+        <img src="{% static 'img/autopark-logo-v2.svg' %}" alt="AUTOPARK" class="logo-img">
+      </a>
+      <button type="button" class="burger-close" aria-label="Закрыть меню">×</button>
+    </div>
     <ul class="burger-menu-list">
       <li><a href="{% url 'home' %}">Главная</a></li>
       <li><a href="{% url 'about' %}">О нас</a></li>
