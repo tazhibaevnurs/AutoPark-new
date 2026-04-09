@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{% static 'css/tailwind-font-override.css' %}">
 </head>
 <body class="{% block body_class %}{% endblock %}">
-    {% include 'includes/header_burger.html' %}
+    {% block site_header %}{% include 'includes/header_burger.html' %}{% endblock %}
     {% include 'includes/fab_contact.html' %}
     {% block content %}{% endblock %}
     {% block footer %}{% include 'includes/footer.html' %}{% endblock %}
