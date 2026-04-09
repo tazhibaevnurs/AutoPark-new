@@ -574,3 +574,8 @@ def serve_media(request, path):
     elif path.lower().endswith('.mp4'):
         content_type = 'video/mp4'
     return FileResponse(open(file_path, 'rb'), content_type=content_type or 'application/octet-stream')
+
+
+def server_error_view(request):
+    """500 в стиле сайта; render(request) даёт полный контекст (в отличие от дефолтного server_error)."""
+    return render(request, '500.html', status=500)

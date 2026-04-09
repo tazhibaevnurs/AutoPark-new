@@ -83,3 +83,5 @@ urlpatterns = [
     # Раздача медиа (фото и т.д.) — явный view, работает при DEBUG=False
     path('media/<path:path>', pages_views.serve_media, name='serve_media'),
 ]
+
+handler500 = 'pages.views.server_error_view'
