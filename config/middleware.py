@@ -68,7 +68,13 @@ class AbuseProtectionMiddleware:
             )
             return HttpResponse("Слишком большой upload-запрос. Максимум 10MB.", status=413)
 
-        if origin and self.allowed_origins and origin not in self.allowed_origins:
+        # CORS: только для /api/ — иначе www/apex и моб. браузеры с Origin на GET ломают HTML-страницы.
+        if (
+            path.startswith("/api/")
+            and origin
+            and self.allowed_origins
+            and origin not in self.allowed_origins
+        ):
             log_security_event("cors_blocked_origin", path=path, ip=ip, origin=origin)
             return JsonResponse({"ok": False, "error": "Origin not allowed."}, status=403)
 
